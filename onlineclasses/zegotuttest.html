@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zego Test – 1-to-1 / Conference</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b0f14;color:#e9eef3;margin:0}
+    header{padding:16px 20px;border-bottom:1px solid #1d2833;background:#0f1620}
+    h1{font-size:18px;margin:0}
+    .wrap{max-width:980px;margin:24px auto;padding:0 16px}
+    .card{background:#0f1620;border:1px solid #1d2833;border-radius:12px;padding:16px}
+    .row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+    .row > *{flex:1 1 220px}
+    input,select,button{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a3642;background:#0b121a;color:#e9eef3}
+    button{cursor:pointer;background:#1f6feb;border-color:#1f6feb}
+    button:hover{filter:brightness(1.1)}
+    .hint{font-size:12px;opacity:.8}
+    #log{white-space:pre-wrap;background:#091018;border-radius:8px;padding:10px;border:1px dashed #2a3642;margin-top:8px;font-size:12px}
+    #container{margin-top:16px;height:75vh;min-height:420px;background:#0b1215;border:1px dashed #2a3642;border-radius:12px}
+    .ok{color:#6ee7a8}.bad{color:#f87171} a{color:#7aa2ff}
+  </style>
+
+  <!-- ✅ Load after HTML parse to avoid 'insertBefore on null' -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"
+    defer
+    crossorigin="anonymous"
+  ></script>
+</head>
+<body>
+  <header><h1>ZEGOCLOUD Quick Test (Standalone HTML)</h1></header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="row">
+        <div><label>Display name
+          <input id="name" placeholder="e.g., Kashif" />
+        </label></div>
+        <div><label>Room ID
+          <input id="room" placeholder="e.g., 12345" />
+        </label></div>
+        <div><label>Mode
+          <select id="mode">
+            <option value="1v1">1-to-1 Call</option>
+            <option value="conf">Conference</option>
+          </select>
+        </label></div>
+      </div>
+      <div class="row">
+        <div><button id="rand">Generate Random Room</button></div>
+        <div><button id="join">Join Room</button></div>
+        <div><button id="share">Copy Share Link</button></div>
+      </div>
+      <div class="hint">Open same URL on a second device/browser with the same Room ID.</div>
+      <div id="log"></div>
+    </div>
+
+    <div id="container" class="card"></div>
+  </div>
+
+<script>
+(function () {
+  // ⚠️ TEST ONLY – never ship serverSecret in production
+  const APP_ID = 2078429700;
+  const SERVER_SECRET = "8bfbfb27bd51f21203441a50af309758";
+
+  const $ = (id) => document.getElementById(id);
+  const log = (m, cls = "") => {
+    const el = $("log");
+    el.innerHTML += (cls ? `<span class="${cls}">` : "") + m + (cls ? "</span>" : "") + "\n";
+    el.scrollTop = el.scrollHeight;
+    console.log("[ZegoTest]", m);
+  };
+  const qp = (n) => { try {return new URL(location.href).searchParams.get(n);} catch(e){return null;} };
+
+  // Prefill from query params
+  if (qp("name")) $("name").value = qp("name");
+  if (qp("roomID")) $("room").value = qp("roomID");
+  if (qp("mode") === "conf") $("mode").value = "conf";
+
+  $("rand").onclick = () => { $("room").value = String(Math.floor(Math.random()*1e6)); log("Generated room: "+$("room").value,"ok"); };
+  $("share").onclick = async () => {
+    const url = new URL(location.href);
+    url.searchParams.set("roomID", $("room").value || "");
+    url.searchParams.set("name", $("name").value || "");
+    url.searchParams.set("mode", $("mode").value);
+    await navigator.clipboard.writeText(url.toString());
+    log("Share link copied:\n"+url.toString(),"ok");
+    alert("Share link copied!");
+  };
+  $("join").onclick = join;
+
+  // Auto-join if roomID provided
+  if (qp("roomID")) { log("Auto-joining from URL params…"); join(); }
+
+  async function ensureMediaPerms() {
+    try { await navigator.mediaDevices.getUserMedia({ audio: true, video: true }); log("Mic/Camera permission OK","ok"); }
+    catch (e) { log("Mic/Camera permission denied: "+e.message,"bad"); }
+  }
+
+  function waitForZego() {
+    return new Promise((res, rej) => {
+      if (window.ZegoUIKitPrebuilt) return res();
+      let tries = 0;
+      const t = setInterval(() => {
+        if (window.ZegoUIKitPrebuilt) { clearInterval(t); res(); }
+        else if (++tries > 200) { clearInterval(t); rej(new Error("Zego SDK not loaded")); }
+      }, 50);
+    });
+  }
+
+  async function join() {
+    const name = $("name").value || ("Guest" + Math.floor(Math.random() * 1e4));
+    const roomID = $("room").value || String(Math.floor(Math.random() * 1e6));
+    const mode   = $("mode").value; // "1v1" | "conf"
+
+    try { await waitForZego(); } 
+    catch(e){ log("Zego SDK not loaded. Check CDN/network.","bad"); alert("Zego script didn’t load. Check console/network."); return; }
+
+    await ensureMediaPerms();
+
+    const userID = String(Math.floor(Math.random() * 1e9));
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(APP_ID, SERVER_SECRET, roomID, userID, name);
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    const scenario = { mode: mode === "1v1" ? ZegoUIKitPrebuilt.OneONoneCall : ZegoUIKitPrebuilt.VideoConference };
+
+    log(`Joining room "${roomID}" as "${name}" in ${mode === "1v1" ? "1-to-1" : "Conference"} mode…`);
+
+    zp.joinRoom({
+      container: $("container"),
+      scenario,
+      turnOnMicrophoneWhenJoining: true,
+      turnOnCameraWhenJoining: true,
+      showMyCameraToggleButton: true,
+      showMyMicrophoneToggleButton: true,
+      showAudioVideoSettingsButton: true,
+      showScreenSharingButton: true,
+      showTextChat: true,
+      showUserList: true,
+      maxUsers: mode === "1v1" ? 2 : 6,
+      layout: "Auto",
+      showLayoutButton: mode !== "1v1",
+      sharedLinks: [{ name:"Share this link", url: `${location.origin}${location.pathname}?roomID=${encodeURIComponent(roomID)}&name=${encodeURIComponent(name)}&mode=${encodeURIComponent(mode)}` }]
+    });
+  }
+})();
+</script>
+</body>
+</html>

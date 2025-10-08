@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Classroom | TutorsPoint</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="classroom-auth">
+        <div class="auth-card">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Live Classroom</h1>
+            
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="userName" placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label>Room Code</label>
+                <input type="text" id="roomCode" placeholder="From your teacher">
+            </div>
+            
+            <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_KEY"></div>
+            
+            <button id="joinBtn" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Join Class
+            </button>
+        </div>
+    </div>
+
+    <div class="classroom-container hidden">
+        <!-- Classroom UI will load here dynamically -->
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

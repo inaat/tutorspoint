@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Class - TutorsPoint</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/index.min.js"></script>
+</head>
+<body>
+  <div id="classroom-message" style="padding:20px;color:red;"></div>
+  <div id="zego-container" style="width: 100%; height: 80vh;"></div>
+
+  <script>
+    async function initClassroom() {
+      const container = document.getElementById('zego-container');
+      const messageBox = document.getElementById('classroom-message');
+
+      const subjectSlug = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      if (!subjectSlug) {
+        messageBox.innerText = 'Invalid subject URL';
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://public_html.test/api/resolve-session.php?subject=${subjectSlug}`);
+        const data = await res.json();
+
+        if (!data.success) {
+          messageBox.innerText = data.message || 'Classroom not available.';
+          return;
+        }
+
+        const token = ZegoUIKitPrebuilt.generateKitTokenForProduction({
+          appID: data.app_id,
+          serverSecret: data.server_secret,
+          roomID: data.room_id,
+          userID: data.user_id,
+          userName: data.user_name,
+          expireTime: 3600
+        });
+
+        const zp = ZegoUIKitPrebuilt.create(token);
+        zp.joinRoom({
+          container: container,
+          scenario: {
+            mode: 'education',
+            config: { role: data.role || 'student' }
+          },
+          sharedLinks: [
+            {
+              name: 'Join Classroom',
+              url: window.location.href
+            }
+          ]
+        });
+
+      } catch (err) {
+        messageBox.innerHTML = '<strong>Error:</strong> ' + err.message;
+      }
+    }
+
+    initClassroom();
+  </script>
+</body>
+</html>

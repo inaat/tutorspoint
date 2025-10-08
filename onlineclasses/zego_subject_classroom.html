@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Classroom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f8fb;
+      padding: 20px;
+    }
+    #zego-container {
+      height: 80vh;
+      border: 2px dashed #0073aa;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .alert-box {
+      padding: 20px;
+      background-color: #ffdddd;
+      border-left: 6px solid #f44336;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2 class="mb-4">🔴 Live Classroom</h2>
+    <div id="zego-container" class="d-flex align-items-center justify-content-center">
+      <div>Loading classroom...</div>
+    </div>
+    <div id="error-message" class="alert-box" style="display: none;"></div>
+  </div>
+
+  <!-- Zego SDK -->
+  <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt@latest/zego-uikit-prebuilt.js"></script>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const subjectSlug = params.get('subject');
+
+    if (!subjectSlug) {
+      showError("❌ Subject not specified in URL. Use ?subject=mathematics");
+    } else {
+      fetch(`/resolve-session.php?subject=${subjectSlug}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) {
+            showError(data.message || "Invalid or expired classroom link.");
+            return;
+          }
+
+          const token = data.token;
+          const zp = ZegoUIKitPrebuilt.create(token);
+          zp.joinRoom({
+            container: document.getElementById('zego-container'),
+            scenario: {
+              mode: 'education',
+              config: {
+                role: data.role || 'student',
+                turnOnCameraWhenJoining: data.role === 'teacher',
+                turnOnMicrophoneWhenJoining: data.role === 'teacher'
+              }
+            },
+            sharedLinks: [{
+              name: "Invite Students",
+              url: window.location.href
+            }]
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          showError("🚫 Error loading classroom. Please try again later.");
+        });
+    }
+
+    function showError(msg) {
+      document.getElementById('zego-container').style.display = 'none';
+      const box = document.getElementById('error-message');
+      box.style.display = 'block';
+      box.innerHTML = msg;
+    }
+  </script>
+</body>
+</html>

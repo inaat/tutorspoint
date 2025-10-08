@@ -1,0 +1,51 @@
+.elementor-kit-8{--e-global-color-primary:#6EC1E4;--e-global-color-secondary:#54595F;--e-global-color-text:#7A7A7A;--e-global-color-accent:#61CE70;--e-global-typography-primary-font-family:"Roboto";--e-global-typography-primary-font-weight:600;--e-global-typography-secondary-font-family:"Roboto Slab";--e-global-typography-secondary-font-weight:400;--e-global-typography-text-font-family:"Roboto";--e-global-typography-text-font-weight:400;--e-global-typography-accent-font-family:"Roboto";--e-global-typography-accent-font-weight:500;}.elementor-kit-8 e-page-transition{background-color:#FFBC7D;}.elementor-section.elementor-section-boxed > .elementor-container{max-width:1140px;}.e-con{--container-max-width:1140px;}.elementor-widget:not(:last-child){margin-block-end:20px;}.elementor-element{--widgets-spacing:20px 20px;--widgets-spacing-row:20px;--widgets-spacing-column:20px;}@media(max-width:1024px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:1024px;}.e-con{--container-max-width:1024px;}}@media(max-width:767px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:767px;}.e-con{--container-max-width:767px;}}/* Start custom CSS *//* ---------- Transparent at the top ---------- */
+#site-header {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  z-index: 9999;
+  transition: background .25s ease, backdrop-filter .25s ease, box-shadow .25s ease;
+}
+
+/* Keep inner wrappers transparent (Elementor containers/sections) */
+#site-header > .elementor-container,
+#site-header > .e-con,
+#site-header .elementor-section,
+#site-header .e-con-inner {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Blurry “glass” when sticky (Elementor adds this class) ---------- */
+#site-header.elementor-sticky--effects {
+  /* smoky glass */
+  background: rgba(16, 22, 35, .45);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* Make sure Elementor doesn't inject a white fill on sticky */
+#site-header.elementor-sticky--effects > .elementor-container,
+#site-header.elementor-sticky--effects > .e-con {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* ---------- Optional: swap logos (color → white on blur) ---------- */
+/* Give your two Image widgets these classes in Advanced → CSS Classes */
+#site-header .logo--color { display: inline-block; }
+#site-header .logo--white { display: none; }
+
+#site-header.elementor-sticky--effects .logo--color { display: none; }
+#site-header.elementor-sticky--effects .logo--white { display: inline-block; }
+
+/* Optional: ensure menu / button text stays readable on glass */
+#site-header.elementor-sticky--effects .elementor-nav-menu a,
+#site-header.elementor-sticky--effects .elementor-item,
+#site-header.elementor-sticky--effects .elementor-button {
+  color: #fff !important;
+}/* End custom CSS */

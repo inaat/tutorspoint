@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom Router</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+    .header {
+      background-color: #0ABAB5;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .classroom-list {
+      list-style: none;
+      padding: 0;
+    }
+    .classroom-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+    .classroom-item button {
+      padding: 8px 12px;
+      border: none;
+      background-color: #0ABAB5;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .classroom-item button:hover {
+      background-color: #088f8a;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">🎓 Select Your Virtual Classroom</div>
+  <div class="container">
+    <h2>Available Subjects</h2>
+    <ul class="classroom-list">
+      <li class="classroom-item">
+        <span>Maths - O Level</span>
+        <button onclick="goToClassroom('maths')">Join</button>
+      </li>
+      <li class="classroom-item">
+        <span>Physics - A Level</span>
+        <button onclick="goToClassroom('physics')">Join</button>
+      </li>
+      <li class="classroom-item">
+        <span>Biology - GCSE</span>
+        <button onclick="goToClassroom('biology')">Join</button>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    function goToClassroom(subject) {
+      // Make API call to resolve session + generate token
+      fetch(`resolve-session.php?subject=${encodeURIComponent(subject)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const { room_id, token, user_id, user_name, role } = data;
+            const url = `classroom.php?room_id=${room_id}&token=${token}&user_id=${user_id}&user_name=${encodeURIComponent(user_name)}&role=${role}&subject=${subject}`;
+            window.location.href = url;
+          } else {
+            alert('❌ Error: ' + (data.message || 'Unable to load classroom'));
+          }
+        })
+        .catch(err => {
+          alert('🚫 Network error');
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>

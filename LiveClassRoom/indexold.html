@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Online Classroom</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Auth Screen -->
+        <div class="auth-screen" id="authScreen">
+            <div class="auth-card">
+                <h1><i class="fas fa-chalkboard-teacher"></i> Virtual Classroom</h1>
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="roomToken">Access Token</label>
+                    <input type="text" id="roomToken" placeholder="Enter room access token">
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Your Role</label>
+                    <select id="userRole">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <button id="joinBtn" class="primary-btn">
+                    <i class="fas fa-door-open"></i> Join Classroom
+                </button>
+                <div class="loader hidden" id="authLoader"></div>
+            </div>
+        </div>
+
+        <!-- Classroom Screen -->
+        <div class="classroom-screen hidden" id="classroomScreen">
+            <div class="top-bar">
+                <div class="class-info">
+                    <h2 id="className">Classroom</h2>
+                    <div class="participant-count">
+                        <i class="fas fa-users"></i>
+                        <span id="participantCount">0</span>
+                    </div>
+                </div>
+                <button id="leaveBtn" class="danger-btn">
+                    <i class="fas fa-sign-out-alt"></i> Leave
+                </button>
+            </div>
+
+            <div class="main-content">
+                <div class="video-container" id="videoContainer"></div>
+                
+                <div class="sidebar">
+                    <div class="sidebar-tabs">
+                        <button class="tab-btn active" data-tab="participants">
+                            <i class="fas fa-users"></i>
+                        </button>
+                        <button class="tab-btn" data-tab="chat">
+                            <i class="fas fa-comments"></i>
+                        </button>
+                        <button class="tab-btn" data-tab="whiteboard">
+                            <i class="fas fa-chalkboard"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="tab-content active" id="participantsTab">
+                        <h3>Participants</h3>
+                        <div class="participants-list" id="participantsList"></div>
+                    </div>
+                    
+                    <div class="tab-content" id="chatTab">
+                        <h3>Chat</h3>
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Type your message...">
+                            <button id="sendMsgBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="whiteboardTab">
+                        <h3>Whiteboard</h3>
+                        <div class="whiteboard-container" id="whiteboardContainer">
+                            <p>Loading whiteboard...</p>
+                        </div>
+                        <div class="whiteboard-tools">
+                            <button class="wb-tool" data-tool="pencil"><i class="fas fa-pencil-alt"></i></button>
+                            <button class="wb-tool" data-tool="eraser"><i class="fas fa-eraser"></i></button>
+                            <input type="color" id="wbColor" value="#000000">
+                            <button class="wb-tool" data-tool="clear"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-bar">
+                <button class="control-btn" id="micBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn" id="cameraBtn">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="control-btn" id="screenShareBtn">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <button class="control-btn" id="inviteBtn">
+                    <i class="fas fa-user-plus"></i> Invite
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div class="modal hidden" id="inviteModal">
+        <div class="modal-content">
+            <h3>Invite Participants</h3>
+            <p>Share this token with participants:</p>
+            <div class="token-display" id="inviteTokenDisplay"></div>
+            <p>Or share this link:</p>
+            <div class="link-display">
+                <input type="text" id="inviteLink" readonly>
+                <button id="copyLinkBtn"><i class="fas fa-copy"></i></button>
+            </div>
+            <button class="primary-btn" id="closeInviteModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Zego SDK -->
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
