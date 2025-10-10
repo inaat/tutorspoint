@@ -92,7 +92,7 @@ class Hostinger_Ai_Assistant_Mcp_Endpoints {
     }
 
     public function permission_check(): bool {
-        return is_user_logged_in();
+        return is_user_logged_in() && current_user_can( 'manage_options' );
     }
 
     protected function install_plugin( string $url ) {
@@ -135,7 +135,7 @@ class Hostinger_Ai_Assistant_Mcp_Endpoints {
             'features_adapter_enabled'   => false,
             'enable_create_tools'        => true,
             'enable_update_tools'        => true,
-            'enable_delete_tools'        => false,
+            'enable_delete_tools'        => true,
             'enable_rest_api_crud_tools' => false,
         );
 

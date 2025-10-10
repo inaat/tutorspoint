@@ -14,6 +14,10 @@ class Hostinger_Ai_Assistant_Requests_Client {
     }
 
     public function get( $endpoint, $params = array(), $headers = array(), $timeout = 120 ) {
+        if ( ! current_user_can( 'edit_pages' ) ) {
+            return new WP_Error( 403, 'Not enough privileges.' );
+        }
+
         $url          = $this->api_url . $endpoint;
         $request_args = array(
             'method'  => 'GET',
@@ -29,6 +33,9 @@ class Hostinger_Ai_Assistant_Requests_Client {
     }
 
     public function post( $endpoint, $params = array(), $headers = array(), $timeout = 120 ) {
+        if ( ! current_user_can( 'edit_pages' ) ) {
+            return new WP_Error( 403, 'Not enough privileges.' );
+        }
         $url          = $this->api_url . $endpoint;
         $request_args = array(
             'method'  => 'POST',

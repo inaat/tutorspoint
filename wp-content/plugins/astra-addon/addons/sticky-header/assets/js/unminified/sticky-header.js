@@ -236,7 +236,9 @@
 		}else{
 			if ( $('#masthead').length ) {
 				var masthead 			= $('#masthead');
-				var masthead_bottom 	= masthead.offset().top + masthead.outerHeight() + 100;
+				var masthead_bottom 	= 'none' == self.options.header_style
+					? masthead.offset().top
+					: masthead.offset().top + masthead.outerHeight() + 100;
 				var stick_upto_scroll 	= masthead_bottom || 0;
 			}
 		}

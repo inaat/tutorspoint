@@ -40,6 +40,7 @@ class ComposerStaticInit6d98b74f597e7674b4e502dab72fafa7
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\DomCrawler\\' => 29,
             'Symfony\\Component\\Clock\\' => 24,
+            'Spatie\\Backtrace\\' => 17,
         ),
         'R' => 
         array (
@@ -148,6 +149,10 @@ class ComposerStaticInit6d98b74f597e7674b4e502dab72fafa7
         'Symfony\\Component\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
+        ),
+        'Spatie\\Backtrace\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/backtrace/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (

@@ -24,6 +24,10 @@ use Hostinger\WpHelper\Utils;
  * @author     Hostinger <info@hostinger.com>
  */
 class Hostinger_Ai_Assistant_Admin {
+    public const MCP_SETTINGS_UPDATED_OPTION     = 'hostinger_mcp_settings_updated';
+    public const MCP_CHOICE_OPTION               = 'hostinger_mcp_choice';
+    public const MCP_ENABLE_DELETE_TOOLS_SETTING = 'enable_delete_tools';
+    public const WORDPRESS_MCP_SETTINGS_OPTION   = 'wordpress_mcp_settings';
 
     /**
      * The ID of this plugin.
@@ -124,10 +128,6 @@ class Hostinger_Ai_Assistant_Admin {
             false
         );
 
-        if ( ! $this->is_excluded_from_lodash_conflict() ) {
-            wp_add_inline_script( 'hostinger_chatbot', 'window.lodash = _.noConflict();', 'after' );
-        }
-
         $user = wp_get_current_user();
         wp_localize_script(
             'hostinger_chatbot',
@@ -203,6 +203,20 @@ class Hostinger_Ai_Assistant_Admin {
         include_once HOSTINGER_AI_ASSISTANT_ABSPATH . 'admin/partials/hostinger-ai-assistant-tab-view.php';
     }
 
+    public function check_and_update_mcp_settings(): void {
+        if ( get_option( self::MCP_SETTINGS_UPDATED_OPTION, false ) ) {
+            return;
+        }
+
+        $mcp_choice = get_option( self::MCP_CHOICE_OPTION, 0 );
+        if ( ! $mcp_choice ) {
+            return;
+        }
+
+        $this->update_mcp_settings();
+        update_option( self::MCP_SETTINGS_UPDATED_OPTION, true );
+    }
+
     /**
      * @return bool
      */
@@ -226,21 +240,13 @@ class Hostinger_Ai_Assistant_Admin {
         return false;
     }
 
-    private function is_excluded_from_lodash_conflict(): bool {
-        $admin_path = parse_url( admin_url(), PHP_URL_PATH );
-
-        $pages = array(
-            $admin_path . 'admin.php?page=googlesitekit',
+    private function update_mcp_settings(): void {
+        $current_settings = get_option( self::WORDPRESS_MCP_SETTINGS_OPTION, array() );
+        $updated_settings = array_merge(
+            $current_settings,
+            array( self::MCP_ENABLE_DELETE_TOOLS_SETTING => true )
         );
 
-        $utils = new Utils();
-
-        foreach ( $pages as $page ) {
-            if ( $utils->isThisPage( $page ) ) {
-                return true;
-            }
-        }
-
-        return false;
+        update_option( self::WORDPRESS_MCP_SETTINGS_OPTION, $updated_settings );
     }
 }

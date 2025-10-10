@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the Ultimate Addons for Elementor Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Addons for Elementor Pro 1.40.4\n"
+"Project-Id-Version: Ultimate Addons for Elementor Pro 1.40.5\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/ultimate-elementor\n"
-"POT-Creation-Date: 2025-09-15 07:49:32+00:00\n"
+"POT-Creation-Date: 2025-09-30 07:09:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -68,6 +68,7 @@ msgid "69"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:139
+#: modules/video-gallery/widgets/video-gallery.php:3348
 msgid "1977"
 msgstr ""
 
@@ -165,8 +166,8 @@ msgstr ""
 #: modules/table/widgets/table.php:1688
 #: modules/team-member/widgets/team-member.php:424
 #: modules/team-member/widgets/team-member.php:502
-#: modules/video/widgets/video.php:930
-#: modules/video-gallery/widgets/video-gallery.php:1496
+#: modules/video/widgets/video.php:968
+#: modules/video-gallery/widgets/video-gallery.php:1748
 #: modules/woocommerce/widgets/woo-add-to-cart.php:308
 #: modules/woocommerce/widgets/woo-add-to-cart.php:324
 #: modules/woocommerce/widgets/woo-mini-cart.php:142
@@ -267,8 +268,8 @@ msgstr ""
 #: modules/registration-form/widgets/registration-form.php:2253
 #: modules/table/widgets/table.php:1111 modules/table/widgets/table.php:1426
 #: modules/team-member/widgets/team-member.php:770
-#: modules/video/widgets/video.php:922
-#: modules/video-gallery/widgets/video-gallery.php:701
+#: modules/video/widgets/video.php:960
+#: modules/video-gallery/widgets/video-gallery.php:730
 #: modules/welcome-music/widgets/welcome-music.php:109
 #: modules/woocommerce/skins/skin-grid-default.php:785
 #: modules/woocommerce/skins/skin-grid-franko.php:696
@@ -1042,60 +1043,64 @@ msgstr ""
 msgid " - Lite"
 msgstr ""
 
-#: classes/uael-config.php:1071
-msgid "Enhance headers/footers & pages with elementor."
+#: classes/uael-config.php:1068
+msgid "Boost Your Traffic with Easy SEO Optimization!"
 msgstr ""
 
-#: classes/uael-config.php:1085
-msgid "Fast and customizable theme for your website."
+#: classes/uael-config.php:1069
+msgid ""
+"Rank higher with effortless SEO optimization. SureRank offers a simple, "
+"clutter-free interface with lightweight code, minimal setup, clear meta and "
+"schema settings, and smart content optimization that actually makes sense, "
+"helping you grow your traffic easily."
 msgstr ""
 
-#: classes/uael-config.php:1098
-msgid "Starter Templates"
+#: classes/uael-config.php:1081
+msgid "Sell Products Effortlessly with SureCart!"
 msgstr ""
 
-#: classes/uael-config.php:1099
-msgid "Launch websites with AI or ready-made templates."
+#: classes/uael-config.php:1082
+msgid ""
+"Sell your products effortlessly with a modern, flexible eCommerce system. "
+"SureCart makes it easy to set up one-click checkout, manage subscriptions, "
+"recover abandoned carts, and collect secure payments, helping you launch "
+"and grow your online store confidently."
 msgstr ""
 
-#: classes/uael-config.php:1112
-msgid "SureCart"
+#: classes/uael-config.php:1094
+msgid "Build Powerful Forms in Minutes with SureForms!"
 msgstr ""
 
-#: classes/uael-config.php:1113
-msgid "Sell your products easily on WordPress."
+#: classes/uael-config.php:1095
+msgid ""
+"Build powerful forms in minutes without complexity. SureForms lets you "
+"create contact forms, payment forms, and surveys using an AI-assisted, "
+"clean interface with conversational layouts, conditional logic, payment "
+"collection, and mobile optimization for a seamless experience."
 msgstr ""
 
-#: classes/uael-config.php:1126
-msgid "Presto Player"
+#: classes/uael-config.php:1107
+msgid "Add Engaging Videos Seamlessly with Presto Player!"
 msgstr ""
 
-#: classes/uael-config.php:1127
-msgid "Display seamless & interactive videos."
+#: classes/uael-config.php:1108
+msgid ""
+"Add engaging videos seamlessly in minutes without complexity. Presto Player "
+"lets you enhance your website with videos using branding, chapters, and "
+"call-to-actions while providing fast load times, detailed analytics, and "
+"user-friendly controls for a seamless viewing experience."
 msgstr ""
 
-#: classes/uael-config.php:1140
-msgid "SureForms"
+#: classes/uael-config.php:1120
+msgid "Automate Your Workflows Easily with Ottokit!"
 msgstr ""
 
-#: classes/uael-config.php:1141
-msgid "Create high-converting forms with ease."
-msgstr ""
-
-#: classes/uael-config.php:1154
-msgid "OttoKit (Formerly SureTriggers)"
-msgstr ""
-
-#: classes/uael-config.php:1155
-msgid "Automate WordPress tasks effortlessly."
-msgstr ""
-
-#: classes/uael-config.php:1168
-msgid "Schema – All In One Schema Rich Snippets"
-msgstr ""
-
-#: classes/uael-config.php:1169
-msgid "Boost SEO with rich results & structured data."
+#: classes/uael-config.php:1121
+msgid ""
+"Automate workflows effortlessly in minutes without complexity. Ottokit lets "
+"you connect your WordPress site with web apps to automate tasks, sync data, "
+"and run actions using a clean visual builder with scheduling, filters, "
+"conditions, and webhooks for a seamless experience."
 msgstr ""
 
 #: classes/uael-geolocation.php:213
@@ -1319,7 +1324,7 @@ msgstr ""
 
 #: classes/uael-helper.php:1543 modules/ff-styler/widgets/ff-styler.php:111
 #: modules/table/widgets/table.php:265 modules/table/widgets/table.php:666
-#: modules/video/widgets/video.php:1724
+#: modules/video/widgets/video.php:1762
 msgid "Select"
 msgstr ""
 
@@ -1366,7 +1371,7 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:1212
 #: modules/timeline/widgets/timeline.php:171
 #: modules/timeline/widgets/timeline.php:659
-#: modules/video-gallery/widgets/video-gallery.php:784
+#: modules/video-gallery/widgets/video-gallery.php:813
 #: modules/woocommerce/skins/skin-grid-default.php:786
 #: modules/woocommerce/skins/skin-grid-default.php:840
 #: modules/woocommerce/skins/skin-grid-default.php:1056
@@ -2138,8 +2143,8 @@ msgstr ""
 #: modules/ba-slider/widgets/ba-slider.php:140
 #: modules/ba-slider/widgets/ba-slider.php:221
 #: modules/headings/widgets/advanced-heading.php:359
-#: modules/infobox/widgets/infobox.php:468 modules/video/widgets/video.php:177
-#: modules/video-gallery/widgets/video-gallery.php:211
+#: modules/infobox/widgets/infobox.php:468 modules/video/widgets/video.php:178
+#: modules/video-gallery/widgets/video-gallery.php:215
 msgid "URL"
 msgstr ""
 
@@ -2353,7 +2358,7 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:1166
 #: modules/twitter/widgets/twitter.php:656
 #: modules/twitter/widgets/twitter.php:1706
-#: modules/video-gallery/widgets/video-gallery.php:1281
+#: modules/video-gallery/widgets/video-gallery.php:1310
 #: modules/woocommerce/skins/skin-grid-default.php:212
 #: modules/woocommerce/skins/skin-grid-franko.php:225
 #: modules/woocommerce/widgets/woo-add-to-cart.php:248
@@ -2447,8 +2452,8 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:919
 #: modules/timeline/widgets/timeline.php:1108
 #: modules/timeline/widgets/timeline.php:1170
-#: modules/twitter/widgets/twitter.php:660 modules/video/widgets/video.php:1342
-#: modules/video-gallery/widgets/video-gallery.php:1285
+#: modules/twitter/widgets/twitter.php:660 modules/video/widgets/video.php:1380
+#: modules/video-gallery/widgets/video-gallery.php:1314
 #: modules/woocommerce/skins/skin-grid-default.php:216
 #: modules/woocommerce/skins/skin-grid-franko.php:229
 #: modules/woocommerce/widgets/woo-add-to-cart.php:252
@@ -2555,7 +2560,7 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:1174
 #: modules/twitter/widgets/twitter.php:664
 #: modules/twitter/widgets/twitter.php:1707
-#: modules/video-gallery/widgets/video-gallery.php:1289
+#: modules/video-gallery/widgets/video-gallery.php:1318
 #: modules/woocommerce/skins/skin-grid-default.php:220
 #: modules/woocommerce/skins/skin-grid-franko.php:233
 #: modules/woocommerce/widgets/woo-add-to-cart.php:256
@@ -2719,18 +2724,18 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:583
 #: modules/timeline/widgets/timeline.php:598
 #: modules/timeline/widgets/timeline.php:1190
-#: modules/twitter/widgets/twitter.php:376 modules/video/widgets/video.php:774
-#: modules/video/widgets/video.php:835 modules/video/widgets/video.php:1387
-#: modules/video/widgets/video.php:1542 modules/video/widgets/video.php:1598
-#: modules/video/widgets/video.php:1711 modules/video/widgets/video.php:1821
-#: modules/video/widgets/video.php:1963
-#: modules/video-gallery/widgets/video-gallery.php:411
-#: modules/video-gallery/widgets/video-gallery.php:606
-#: modules/video-gallery/widgets/video-gallery.php:737
-#: modules/video-gallery/widgets/video-gallery.php:831
-#: modules/video-gallery/widgets/video-gallery.php:863
-#: modules/video-gallery/widgets/video-gallery.php:1861
-#: modules/video-gallery/widgets/video-gallery.php:1930
+#: modules/twitter/widgets/twitter.php:376 modules/video/widgets/video.php:812
+#: modules/video/widgets/video.php:873 modules/video/widgets/video.php:1425
+#: modules/video/widgets/video.php:1580 modules/video/widgets/video.php:1636
+#: modules/video/widgets/video.php:1749 modules/video/widgets/video.php:1859
+#: modules/video/widgets/video.php:2001
+#: modules/video-gallery/widgets/video-gallery.php:429
+#: modules/video-gallery/widgets/video-gallery.php:635
+#: modules/video-gallery/widgets/video-gallery.php:766
+#: modules/video-gallery/widgets/video-gallery.php:860
+#: modules/video-gallery/widgets/video-gallery.php:892
+#: modules/video-gallery/widgets/video-gallery.php:2113
+#: modules/video-gallery/widgets/video-gallery.php:2182
 #: modules/welcome-music/widgets/welcome-music.php:171
 #: modules/welcome-music/widgets/welcome-music.php:197
 #: modules/welcome-music/widgets/welcome-music.php:240
@@ -2892,18 +2897,18 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:584
 #: modules/timeline/widgets/timeline.php:599
 #: modules/timeline/widgets/timeline.php:1191
-#: modules/twitter/widgets/twitter.php:375 modules/video/widgets/video.php:773
-#: modules/video/widgets/video.php:834 modules/video/widgets/video.php:1386
-#: modules/video/widgets/video.php:1541 modules/video/widgets/video.php:1597
-#: modules/video/widgets/video.php:1710 modules/video/widgets/video.php:1820
-#: modules/video/widgets/video.php:1964
-#: modules/video-gallery/widgets/video-gallery.php:412
-#: modules/video-gallery/widgets/video-gallery.php:607
-#: modules/video-gallery/widgets/video-gallery.php:736
-#: modules/video-gallery/widgets/video-gallery.php:830
-#: modules/video-gallery/widgets/video-gallery.php:864
-#: modules/video-gallery/widgets/video-gallery.php:1860
-#: modules/video-gallery/widgets/video-gallery.php:1929
+#: modules/twitter/widgets/twitter.php:375 modules/video/widgets/video.php:811
+#: modules/video/widgets/video.php:872 modules/video/widgets/video.php:1424
+#: modules/video/widgets/video.php:1579 modules/video/widgets/video.php:1635
+#: modules/video/widgets/video.php:1748 modules/video/widgets/video.php:1858
+#: modules/video/widgets/video.php:2002
+#: modules/video-gallery/widgets/video-gallery.php:430
+#: modules/video-gallery/widgets/video-gallery.php:636
+#: modules/video-gallery/widgets/video-gallery.php:765
+#: modules/video-gallery/widgets/video-gallery.php:859
+#: modules/video-gallery/widgets/video-gallery.php:893
+#: modules/video-gallery/widgets/video-gallery.php:2112
+#: modules/video-gallery/widgets/video-gallery.php:2181
 #: modules/welcome-music/widgets/welcome-music.php:172
 #: modules/welcome-music/widgets/welcome-music.php:198
 #: modules/welcome-music/widgets/welcome-music.php:241
@@ -2928,8 +2933,8 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1125
 #: modules/modal-popup/widgets/modal-popup.php:214
 #: modules/offcanvas/widgets/offcanvas.php:1830
-#: modules/posts/skins/skin-base.php:427 modules/video/widgets/video.php:873
-#: modules/video-gallery/widgets/video-gallery.php:1825
+#: modules/posts/skins/skin-base.php:427 modules/video/widgets/video.php:911
+#: modules/video-gallery/widgets/video-gallery.php:2077
 #: modules/woocommerce/skins/skin-grid-base.php:148
 msgid "Overlay Color"
 msgstr ""
@@ -3121,10 +3126,10 @@ msgstr ""
 #: modules/twitter/widgets/twitter.php:1096
 #: modules/twitter/widgets/twitter.php:1165
 #: modules/twitter/widgets/twitter.php:1229
-#: modules/video/widgets/video.php:1056 modules/video/widgets/video.php:1130
-#: modules/video/widgets/video.php:1626
-#: modules/video-gallery/widgets/video-gallery.php:1635
-#: modules/video-gallery/widgets/video-gallery.php:1712
+#: modules/video/widgets/video.php:1094 modules/video/widgets/video.php:1168
+#: modules/video/widgets/video.php:1664
+#: modules/video-gallery/widgets/video-gallery.php:1887
+#: modules/video-gallery/widgets/video-gallery.php:1964
 #: modules/welcome-music/widgets/welcome-music.php:279
 #: modules/woocommerce/skins/skin-grid-base.php:110
 #: modules/woocommerce/skins/skin-grid-base.php:221
@@ -3294,10 +3299,10 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:1675
 #: modules/timeline/widgets/timeline.php:1767
 #: modules/twitter/widgets/twitter.php:1514
-#: modules/video/widgets/video.php:1215 modules/video/widgets/video.php:1285
-#: modules/video/widgets/video.php:1492 modules/video/widgets/video.php:1567
-#: modules/video/widgets/video.php:1641 modules/video/widgets/video.php:1849
-#: modules/video-gallery/widgets/video-gallery.php:1393
+#: modules/video/widgets/video.php:1253 modules/video/widgets/video.php:1323
+#: modules/video/widgets/video.php:1530 modules/video/widgets/video.php:1605
+#: modules/video/widgets/video.php:1679 modules/video/widgets/video.php:1887
+#: modules/video-gallery/widgets/video-gallery.php:1422
 #: modules/woocommerce/skins/skin-grid-base.php:124
 #: modules/woocommerce/skins/skin-grid-base.php:160
 #: modules/woocommerce/skins/skin-grid-default.php:636
@@ -3419,8 +3424,8 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:1616
 #: modules/twitter/widgets/twitter.php:567
 #: modules/twitter/widgets/twitter.php:1679
-#: modules/video/widgets/video.php:1671 modules/video/widgets/video.php:1880
-#: modules/video-gallery/widgets/video-gallery.php:1321
+#: modules/video/widgets/video.php:1709 modules/video/widgets/video.php:1918
+#: modules/video-gallery/widgets/video-gallery.php:1350
 #: modules/woocommerce/skins/skin-grid-base.php:172
 #: modules/woocommerce/skins/skin-grid-default.php:596
 #: modules/woocommerce/skins/skin-grid-default.php:904
@@ -3475,7 +3480,7 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:714
 #: modules/team-member/widgets/team-member.php:748
 #: modules/timeline/widgets/timeline.php:1205
-#: modules/video/widgets/video.php:1343
+#: modules/video/widgets/video.php:1381
 #: modules/woocommerce/widgets/woo-mini-cart.php:269
 msgid "Top"
 msgstr ""
@@ -3539,8 +3544,8 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:674
 #: modules/timeline/widgets/timeline.php:706
 #: modules/twitter/widgets/twitter.php:2090
-#: modules/video/widgets/video.php:2038
-#: modules/video-gallery/widgets/video-gallery.php:984
+#: modules/video/widgets/video.php:2076
+#: modules/video-gallery/widgets/video-gallery.php:1013
 #: modules/welcome-music/widgets/welcome-music.php:369
 #: modules/woocommerce/widgets/woo-add-to-cart.php:961
 #: modules/woocommerce/widgets/woo-categories.php:1223
@@ -3568,8 +3573,8 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:3484
 #: modules/table/widgets/table.php:2049
 #: modules/timeline/widgets/timeline.php:725
-#: modules/video/widgets/video.php:2057
-#: modules/video-gallery/widgets/video-gallery.php:1003
+#: modules/video/widgets/video.php:2095
+#: modules/video-gallery/widgets/video-gallery.php:1032
 #: modules/woocommerce/widgets/woo-products.php:1386
 #. translators: %1$s doc link
 msgid "%1$s Getting started video » %2$s"
@@ -3607,8 +3612,8 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:683
 #: modules/timeline/widgets/timeline.php:715
 #: modules/twitter/widgets/twitter.php:2099
-#: modules/video/widgets/video.php:2047
-#: modules/video-gallery/widgets/video-gallery.php:993
+#: modules/video/widgets/video.php:2085
+#: modules/video-gallery/widgets/video-gallery.php:1022
 #: modules/welcome-music/widgets/welcome-music.php:378
 #: modules/woocommerce/widgets/woo-add-to-cart.php:970
 #: modules/woocommerce/widgets/woo-categories.php:1232
@@ -3779,8 +3784,8 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:140
 #: modules/team-member/widgets/team-member.php:131
 #: modules/timeline/widgets/timeline.php:160
-#: modules/video-gallery/widgets/video-gallery.php:159
-#: modules/video-gallery/widgets/video-gallery.php:629
+#: modules/video-gallery/widgets/video-gallery.php:162
+#: modules/video-gallery/widgets/video-gallery.php:658
 #: modules/woocommerce/widgets/woo-categories.php:122
 #: modules/woocommerce/widgets/woo-products.php:148
 #: modules/wpf-styler/widgets/wpf-styler.php:157
@@ -4029,9 +4034,9 @@ msgstr ""
 #: modules/twitter/widgets/twitter.php:1973
 #: modules/twitter/widgets/twitter.php:2021
 #: modules/twitter/widgets/twitter.php:2041
-#: modules/twitter/widgets/twitter.php:2061 modules/video/widgets/video.php:485
-#: modules/video/widgets/video.php:569 modules/video/widgets/video.php:583
-#: modules/video/widgets/video.php:597 modules/video/widgets/video.php:736
+#: modules/twitter/widgets/twitter.php:2061 modules/video/widgets/video.php:523
+#: modules/video/widgets/video.php:607 modules/video/widgets/video.php:621
+#: modules/video/widgets/video.php:635 modules/video/widgets/video.php:774
 #: modules/woocommerce/skins/skin-grid-default.php:95
 #: modules/woocommerce/skins/skin-grid-default.php:107
 #: modules/woocommerce/skins/skin-grid-default.php:119
@@ -4118,9 +4123,9 @@ msgstr ""
 #: modules/twitter/widgets/twitter.php:1974
 #: modules/twitter/widgets/twitter.php:2022
 #: modules/twitter/widgets/twitter.php:2042
-#: modules/twitter/widgets/twitter.php:2062 modules/video/widgets/video.php:484
-#: modules/video/widgets/video.php:568 modules/video/widgets/video.php:582
-#: modules/video/widgets/video.php:596 modules/video/widgets/video.php:735
+#: modules/twitter/widgets/twitter.php:2062 modules/video/widgets/video.php:522
+#: modules/video/widgets/video.php:606 modules/video/widgets/video.php:620
+#: modules/video/widgets/video.php:634 modules/video/widgets/video.php:773
 #: modules/woocommerce/skins/skin-grid-default.php:96
 #: modules/woocommerce/skins/skin-grid-default.php:108
 #: modules/woocommerce/skins/skin-grid-default.php:120
@@ -4281,7 +4286,7 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:2016
 #: modules/timeline/widgets/timeline.php:2064
 #: modules/timeline/widgets/timeline.php:2099
-#: modules/video/widgets/video.php:1553
+#: modules/video/widgets/video.php:1591
 #: modules/woocommerce/widgets/woo-checkout.php:1471
 #: modules/woocommerce/widgets/woo-checkout.php:1571
 msgid "Icon Color"
@@ -4371,8 +4376,8 @@ msgstr ""
 #: modules/retina-image/widgets/retina-image.php:555
 #: modules/table-of-contents/widgets/table-of-contents.php:872
 #: modules/table-of-contents/widgets/table-of-contents.php:917
-#: modules/video/widgets/video.php:1833
-#: modules/video-gallery/widgets/video-gallery.php:1379
+#: modules/video/widgets/video.php:1871
+#: modules/video-gallery/widgets/video-gallery.php:1408
 #: modules/woocommerce/skins/skin-grid-default.php:620
 #: modules/woocommerce/skins/skin-grid-franko.php:600
 #: modules/woocommerce/widgets/woo-add-to-cart.php:434
@@ -4440,8 +4445,8 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:1407
 #: modules/timeline/widgets/timeline.php:1241
 #: modules/twitter/widgets/twitter.php:1268
-#: modules/video/widgets/video.php:1918
-#: modules/video-gallery/widgets/video-gallery.php:1096
+#: modules/video/widgets/video.php:1956
+#: modules/video-gallery/widgets/video-gallery.php:1125
 #: modules/woocommerce/skins/skin-grid-default.php:299
 #: modules/woocommerce/skins/skin-grid-default.php:378
 #: modules/woocommerce/skins/skin-grid-default.php:426
@@ -4470,7 +4475,7 @@ msgstr ""
 #: modules/registration-form/widgets/registration-form.php:1453
 #: modules/social-share/widgets/social-share.php:568
 #: modules/twitter/widgets/twitter.php:1284
-#: modules/video-gallery/widgets/video-gallery.php:1104
+#: modules/video-gallery/widgets/video-gallery.php:1133
 #: modules/woocommerce/widgets/woo-categories.php:790
 #: modules/woocommerce/widgets/woo-products.php:771
 msgid "Columns Gap"
@@ -4485,7 +4490,7 @@ msgstr ""
 #: modules/registration-form/widgets/registration-form.php:1474
 #: modules/social-share/widgets/social-share.php:619
 #: modules/twitter/widgets/twitter.php:1309
-#: modules/video-gallery/widgets/video-gallery.php:1127
+#: modules/video-gallery/widgets/video-gallery.php:1156
 #: modules/woocommerce/widgets/woo-categories.php:812
 #: modules/woocommerce/widgets/woo-products.php:792
 msgid "Rows Gap"
@@ -4576,8 +4581,8 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:781
 #: modules/twitter/widgets/twitter.php:623
 #: modules/twitter/widgets/twitter.php:1550
-#: modules/twitter/widgets/twitter.php:1627 modules/video/widgets/video.php:884
-#: modules/video-gallery/widgets/video-gallery.php:2060
+#: modules/twitter/widgets/twitter.php:1627 modules/video/widgets/video.php:922
+#: modules/video-gallery/widgets/video-gallery.php:2312
 #: modules/woocommerce/widgets/woo-add-to-cart.php:472
 #: modules/woocommerce/widgets/woo-add-to-cart.php:671
 #: modules/woocommerce/widgets/woo-add-to-cart.php:937
@@ -4600,8 +4605,8 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1458
 #: modules/posts/skins/skin-base.php:559 modules/posts/skins/skin-base.php:3589
 #: modules/twitter/widgets/twitter.php:1842
-#: modules/video-gallery/widgets/video-gallery.php:898
-#: modules/video-gallery/widgets/video-gallery.php:1977
+#: modules/video-gallery/widgets/video-gallery.php:927
+#: modules/video-gallery/widgets/video-gallery.php:2229
 #: modules/woocommerce/widgets/woo-categories.php:269
 #: modules/woocommerce/widgets/woo-categories.php:456
 #: modules/woocommerce/widgets/woo-products.php:614
@@ -4617,8 +4622,8 @@ msgstr ""
 #: modules/posts/skins/skin-base.php:564 modules/posts/skins/skin-base.php:3601
 #: modules/twitter/widgets/twitter.php:702
 #: modules/twitter/widgets/twitter.php:1847
-#: modules/video-gallery/widgets/video-gallery.php:903
-#: modules/video-gallery/widgets/video-gallery.php:1989
+#: modules/video-gallery/widgets/video-gallery.php:932
+#: modules/video-gallery/widgets/video-gallery.php:2241
 #: modules/woocommerce/widgets/woo-categories.php:274
 #: modules/woocommerce/widgets/woo-categories.php:468
 #: modules/woocommerce/widgets/woo-products.php:619
@@ -4654,7 +4659,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1501
 #: modules/posts/skins/skin-base.php:3630
 #: modules/twitter/widgets/twitter.php:733
-#: modules/video-gallery/widgets/video-gallery.php:2001
+#: modules/video-gallery/widgets/video-gallery.php:2253
 msgid "Arrows Size"
 msgstr ""
 
@@ -4662,7 +4667,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1522
 #: modules/posts/skins/skin-base.php:3660
 #: modules/twitter/widgets/twitter.php:754
-#: modules/video-gallery/widgets/video-gallery.php:2021
+#: modules/video-gallery/widgets/video-gallery.php:2273
 msgid "Arrows Color"
 msgstr ""
 
@@ -4673,8 +4678,8 @@ msgstr ""
 #: modules/posts/skins/skin-base.php:565 modules/posts/skins/skin-base.php:3776
 #: modules/twitter/widgets/twitter.php:769
 #: modules/twitter/widgets/twitter.php:1848
-#: modules/video-gallery/widgets/video-gallery.php:904
-#: modules/video-gallery/widgets/video-gallery.php:2082
+#: modules/video-gallery/widgets/video-gallery.php:933
+#: modules/video-gallery/widgets/video-gallery.php:2334
 #: modules/woocommerce/widgets/woo-categories.php:275
 #: modules/woocommerce/widgets/woo-categories.php:623
 #: modules/woocommerce/widgets/woo-products.php:620
@@ -4686,7 +4691,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1550
 #: modules/posts/skins/skin-base.php:3788
 #: modules/twitter/widgets/twitter.php:782
-#: modules/video-gallery/widgets/video-gallery.php:2094
+#: modules/video-gallery/widgets/video-gallery.php:2346
 msgid "Dots Size"
 msgstr ""
 
@@ -4694,7 +4699,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:1571
 #: modules/posts/skins/skin-base.php:3808
 #: modules/twitter/widgets/twitter.php:803
-#: modules/video-gallery/widgets/video-gallery.php:2114
+#: modules/video-gallery/widgets/video-gallery.php:2366
 msgid "Dots Color"
 msgstr ""
 
@@ -4836,12 +4841,13 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:1315
 #: modules/timeline/widgets/timeline.php:629
 #: modules/twitter/widgets/twitter.php:1849
-#: modules/video/widgets/video.php:1017 modules/video/widgets/video.php:1184
-#: modules/video/widgets/video.php:1249 modules/video/widgets/video.php:1901
-#: modules/video-gallery/widgets/video-gallery.php:905
-#: modules/video-gallery/widgets/video-gallery.php:1239
-#: modules/video-gallery/widgets/video-gallery.php:1590
-#: modules/video-gallery/widgets/video-gallery.php:1769
+#: modules/video/widgets/video.php:1055 modules/video/widgets/video.php:1222
+#: modules/video/widgets/video.php:1287 modules/video/widgets/video.php:1939
+#: modules/video-gallery/widgets/video-gallery.php:934
+#: modules/video-gallery/widgets/video-gallery.php:1268
+#: modules/video-gallery/widgets/video-gallery.php:1514
+#: modules/video-gallery/widgets/video-gallery.php:1842
+#: modules/video-gallery/widgets/video-gallery.php:2021
 #: modules/woocommerce/skins/skin-grid-base.php:64
 #: modules/woocommerce/skins/skin-grid-franko.php:89
 #: modules/woocommerce/widgets/woo-categories.php:276
@@ -4987,7 +4993,7 @@ msgstr ""
 #: modules/table/widgets/table.php:1542
 #: modules/timeline/widgets/timeline.php:1586
 #: modules/twitter/widgets/twitter.php:599
-#: modules/video-gallery/widgets/video-gallery.php:1405
+#: modules/video-gallery/widgets/video-gallery.php:1434
 #: modules/woocommerce/skins/skin-grid-base.php:185
 #: modules/woocommerce/widgets/woo-checkout.php:569
 #: modules/woocommerce/widgets/woo-checkout.php:980
@@ -5245,7 +5251,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:2378
 #: modules/timeline/widgets/timeline.php:1091
 #: modules/twitter/widgets/twitter.php:252
-#: modules/video-gallery/widgets/video-gallery.php:636
+#: modules/video-gallery/widgets/video-gallery.php:665
 #: modules/woocommerce/widgets/woo-categories.php:129
 #: modules/woocommerce/widgets/woo-categories.php:782
 #: modules/woocommerce/widgets/woo-checkout.php:123
@@ -5265,7 +5271,7 @@ msgstr ""
 #: modules/instagram-feed/widgets/instagram-feed.php:172
 #: modules/posts/skins/skin-base.php:155
 #: modules/twitter/widgets/twitter.php:263
-#: modules/video-gallery/widgets/video-gallery.php:639
+#: modules/video-gallery/widgets/video-gallery.php:668
 #: modules/woocommerce/widgets/woo-categories.php:133
 #: modules/woocommerce/widgets/woo-products.php:160
 msgid "Grid"
@@ -5278,8 +5284,8 @@ msgstr ""
 #: modules/twitter/widgets/twitter.php:266
 #: modules/twitter/widgets/twitter.php:690
 #: modules/twitter/widgets/twitter.php:1736
-#: modules/video-gallery/widgets/video-gallery.php:640
-#: modules/video-gallery/widgets/video-gallery.php:887
+#: modules/video-gallery/widgets/video-gallery.php:669
+#: modules/video-gallery/widgets/video-gallery.php:916
 #: modules/woocommerce/widgets/woo-categories.php:134
 #: modules/woocommerce/widgets/woo-products.php:161
 msgid "Carousel"
@@ -5320,7 +5326,7 @@ msgstr ""
 #: modules/posts/skins/skin-base.php:137
 #: modules/social-share/widgets/social-share.php:382
 #: modules/twitter/widgets/twitter.php:289
-#: modules/video-gallery/widgets/video-gallery.php:649
+#: modules/video-gallery/widgets/video-gallery.php:678
 #: modules/woocommerce/widgets/woo-categories.php:164
 #: modules/woocommerce/widgets/woo-products.php:554
 msgid "Columns"
@@ -5343,7 +5349,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:543
 #: modules/posts/skins/skin-base.php:563
 #: modules/twitter/widgets/twitter.php:1846
-#: modules/video-gallery/widgets/video-gallery.php:902
+#: modules/video-gallery/widgets/video-gallery.php:931
 #: modules/woocommerce/widgets/woo-categories.php:273
 #: modules/woocommerce/widgets/woo-products.php:618
 msgid "Arrows and Dots"
@@ -5353,7 +5359,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:514
 #: modules/posts/skins/skin-base.php:609
 #: modules/twitter/widgets/twitter.php:1817
-#: modules/video-gallery/widgets/video-gallery.php:951
+#: modules/video-gallery/widgets/video-gallery.php:980
 #: modules/woocommerce/widgets/woo-categories.php:372
 #: modules/woocommerce/widgets/woo-products.php:723
 msgid "Infinite Loop"
@@ -5364,10 +5370,10 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:474
 #: modules/modal-popup/widgets/modal-popup.php:511
 #: modules/posts/skins/skin-base.php:584
-#: modules/twitter/widgets/twitter.php:1777 modules/video/widgets/video.php:455
-#: modules/video/widgets/video.php:533 modules/video/widgets/video.php:629
-#: modules/video/widgets/video.php:675 modules/video/widgets/video.php:711
-#: modules/video-gallery/widgets/video-gallery.php:913
+#: modules/twitter/widgets/twitter.php:1777 modules/video/widgets/video.php:493
+#: modules/video/widgets/video.php:571 modules/video/widgets/video.php:667
+#: modules/video/widgets/video.php:713 modules/video/widgets/video.php:749
+#: modules/video-gallery/widgets/video-gallery.php:942
 #: modules/welcome-music/widgets/welcome-music.php:169
 #: modules/woocommerce/widgets/woo-categories.php:330
 #: modules/woocommerce/widgets/woo-products.php:679
@@ -5379,7 +5385,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:500
 #: modules/posts/skins/skin-base.php:574
 #: modules/twitter/widgets/twitter.php:1803
-#: modules/video-gallery/widgets/video-gallery.php:938
+#: modules/video-gallery/widgets/video-gallery.php:967
 #: modules/woocommerce/widgets/woo-categories.php:358
 #: modules/woocommerce/widgets/woo-products.php:708
 msgid "Pause on Hover"
@@ -5387,7 +5393,7 @@ msgstr ""
 
 #: modules/business-reviews/widgets/business-reviews.php:613
 #: modules/posts/skins/skin-base.php:594
-#: modules/video-gallery/widgets/video-gallery.php:923
+#: modules/video-gallery/widgets/video-gallery.php:952
 #: modules/woocommerce/widgets/woo-categories.php:343
 #: modules/woocommerce/widgets/woo-products.php:692
 msgid "Autoplay Speed"
@@ -5397,7 +5403,7 @@ msgstr ""
 #: modules/image-gallery/widgets/image-gallery.php:527
 #: modules/posts/skins/skin-base.php:619
 #: modules/twitter/widgets/twitter.php:1830
-#: modules/video-gallery/widgets/video-gallery.php:961
+#: modules/video-gallery/widgets/video-gallery.php:990
 #: modules/woocommerce/widgets/woo-categories.php:385
 #: modules/woocommerce/widgets/woo-products.php:737
 msgid "Transition Speed (ms)"
@@ -5516,7 +5522,7 @@ msgstr ""
 #: modules/social-share/widgets/social-share.php:1377
 #: modules/table/widgets/table.php:237 modules/table/widgets/table.php:618
 #: modules/timeline/widgets/timeline.php:628
-#: modules/video/widgets/video.php:1609
+#: modules/video/widgets/video.php:1647
 #: modules/woocommerce/widgets/woo-add-to-cart.php:230
 #: modules/woocommerce/widgets/woo-mini-cart.php:143
 #: modules/woocommerce/widgets/woo-mini-cart.php:166
@@ -5550,9 +5556,9 @@ msgstr ""
 #: modules/table/widgets/table.php:633
 #: modules/team-member/widgets/team-member.php:569
 #: modules/timeline/widgets/timeline.php:862
-#: modules/video/widgets/video.php:211 modules/video/widgets/video.php:244
-#: modules/video/widgets/video.php:326
-#: modules/video-gallery/widgets/video-gallery.php:303
+#: modules/video/widgets/video.php:213 modules/video/widgets/video.php:246
+#: modules/video/widgets/video.php:328 modules/video/widgets/video.php:361
+#: modules/video-gallery/widgets/video-gallery.php:321
 #: modules/welcome-music/widgets/welcome-music.php:110
 #: modules/welcome-music/widgets/welcome-music.php:139
 msgid "Link"
@@ -5673,9 +5679,10 @@ msgstr ""
 #: modules/social-share/widgets/social-share.php:840
 #: modules/table-of-contents/widgets/table-of-contents.php:865
 #: modules/team-member/widgets/team-member.php:1224
-#: modules/video/widgets/video.php:1034
-#: modules/video-gallery/widgets/video-gallery.php:1372
-#: modules/video-gallery/widgets/video-gallery.php:1613
+#: modules/video/widgets/video.php:1072
+#: modules/video-gallery/widgets/video-gallery.php:1401
+#: modules/video-gallery/widgets/video-gallery.php:1865
+#: modules/video-gallery/widgets/video-gallery.php:3347
 #: modules/woocommerce/skins/skin-grid-default.php:610
 #: modules/woocommerce/skins/skin-grid-franko.php:593
 #: modules/woocommerce/widgets/woo-add-to-cart.php:427
@@ -5740,10 +5747,10 @@ msgstr ""
 #: modules/table/widgets/table.php:1232 modules/table/widgets/table.php:1601
 #: modules/table-of-contents/widgets/table-of-contents.php:888
 #: modules/team-member/widgets/team-member.php:1266
-#: modules/video/widgets/video.php:1108
-#: modules/video-gallery/widgets/video-gallery.php:1415
-#: modules/video-gallery/widgets/video-gallery.php:1690
-#: modules/video-gallery/widgets/video-gallery.php:1871
+#: modules/video/widgets/video.php:1146
+#: modules/video-gallery/widgets/video-gallery.php:1444
+#: modules/video-gallery/widgets/video-gallery.php:1942
+#: modules/video-gallery/widgets/video-gallery.php:2123
 #: modules/woocommerce/skins/skin-grid-default.php:657
 #: modules/woocommerce/skins/skin-grid-franko.php:625
 #: modules/woocommerce/widgets/woo-add-to-cart.php:526
@@ -5783,7 +5790,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:3262
 #: modules/team-member/widgets/team-member.php:866
 #: modules/team-member/widgets/team-member.php:1370
-#: modules/video-gallery/widgets/video-gallery.php:1448
+#: modules/video-gallery/widgets/video-gallery.php:1477
 #: modules/woocommerce/widgets/woo-add-to-cart.php:561
 #: modules/woocommerce/widgets/woo-products.php:1075
 #: modules/wpf-styler/widgets/wpf-styler.php:960
@@ -5810,7 +5817,7 @@ msgstr ""
 #: modules/buttons/widgets/buttons.php:506
 #: modules/content-toggle/widgets/content-toggle.php:662
 #: modules/price-list/widgets/price-list.php:438
-#: modules/video/widgets/video.php:1896
+#: modules/video/widgets/video.php:1934
 msgid "Stack on"
 msgstr ""
 
@@ -5820,13 +5827,13 @@ msgstr ""
 
 #: modules/buttons/widgets/buttons.php:512
 #: modules/sticky-header/sticky-header.php:90
-#: modules/video/widgets/video.php:1512 modules/video/widgets/video.php:1902
+#: modules/video/widgets/video.php:1550 modules/video/widgets/video.php:1940
 msgid "Desktop"
 msgstr ""
 
 #: modules/buttons/widgets/buttons.php:513
 #: modules/sticky-header/sticky-header.php:91
-#: modules/video/widgets/video.php:1513 modules/video/widgets/video.php:1903
+#: modules/video/widgets/video.php:1551 modules/video/widgets/video.php:1941
 msgid "Tablet"
 msgstr ""
 
@@ -5834,7 +5841,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:461
 #: modules/price-table/widgets/price-table.php:909
 #: modules/sticky-header/sticky-header.php:92
-#: modules/video/widgets/video.php:1514 modules/video/widgets/video.php:1904
+#: modules/video/widgets/video.php:1552 modules/video/widgets/video.php:1942
 msgid "Mobile"
 msgstr ""
 
@@ -5867,8 +5874,8 @@ msgstr ""
 #: modules/registration-form/widgets/registration-form.php:1790
 #: modules/social-share/widgets/social-share.php:1397
 #: modules/table-of-contents/widgets/table-of-contents.php:410
-#: modules/twitter/widgets/twitter.php:890 modules/video/widgets/video.php:987
-#: modules/video-gallery/widgets/video-gallery.php:1553
+#: modules/twitter/widgets/twitter.php:890 modules/video/widgets/video.php:1025
+#: modules/video-gallery/widgets/video-gallery.php:1805
 #: modules/welcome-music/widgets/welcome-music.php:293
 #: modules/woocommerce/skins/skin-grid-base.php:204
 #: modules/woocommerce/skins/skin-grid-default.php:852
@@ -5914,10 +5921,10 @@ msgstr ""
 #: modules/social-share/widgets/social-share.php:1077
 #: modules/team-member/widgets/team-member.php:884
 #: modules/team-member/widgets/team-member.php:1388
-#: modules/video/widgets/video.php:1013 modules/video/widgets/video.php:1180
-#: modules/video/widgets/video.php:1245
-#: modules/video-gallery/widgets/video-gallery.php:1586
-#: modules/video-gallery/widgets/video-gallery.php:1765
+#: modules/video/widgets/video.php:1051 modules/video/widgets/video.php:1218
+#: modules/video/widgets/video.php:1283
+#: modules/video-gallery/widgets/video-gallery.php:1838
+#: modules/video-gallery/widgets/video-gallery.php:2017
 #: modules/woocommerce/widgets/woo-add-to-cart.php:578
 msgid "Hover Animation"
 msgstr ""
@@ -5957,6 +5964,7 @@ msgstr ""
 #: modules/gf-styler/widgets/gf-styler.php:341
 #: modules/nav-menu/widgets/nav-menu.php:1143
 #: modules/registration-form/widgets/registration-form.php:1622
+#: modules/video-gallery/widgets/video-gallery.php:1515
 #: modules/wpf-styler/widgets/wpf-styler.php:271
 msgid "Underline"
 msgstr ""
@@ -6530,7 +6538,7 @@ msgstr ""
 #: modules/team-member/widgets/team-member.php:255
 #: modules/team-member/widgets/team-member.php:1072
 #: modules/timeline/widgets/timeline.php:850
-#: modules/video-gallery/widgets/video-gallery.php:477
+#: modules/video-gallery/widgets/video-gallery.php:495
 #: modules/woocommerce/widgets/woo-categories.php:747
 #: modules/woocommerce/widgets/woo-checkout.php:1976
 msgid "Description"
@@ -6634,7 +6642,7 @@ msgstr ""
 #: modules/posts/skins/skin-base.php:1312
 #: modules/posts/skins/skin-base.php:1363
 #: modules/team-member/widgets/team-member.php:970
-#: modules/video-gallery/widgets/video-gallery.php:1175
+#: modules/video-gallery/widgets/video-gallery.php:1204
 #: modules/woocommerce/widgets/woo-categories.php:854
 #: modules/wpf-styler/widgets/wpf-styler.php:1353
 msgid "HTML Tag"
@@ -6670,13 +6678,13 @@ msgstr ""
 
 #: modules/content-toggle/widgets/content-toggle.php:668
 #: modules/price-list/widgets/price-list.php:444
-#: modules/video-gallery/widgets/video-gallery.php:1240
+#: modules/video-gallery/widgets/video-gallery.php:1269
 msgid "Tablet (1023px >)"
 msgstr ""
 
 #: modules/content-toggle/widgets/content-toggle.php:669
 #: modules/price-list/widgets/price-list.php:445
-#: modules/video-gallery/widgets/video-gallery.php:1241
+#: modules/video-gallery/widgets/video-gallery.php:1270
 msgid "Mobile (767px >)"
 msgstr ""
 
@@ -6729,7 +6737,7 @@ msgstr ""
 #: modules/timeline/widgets/timeline.php:819
 #: modules/twitter/widgets/twitter.php:400
 #: modules/twitter/widgets/twitter.php:956
-#: modules/video-gallery/widgets/video-gallery.php:1817
+#: modules/video-gallery/widgets/video-gallery.php:2069
 #: modules/woocommerce/skins/skin-grid-default.php:85
 #: modules/woocommerce/skins/skin-grid-default.php:200
 #: modules/woocommerce/skins/skin-grid-franko.php:111
@@ -7028,7 +7036,7 @@ msgstr ""
 #: modules/party-propz-extension/module.php:204
 #: modules/party-propz-extension/module.php:648
 #: modules/registration-form/widgets/registration-form.php:867
-#: modules/video/widgets/video.php:1539 modules/video/widgets/video.php:1594
+#: modules/video/widgets/video.php:1577 modules/video/widgets/video.php:1632
 #: modules/woocommerce/widgets/woo-checkout.php:399
 msgid "Enable"
 msgstr ""
@@ -7096,7 +7104,7 @@ msgstr ""
 #: modules/posts/skins/skin-news.php:1220 modules/table/widgets/table.php:515
 #: modules/team-member/widgets/team-member.php:725
 #: modules/timeline/widgets/timeline.php:1125
-#: modules/video-gallery/widgets/video-gallery.php:859
+#: modules/video-gallery/widgets/video-gallery.php:888
 #. translators: 1: <b> 2: </b>
 msgid "Responsive Support"
 msgstr ""
@@ -8370,7 +8378,7 @@ msgstr ""
 
 #: modules/display-conditions/conditions/time-span.php:74
 #: modules/modal-popup/widgets/modal-popup.php:572
-#: modules/video/widgets/video.php:385
+#: modules/video/widgets/video.php:420
 msgid "Start Time"
 msgstr ""
 
@@ -8507,8 +8515,8 @@ msgstr ""
 #: modules/table-of-contents/widgets/table-of-contents.php:145
 #: modules/table-of-contents/widgets/table-of-contents.php:617
 #: modules/timeline/widgets/timeline.php:458
-#: modules/video-gallery/widgets/video-gallery.php:468
-#: modules/video-gallery/widgets/video-gallery.php:1162
+#: modules/video-gallery/widgets/video-gallery.php:486
+#: modules/video-gallery/widgets/video-gallery.php:1191
 #: modules/woocommerce/skins/skin-grid-default.php:117
 #: modules/woocommerce/skins/skin-grid-default.php:318
 #: modules/woocommerce/skins/skin-grid-franko.php:131
@@ -8647,7 +8655,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1628
 #: modules/table-of-contents/widgets/table-of-contents.php:186
 #: modules/timeline/widgets/timeline.php:1375
-#: modules/video-gallery/widgets/video-gallery.php:1178
+#: modules/video-gallery/widgets/video-gallery.php:1207
 #: modules/woocommerce/widgets/woo-categories.php:857
 #: modules/wpf-styler/widgets/wpf-styler.php:1356
 msgid "H1"
@@ -8670,7 +8678,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1629
 #: modules/table-of-contents/widgets/table-of-contents.php:187
 #: modules/timeline/widgets/timeline.php:1376
-#: modules/video-gallery/widgets/video-gallery.php:1179
+#: modules/video-gallery/widgets/video-gallery.php:1208
 #: modules/woocommerce/widgets/woo-categories.php:858
 #: modules/wpf-styler/widgets/wpf-styler.php:1357
 msgid "H2"
@@ -8693,7 +8701,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1630
 #: modules/table-of-contents/widgets/table-of-contents.php:188
 #: modules/timeline/widgets/timeline.php:1377
-#: modules/video-gallery/widgets/video-gallery.php:1180
+#: modules/video-gallery/widgets/video-gallery.php:1209
 #: modules/woocommerce/widgets/woo-categories.php:859
 #: modules/wpf-styler/widgets/wpf-styler.php:1358
 msgid "H3"
@@ -8716,7 +8724,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1631
 #: modules/table-of-contents/widgets/table-of-contents.php:189
 #: modules/timeline/widgets/timeline.php:1378
-#: modules/video-gallery/widgets/video-gallery.php:1181
+#: modules/video-gallery/widgets/video-gallery.php:1210
 #: modules/woocommerce/widgets/woo-categories.php:860
 #: modules/wpf-styler/widgets/wpf-styler.php:1359
 msgid "H4"
@@ -8739,7 +8747,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1632
 #: modules/table-of-contents/widgets/table-of-contents.php:190
 #: modules/timeline/widgets/timeline.php:1379
-#: modules/video-gallery/widgets/video-gallery.php:1182
+#: modules/video-gallery/widgets/video-gallery.php:1211
 #: modules/woocommerce/widgets/woo-categories.php:861
 #: modules/wpf-styler/widgets/wpf-styler.php:1360
 msgid "H5"
@@ -8762,7 +8770,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1633
 #: modules/table-of-contents/widgets/table-of-contents.php:191
 #: modules/timeline/widgets/timeline.php:1380
-#: modules/video-gallery/widgets/video-gallery.php:1183
+#: modules/video-gallery/widgets/video-gallery.php:1212
 #: modules/woocommerce/widgets/woo-categories.php:862
 #: modules/wpf-styler/widgets/wpf-styler.php:1361
 msgid "H6"
@@ -8780,7 +8788,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1557
 #: modules/price-table/widgets/price-table.php:1634
 #: modules/timeline/widgets/timeline.php:1381
-#: modules/video-gallery/widgets/video-gallery.php:1184
+#: modules/video-gallery/widgets/video-gallery.php:1213
 #: modules/wpf-styler/widgets/wpf-styler.php:1362
 msgid "div"
 msgstr ""
@@ -8797,7 +8805,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:1558
 #: modules/price-table/widgets/price-table.php:1635
 #: modules/timeline/widgets/timeline.php:1382
-#: modules/video-gallery/widgets/video-gallery.php:1185
+#: modules/video-gallery/widgets/video-gallery.php:1214
 #: modules/wpf-styler/widgets/wpf-styler.php:1363
 msgid "p"
 msgstr ""
@@ -9048,7 +9056,7 @@ msgstr ""
 #: modules/google-map/widgets/google-map.php:104
 #: modules/particles/module.php:373
 #: modules/party-propz-extension/module.php:322
-#: modules/video/widgets/video.php:1434
+#: modules/video/widgets/video.php:1472
 #: modules/welcome-music/widgets/welcome-music.php:257
 msgid "Top Left"
 msgstr ""
@@ -9056,7 +9064,7 @@ msgstr ""
 #: modules/google-map/widgets/google-map.php:105
 #: modules/particles/module.php:374
 #: modules/party-propz-extension/module.php:323
-#: modules/video/widgets/video.php:1435
+#: modules/video/widgets/video.php:1473
 #: modules/welcome-music/widgets/welcome-music.php:256
 msgid "Top Right"
 msgstr ""
@@ -9095,7 +9103,7 @@ msgstr ""
 #: modules/particles/module.php:375
 #: modules/party-propz-extension/module.php:324
 #: modules/registration-form/widgets/registration-form.php:323
-#: modules/video/widgets/video.php:1436
+#: modules/video/widgets/video.php:1474
 #: modules/welcome-music/widgets/welcome-music.php:258
 msgid "Bottom Left"
 msgstr ""
@@ -9104,7 +9112,7 @@ msgstr ""
 #: modules/particles/module.php:376
 #: modules/party-propz-extension/module.php:325
 #: modules/registration-form/widgets/registration-form.php:322
-#: modules/video/widgets/video.php:1437
+#: modules/video/widgets/video.php:1475
 #: modules/welcome-music/widgets/welcome-music.php:259
 msgid "Bottom Right"
 msgstr ""
@@ -9478,9 +9486,9 @@ msgstr ""
 #: modules/party-propz-extension/module.php:704
 #: modules/price-table/widgets/price-table.php:1069
 #: modules/price-table/widgets/price-table.php:1082
-#: modules/video/widgets/video.php:957 modules/video/widgets/video.php:974
-#: modules/video-gallery/widgets/video-gallery.php:1523
-#: modules/video-gallery/widgets/video-gallery.php:1540
+#: modules/video/widgets/video.php:995 modules/video/widgets/video.php:1012
+#: modules/video-gallery/widgets/video-gallery.php:1775
+#: modules/video-gallery/widgets/video-gallery.php:1792
 msgid "Select Icon"
 msgstr ""
 
@@ -9551,6 +9559,7 @@ msgstr ""
 #: modules/headings/widgets/dual-heading.php:690
 #: modules/posts/widgets/posts-base.php:320
 #: modules/timeline/widgets/timeline.php:426
+#: modules/video-gallery/widgets/video-gallery.php:1562
 #: modules/woocommerce/widgets/woo-products.php:284
 msgid "Offset"
 msgstr ""
@@ -9589,6 +9598,7 @@ msgstr ""
 #: modules/price-table/widgets/price-table.php:2300
 #: modules/table-of-contents/widgets/table-of-contents.php:766
 #: modules/team-member/widgets/team-member.php:347
+#: modules/video-gallery/widgets/video-gallery.php:1531
 #: modules/woocommerce/widgets/woo-checkout.php:774
 #: modules/woocommerce/widgets/woo-checkout.php:1872
 msgid "Thickness"
@@ -9649,7 +9659,7 @@ msgstr ""
 #: modules/hotspot/widgets/hotspot.php:1090
 #: modules/infobox/widgets/infobox.php:550
 #: modules/price-table/widgets/price-table.php:1707
-#: modules/video/widgets/video.php:1477
+#: modules/video/widgets/video.php:1515
 msgid "Background Size"
 msgstr ""
 
@@ -9761,6 +9771,8 @@ msgid "Designer"
 msgstr ""
 
 #: modules/headings/widgets/fancy-heading.php:189
+#: modules/video-gallery/widgets/video-gallery.php:1511
+#: modules/video-gallery/widgets/video-gallery.php:1694
 msgid "Effect"
 msgstr ""
 
@@ -9791,8 +9803,8 @@ msgstr ""
 #: modules/headings/widgets/fancy-heading.php:203
 #: modules/nav-menu/widgets/nav-menu.php:576
 #: modules/offcanvas/widgets/offcanvas.php:1821
-#: modules/video-gallery/widgets/video-gallery.php:1596
-#: modules/video-gallery/widgets/video-gallery.php:1775
+#: modules/video-gallery/widgets/video-gallery.php:1848
+#: modules/video-gallery/widgets/video-gallery.php:2027
 msgid "Push"
 msgstr ""
 
@@ -9896,8 +9908,8 @@ msgstr ""
 #: modules/table/widgets/table.php:1776
 #: modules/team-member/widgets/team-member.php:139
 #: modules/team-member/widgets/team-member.php:702
-#: modules/twitter/widgets/twitter.php:829 modules/video/widgets/video.php:926
-#: modules/video-gallery/widgets/video-gallery.php:1492
+#: modules/twitter/widgets/twitter.php:829 modules/video/widgets/video.php:964
+#: modules/video-gallery/widgets/video-gallery.php:1744
 #: modules/woocommerce/skins/skin-grid-default.php:93
 #: modules/woocommerce/skins/skin-grid-franko.php:119
 #: modules/woocommerce/widgets/woo-mini-cart.php:2180
@@ -10090,10 +10102,10 @@ msgstr ""
 
 #: modules/hotspot/widgets/hotspot.php:927
 #: modules/price-table/widgets/price-table.php:888
-#: modules/video/widgets/video.php:1018 modules/video/widgets/video.php:1185
-#: modules/video/widgets/video.php:1250
-#: modules/video-gallery/widgets/video-gallery.php:1591
-#: modules/video-gallery/widgets/video-gallery.php:1770
+#: modules/video/widgets/video.php:1056 modules/video/widgets/video.php:1223
+#: modules/video/widgets/video.php:1288
+#: modules/video-gallery/widgets/video-gallery.php:1843
+#: modules/video-gallery/widgets/video-gallery.php:2022
 msgid "Grow"
 msgstr ""
 
@@ -10490,44 +10502,53 @@ msgid "Inherit"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:140
+#: modules/video-gallery/widgets/video-gallery.php:3349
 msgid "Aden"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:141
+#: modules/video-gallery/widgets/video-gallery.php:3350
 msgid "Earlybird"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:142
+#: modules/video-gallery/widgets/video-gallery.php:3351
 msgid "Hudson"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:143
+#: modules/video-gallery/widgets/video-gallery.php:3352
 msgid "Inkwell"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:144
+#: modules/video-gallery/widgets/video-gallery.php:3353
 msgid "Perpetua"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:145
+#: modules/video-gallery/widgets/video-gallery.php:3354
 msgid "Poprocket"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:146
+#: modules/video-gallery/widgets/video-gallery.php:3355
 msgid "Sutro"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:147
+#: modules/video-gallery/widgets/video-gallery.php:3356
 msgid "Toaster"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:148
+#: modules/video-gallery/widgets/video-gallery.php:3357
 msgid "Willow"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:189
 #: modules/image-gallery/widgets/image-gallery.php:716
-#: modules/video-gallery/widgets/video-gallery.php:142
+#: modules/video-gallery/widgets/video-gallery.php:143
 msgid "Gallery"
 msgstr ""
 
@@ -10564,38 +10585,38 @@ msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:348
 #: modules/posts/skins/skin-base.php:826 modules/posts/skins/skin-feed.php:195
-#: modules/video-gallery/widgets/video-gallery.php:763
+#: modules/video-gallery/widgets/video-gallery.php:792
 msgid "\"All\" Tab Label"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:350
 #: modules/posts/skins/skin-base.php:828 modules/posts/skins/skin-feed.php:197
 #: modules/posts/template-blocks/skin-feed.php:186
-#: modules/posts/template-blocks/skin-style.php:1315
-#: modules/video-gallery/widgets/video-gallery.php:765
+#: modules/posts/template-blocks/skin-style.php:1327
+#: modules/video-gallery/widgets/video-gallery.php:794
 msgid "All"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:361
 #: modules/posts/skins/skin-base.php:843 modules/posts/skins/skin-feed.php:211
-#: modules/video-gallery/widgets/video-gallery.php:779
+#: modules/video-gallery/widgets/video-gallery.php:808
 msgid "Default Tab on Page Load"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:365
 #: modules/posts/skins/skin-base.php:847 modules/posts/skins/skin-feed.php:215
-#: modules/video-gallery/widgets/video-gallery.php:783
+#: modules/video-gallery/widgets/video-gallery.php:812
 msgid "First"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:376
 #: modules/posts/skins/skin-base.php:860 modules/posts/skins/skin-feed.php:227
-#: modules/video-gallery/widgets/video-gallery.php:794
+#: modules/video-gallery/widgets/video-gallery.php:823
 msgid "Enter Category Name"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:393
-#: modules/video-gallery/widgets/video-gallery.php:812
+#: modules/video-gallery/widgets/video-gallery.php:841
 #. translators: %1$s admin link
 msgid ""
 "Note: Enter the category name that you wish to set as a default on page "
@@ -10604,7 +10625,7 @@ msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:408
 #: modules/posts/skins/skin-base.php:876 modules/posts/skins/skin-feed.php:242
-#: modules/video-gallery/widgets/video-gallery.php:860
+#: modules/video-gallery/widgets/video-gallery.php:889
 msgid "Enable this option to display Filterable Tabs in a Dropdown on Mobile."
 msgstr ""
 
@@ -10627,13 +10648,13 @@ msgid "Additional Options"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:583
-#: modules/video-gallery/widgets/video-gallery.php:685
+#: modules/video-gallery/widgets/video-gallery.php:714
 msgid "Click Action"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:587
 #: modules/image-gallery/widgets/image-gallery.php:697
-#: modules/video/widgets/video.php:443 modules/video/widgets/video.php:1275
+#: modules/video/widgets/video.php:481 modules/video/widgets/video.php:1313
 #: modules/woocommerce/skins/skin-grid-base.php:139
 msgid "Lightbox"
 msgstr ""
@@ -10669,20 +10690,20 @@ msgid "New Window"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:627
-#: modules/video-gallery/widgets/video-gallery.php:698
+#: modules/video-gallery/widgets/video-gallery.php:727
 msgid "Ordering"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:631
 #: modules/posts/widgets/posts-base.php:367
 #: modules/timeline/widgets/timeline.php:459
-#: modules/video-gallery/widgets/video-gallery.php:702
+#: modules/video-gallery/widgets/video-gallery.php:731
 #: modules/woocommerce/widgets/woo-products.php:390
 msgid "Random"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:639
-#: modules/video-gallery/widgets/video-gallery.php:1856
+#: modules/video-gallery/widgets/video-gallery.php:2108
 msgid "Show Caption"
 msgstr ""
 
@@ -10753,8 +10774,8 @@ msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:817
 #: modules/modal-popup/widgets/modal-popup.php:628
-#: modules/video/widgets/video.php:544 modules/video/widgets/video.php:640
-#: modules/video/widgets/video.php:686 modules/video/widgets/video.php:722
+#: modules/video/widgets/video.php:582 modules/video/widgets/video.php:678
+#: modules/video/widgets/video.php:724 modules/video/widgets/video.php:760
 #: modules/welcome-music/widgets/welcome-music.php:195
 msgid "Loop"
 msgstr ""
@@ -10783,7 +10804,8 @@ msgid "Middle"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:966
-#: modules/video-gallery/widgets/video-gallery.php:486
+#: modules/video-gallery/widgets/video-gallery.php:504
+#: modules/video-gallery/widgets/video-gallery.php:1708
 msgid "Thumbnail"
 msgstr ""
 
@@ -10839,8 +10861,8 @@ msgstr ""
 #: modules/instagram-feed/widgets/instagram-feed.php:313
 #: modules/retina-image/widgets/retina-image.php:201
 #: modules/retina-image/widgets/retina-image.php:544
-#: modules/video-gallery/widgets/video-gallery.php:362
-#: modules/video-gallery/widgets/video-gallery.php:1847
+#: modules/video-gallery/widgets/video-gallery.php:380
+#: modules/video-gallery/widgets/video-gallery.php:2099
 msgid "Caption"
 msgstr ""
 
@@ -10854,38 +10876,38 @@ msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1597
 #: modules/posts/skins/skin-base.php:757 modules/posts/skins/skin-feed.php:126
-#: modules/video-gallery/widgets/video-gallery.php:722
-#: modules/video-gallery/widgets/video-gallery.php:1265
+#: modules/video-gallery/widgets/video-gallery.php:751
+#: modules/video-gallery/widgets/video-gallery.php:1294
 msgid "Filterable Tabs"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1608
-#: modules/video-gallery/widgets/video-gallery.php:1277
+#: modules/video-gallery/widgets/video-gallery.php:1306
 #: modules/woocommerce/widgets/woo-checkout.php:1416
 msgid "Tab Alignment"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1673
 #: modules/posts/skins/skin-base.php:1087 modules/posts/skins/skin-feed.php:441
-#: modules/video-gallery/widgets/video-gallery.php:1334
+#: modules/video-gallery/widgets/video-gallery.php:1363
 msgid "Spacing Between Tabs"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1694
-#: modules/video-gallery/widgets/video-gallery.php:1351
+#: modules/video-gallery/widgets/video-gallery.php:1380
 msgid "Tabs Bottom Spacing"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1788
 #: modules/posts/skins/skin-base.php:996 modules/posts/skins/skin-feed.php:355
-#: modules/video-gallery/widgets/video-gallery.php:1422
+#: modules/video-gallery/widgets/video-gallery.php:1451
 #: modules/woocommerce/widgets/woo-products.php:1039
 msgid "Text Active / Hover Color"
 msgstr ""
 
 #: modules/image-gallery/widgets/image-gallery.php:1804
 #: modules/posts/skins/skin-base.php:1012 modules/posts/skins/skin-feed.php:370
-#: modules/video-gallery/widgets/video-gallery.php:1434
+#: modules/video-gallery/widgets/video-gallery.php:1463
 msgid "Background Active / Hover Color"
 msgstr ""
 
@@ -10935,8 +10957,8 @@ msgid ""
 "adipiscing. Quo incidunt ullamco.​"
 msgstr ""
 
-#: modules/infobox/widgets/infobox.php:179 modules/video/widgets/video.php:918
-#: modules/video-gallery/widgets/video-gallery.php:1488
+#: modules/infobox/widgets/infobox.php:179 modules/video/widgets/video.php:956
+#: modules/video-gallery/widgets/video-gallery.php:1740
 msgid "Image/Icon"
 msgstr ""
 
@@ -11219,7 +11241,7 @@ msgid "Show Content"
 msgstr ""
 
 #: modules/instagram-feed/widgets/instagram-feed.php:344
-#: modules/video-gallery/widgets/video-gallery.php:1872
+#: modules/video-gallery/widgets/video-gallery.php:2124
 msgid "Always"
 msgstr ""
 
@@ -11885,13 +11907,13 @@ msgid "Embed Code / URL"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:383
-#: modules/video-gallery/widgets/video-gallery.php:236
+#: modules/video-gallery/widgets/video-gallery.php:240
 msgid "Video URL"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:403
-#: modules/video/widgets/video.php:232
-#: modules/video-gallery/widgets/video-gallery.php:257
+#: modules/video/widgets/video.php:234
+#: modules/video-gallery/widgets/video-gallery.php:261
 #. translators: %1$s doc link
 msgid ""
 "<b>Note:</b> Make sure you add the actual URL of the video and not the "
@@ -11901,8 +11923,8 @@ msgid ""
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:417
-#: modules/video/widgets/video.php:265
-#: modules/video-gallery/widgets/video-gallery.php:271
+#: modules/video/widgets/video.php:267
+#: modules/video-gallery/widgets/video-gallery.php:275
 #. translators: %1$s doc link
 msgid ""
 "<b>Note:</b> Make sure you add the actual URL of the video and not the "
@@ -11931,23 +11953,23 @@ msgid "Height of Iframe"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:492
-#: modules/video/widgets/video.php:415
-#: modules/video-gallery/widgets/video-gallery.php:671
+#: modules/video/widgets/video.php:450
+#: modules/video-gallery/widgets/video-gallery.php:700
 msgid "Aspect Ratio"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:526
-#: modules/video/widgets/video.php:466
+#: modules/video/widgets/video.php:504
 msgid "Related Videos From"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:530
-#: modules/video/widgets/video.php:470
+#: modules/video/widgets/video.php:508
 msgid "Current Video Channel"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:531
-#: modules/video/widgets/video.php:471
+#: modules/video/widgets/video.php:509
 msgid "Any Random Video"
 msgstr ""
 
@@ -11956,39 +11978,39 @@ msgid "Disable Player Controls"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:574
-#: modules/video/widgets/video.php:390
+#: modules/video/widgets/video.php:425
 msgid "Specify a start time (in seconds)"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:585
-#: modules/video/widgets/video.php:400
+#: modules/video/widgets/video.php:435
 msgid "End Time"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:587
-#: modules/video/widgets/video.php:405
+#: modules/video/widgets/video.php:440
 msgid "Specify an end time (in seconds)"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:598
-#: modules/video/widgets/video.php:496 modules/video/widgets/video.php:555
-#: modules/video/widgets/video.php:651 modules/video/widgets/video.php:747
+#: modules/video/widgets/video.php:534 modules/video/widgets/video.php:593
+#: modules/video/widgets/video.php:689 modules/video/widgets/video.php:785
 msgid "Mute"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:610
-#: modules/video/widgets/video.php:507
+#: modules/video/widgets/video.php:545
 msgid "Modest Branding"
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:611
-#: modules/video/widgets/video.php:508
+#: modules/video/widgets/video.php:546
 msgid "This option lets you use a YouTube player that does not show a YouTube logo."
 msgstr ""
 
 #: modules/modal-popup/widgets/modal-popup.php:651
 #: modules/offcanvas/widgets/offcanvas.php:804
-#: modules/video/widgets/video.php:1527
+#: modules/video/widgets/video.php:1565
 msgid "Close Button"
 msgstr ""
 
@@ -12616,15 +12638,18 @@ msgid "Link Hover Effect"
 msgstr ""
 
 #: modules/nav-menu/widgets/nav-menu.php:1144
+#: modules/video-gallery/widgets/video-gallery.php:1516
 msgid "Overline"
 msgstr ""
 
 #: modules/nav-menu/widgets/nav-menu.php:1145
+#: modules/video-gallery/widgets/video-gallery.php:1518
 msgid "Double Line"
 msgstr ""
 
 #: modules/nav-menu/widgets/nav-menu.php:1146
 #: modules/social-share/widgets/social-share.php:341
+#: modules/video-gallery/widgets/video-gallery.php:1517
 msgid "Framed"
 msgstr ""
 
@@ -12679,7 +12704,7 @@ msgid "Menu Trigger & Close Icon"
 msgstr ""
 
 #: modules/nav-menu/widgets/nav-menu.php:1945
-#: modules/video/widgets/video.php:1296
+#: modules/video/widgets/video.php:1334
 msgid "Close Icon Color"
 msgstr ""
 
@@ -12951,24 +12976,24 @@ msgstr ""
 
 #: modules/party-propz-extension/module.php:299
 #: modules/party-propz-extension/module.php:743
-#: modules/video/widgets/video.php:844 modules/video/widgets/video.php:941
-#: modules/video-gallery/widgets/video-gallery.php:423
-#: modules/video-gallery/widgets/video-gallery.php:1507
+#: modules/video/widgets/video.php:882 modules/video/widgets/video.php:979
+#: modules/video-gallery/widgets/video-gallery.php:441
+#: modules/video-gallery/widgets/video-gallery.php:1759
 msgid "Select Image"
 msgstr ""
 
 #: modules/party-propz-extension/module.php:326
-#: modules/video/widgets/video.php:1438
+#: modules/video/widgets/video.php:1476
 msgid "Center Left"
 msgstr ""
 
 #: modules/party-propz-extension/module.php:327
-#: modules/video/widgets/video.php:1439
+#: modules/video/widgets/video.php:1477
 msgid "Center Right"
 msgstr ""
 
 #: modules/party-propz-extension/module.php:395
-#: modules/video/widgets/video.php:1452
+#: modules/video/widgets/video.php:1490
 msgid "Spacing from Edges"
 msgstr ""
 
@@ -13015,7 +13040,7 @@ msgstr ""
 #: modules/posts/skins/skin-feed.php:553 modules/posts/skins/skin-news.php:309
 #: modules/posts/template-blocks/skin-feed.php:134
 #: modules/posts/template-blocks/skin-news.php:191
-#: modules/posts/template-blocks/skin-style.php:1019
+#: modules/posts/template-blocks/skin-style.php:1031
 #: modules/timeline/widgets/skin-style.php:225
 #: modules/woocommerce/widgets/woo-products.php:447
 #: modules/woocommerce/widgets/woo-products.php:944
@@ -13148,7 +13173,7 @@ msgstr ""
 #: modules/posts/skins/skin-base.php:678 modules/posts/skins/skin-base.php:1225
 #: modules/posts/skins/skin-feed.php:1253 modules/posts/skins/skin-news.php:939
 #: modules/posts/skins/skin-news.php:1056
-#: modules/video-gallery/widgets/video-gallery.php:1916
+#: modules/video-gallery/widgets/video-gallery.php:2168
 #: modules/woocommerce/skins/skin-grid-default.php:105
 #: modules/woocommerce/skins/skin-grid-default.php:256
 #: modules/woocommerce/skins/skin-grid-franko.php:187
@@ -13390,7 +13415,7 @@ msgstr ""
 
 #: modules/posts/skins/skin-base.php:2647
 #: modules/posts/skins/skin-news.php:1094
-#: modules/video-gallery/widgets/video-gallery.php:1199
+#: modules/video-gallery/widgets/video-gallery.php:1228
 msgid "Title Color"
 msgstr ""
 
@@ -13429,8 +13454,8 @@ msgstr ""
 msgid "Article Schema"
 msgstr ""
 
-#: modules/posts/skins/skin-base.php:3501 modules/video/widgets/video.php:1961
-#: modules/video-gallery/widgets/video-gallery.php:603
+#: modules/posts/skins/skin-base.php:3501 modules/video/widgets/video.php:1999
+#: modules/video-gallery/widgets/video-gallery.php:632
 msgid "Schema Support"
 msgstr ""
 
@@ -13475,7 +13500,7 @@ msgid "Publisher Logo"
 msgstr ""
 
 #: modules/posts/skins/skin-base.php:3733
-#: modules/video-gallery/widgets/video-gallery.php:2040
+#: modules/video-gallery/widgets/video-gallery.php:2292
 msgid "Arrows Border Size"
 msgstr ""
 
@@ -13611,23 +13636,23 @@ msgid "Note: Number of columns <b>excludes</b> featured post."
 msgstr ""
 
 #: modules/posts/template-blocks/skin-feed.php:190
-#: modules/posts/template-blocks/skin-style.php:1319
+#: modules/posts/template-blocks/skin-style.php:1331
 msgid "Taxonomy Filter"
 msgstr ""
 
-#: modules/posts/template-blocks/skin-style.php:1553
+#: modules/posts/template-blocks/skin-style.php:1565
 msgid ""
 "Some posts do not have featured images. Please fill in all required fields "
 "to display posts schema properly."
 msgstr ""
 
-#: modules/posts/template-blocks/skin-style.php:1556
+#: modules/posts/template-blocks/skin-style.php:1568
 msgid ""
 "Some fields are empty under the posts schema section. Please fill in all "
 "required fields."
 msgstr ""
 
-#: modules/posts/template-blocks/skin-style.php:1557
+#: modules/posts/template-blocks/skin-style.php:1569
 msgid "Make sure all your posts do have a featured image."
 msgstr ""
 
@@ -13997,26 +14022,26 @@ msgid "Pricing Above Call To Action"
 msgstr ""
 
 #: modules/price-table/widgets/price-table.php:168
-#: modules/video/widgets/video.php:1019 modules/video/widgets/video.php:1186
-#: modules/video/widgets/video.php:1251
-#: modules/video-gallery/widgets/video-gallery.php:1598
-#: modules/video-gallery/widgets/video-gallery.php:1777
+#: modules/video/widgets/video.php:1057 modules/video/widgets/video.php:1224
+#: modules/video/widgets/video.php:1289
+#: modules/video-gallery/widgets/video-gallery.php:1850
+#: modules/video-gallery/widgets/video-gallery.php:2029
 msgid "Float"
 msgstr ""
 
 #: modules/price-table/widgets/price-table.php:169
-#: modules/video/widgets/video.php:1020 modules/video/widgets/video.php:1187
-#: modules/video/widgets/video.php:1252
-#: modules/video-gallery/widgets/video-gallery.php:1599
-#: modules/video-gallery/widgets/video-gallery.php:1778
+#: modules/video/widgets/video.php:1058 modules/video/widgets/video.php:1225
+#: modules/video/widgets/video.php:1290
+#: modules/video-gallery/widgets/video-gallery.php:1851
+#: modules/video-gallery/widgets/video-gallery.php:2030
 msgid "Sink"
 msgstr ""
 
 #: modules/price-table/widgets/price-table.php:170
-#: modules/video/widgets/video.php:1021 modules/video/widgets/video.php:1188
-#: modules/video/widgets/video.php:1253
-#: modules/video-gallery/widgets/video-gallery.php:1600
-#: modules/video-gallery/widgets/video-gallery.php:1779
+#: modules/video/widgets/video.php:1059 modules/video/widgets/video.php:1226
+#: modules/video/widgets/video.php:1291
+#: modules/video-gallery/widgets/video-gallery.php:1852
+#: modules/video-gallery/widgets/video-gallery.php:2031
 msgid "Wobble Vertical"
 msgstr ""
 
@@ -14646,7 +14671,7 @@ msgid "Selector Color"
 msgstr ""
 
 #: modules/registration-form/widgets/registration-form.php:2091
-#: modules/video/widgets/video.php:1230
+#: modules/video/widgets/video.php:1268
 msgid "Hover Background Color"
 msgstr ""
 
@@ -15136,7 +15161,7 @@ msgid ""
 msgstr ""
 
 #: modules/table/widgets/table.php:192 modules/table/widgets/table.php:578
-#: modules/video-gallery/widgets/video-gallery.php:1868
+#: modules/video-gallery/widgets/video-gallery.php:2120
 msgid "Action"
 msgstr ""
 
@@ -16126,7 +16151,7 @@ msgid "To show Twitter Feed widget, please set the %s from widget settings."
 msgstr ""
 
 #: modules/video/widgets/video.php:131
-#: modules/video-gallery/widgets/video-gallery.php:164
+#: modules/video-gallery/widgets/video-gallery.php:167
 msgid "Video Type"
 msgstr ""
 
@@ -16139,47 +16164,52 @@ msgid "Bunny.net"
 msgstr ""
 
 #: modules/video/widgets/video.php:139
-#: modules/video-gallery/widgets/video-gallery.php:172
+#: modules/video-gallery/widgets/video-gallery.php:174
+msgid "Rumble Video"
+msgstr ""
+
+#: modules/video/widgets/video.php:140
+#: modules/video-gallery/widgets/video-gallery.php:176
 msgid "Self Hosted"
 msgstr ""
 
-#: modules/video/widgets/video.php:147
-#: modules/video-gallery/widgets/video-gallery.php:181
+#: modules/video/widgets/video.php:148
+#: modules/video-gallery/widgets/video-gallery.php:185
 msgid "External URL"
 msgstr ""
 
-#: modules/video/widgets/video.php:158
-#: modules/video-gallery/widgets/video-gallery.php:192
+#: modules/video/widgets/video.php:159
+#: modules/video-gallery/widgets/video-gallery.php:196
 msgid "Choose File"
 msgstr ""
 
-#: modules/video/widgets/video.php:191
-#: modules/video-gallery/widgets/video-gallery.php:225
+#: modules/video/widgets/video.php:192
+#: modules/video-gallery/widgets/video-gallery.php:229
 msgid "Enter your URL"
 msgstr ""
 
-#: modules/video/widgets/video.php:277
-#: modules/video-gallery/widgets/video-gallery.php:283
+#: modules/video/widgets/video.php:279
+#: modules/video-gallery/widgets/video-gallery.php:301
 msgid "Link & Thumbnail Text"
 msgstr ""
 
-#: modules/video/widgets/video.php:300
+#: modules/video/widgets/video.php:302
 #. translators: %s admin link
 msgid ""
 "Go to your Wistia video, right click, \"Copy Link & Thumbnail\" and paste "
 "here. %1$s Learn more %2$s."
 msgstr ""
 
-#: modules/video/widgets/video.php:313
-#: modules/video-gallery/widgets/video-gallery.php:284
+#: modules/video/widgets/video.php:315
+#: modules/video-gallery/widgets/video-gallery.php:302
 #. translators: %s admin link
 msgid ""
 "Go to your Wistia video, right click, \"Copy Link & Thumbnail\" and paste "
 "here."
 msgstr ""
 
-#: modules/video/widgets/video.php:347
-#: modules/video-gallery/widgets/video-gallery.php:324
+#: modules/video/widgets/video.php:349
+#: modules/video-gallery/widgets/video-gallery.php:342
 msgid ""
 "<b>Note:</b> Use the Bunny.net embed iframe URL "
 "format.</br></br><b>Valid:</b>&nbsp;https://iframe.mediadelivery.net/play/"
@@ -16187,13 +16217,23 @@ msgid ""
 "play/432016/13530e19-ff52-4f20-a422-0075cccd73d4"
 msgstr ""
 
-#: modules/video/widgets/video.php:359
-#: modules/video-gallery/widgets/video-gallery.php:336
+#: modules/video/widgets/video.php:382
+msgid ""
+"<b>Note:</b> Use the direct Rumble video URL "
+"format.</br></br><b>Valid:</b>&nbsp;https://rumble.com/v6wy7zw-video-title."
+"html</br><b>Example:</b>&nbsp;https://rumble.com/v6ze3ru-video-placeholder-"
+"brainstorm-force.html</br></br><b>Important:</b> Not all Rumble videos are "
+"embeddable. If you get a 410 error, the video owner may have disabled "
+"embedding or the video may be restricted."
+msgstr ""
+
+#: modules/video/widgets/video.php:394
+#: modules/video-gallery/widgets/video-gallery.php:354
 msgid "Bunny CDN Prefix"
 msgstr ""
 
-#: modules/video/widgets/video.php:373
-#: modules/video-gallery/widgets/video-gallery.php:350
+#: modules/video/widgets/video.php:408
+#: modules/video-gallery/widgets/video-gallery.php:368
 msgid ""
 "<b>Note:</b> This is required for default thumbnail to load, found in your "
 "Bunny.net Stream library delivery URL before .b-cdn.net or navigate to "
@@ -16201,484 +16241,531 @@ msgid ""
 "direct URL file access” option is enabled. If it is, try disabling it"
 msgstr ""
 
-#: modules/video/widgets/video.php:433
+#: modules/video/widgets/video.php:468
 msgid "Video Options"
 msgstr ""
 
-#: modules/video/widgets/video.php:482 modules/video/widgets/video.php:733
+#: modules/video/widgets/video.php:520 modules/video/widgets/video.php:771
 msgid "Player Control"
 msgstr ""
 
-#: modules/video/widgets/video.php:520
+#: modules/video/widgets/video.php:558
 msgid "Privacy Mode"
 msgstr ""
 
-#: modules/video/widgets/video.php:522
+#: modules/video/widgets/video.php:560
 msgid ""
 "When you turn on privacy mode, YouTube won't store information about "
 "visitors on your website unless they play the video."
 msgstr ""
 
-#: modules/video/widgets/video.php:566
+#: modules/video/widgets/video.php:604
 msgid "Intro Title"
 msgstr ""
 
-#: modules/video/widgets/video.php:580
+#: modules/video/widgets/video.php:618
 msgid "Intro Portrait"
 msgstr ""
 
-#: modules/video/widgets/video.php:594
+#: modules/video/widgets/video.php:632
 msgid "Intro Byline"
 msgstr ""
 
-#: modules/video/widgets/video.php:608
+#: modules/video/widgets/video.php:646
 msgid "Controls Color"
 msgstr ""
 
-#: modules/video/widgets/video.php:662
+#: modules/video/widgets/video.php:700
 msgid "Show Playbar"
 msgstr ""
 
-#: modules/video/widgets/video.php:699
+#: modules/video/widgets/video.php:737
 msgid ""
 "<b>Note:</b> Bunny.net does not support hiding player controls via URL "
 "parameters. Controls are managed globally in your Bunny Stream library "
 "settings."
 msgstr ""
 
-#: modules/video/widgets/video.php:758
+#: modules/video/widgets/video.php:796
 msgid "Note: Mute functionality will not work inside the lightbox."
 msgstr ""
 
-#: modules/video/widgets/video.php:771
+#: modules/video/widgets/video.php:809
 msgid "Enable Double Click on Mobile"
 msgstr ""
 
-#: modules/video/widgets/video.php:787
+#: modules/video/widgets/video.php:825
 #. translators: %s admin link
 msgid ""
 "Enable this option if you are not able to see custom thumbnail or overlay "
 "color on Mobile. Please read %1$s this article %2$s for more information."
 msgstr ""
 
-#: modules/video/widgets/video.php:807
+#: modules/video/widgets/video.php:845
 msgid "Thumbnail & Overlay"
 msgstr ""
 
-#: modules/video/widgets/video.php:814
-#: modules/video-gallery/widgets/video-gallery.php:390
+#: modules/video/widgets/video.php:852
+#: modules/video-gallery/widgets/video-gallery.php:408
 msgid "Thumbnail Size"
 msgstr ""
 
-#: modules/video/widgets/video.php:817
-#: modules/video-gallery/widgets/video-gallery.php:393
+#: modules/video/widgets/video.php:855
+#: modules/video-gallery/widgets/video-gallery.php:411
 msgid "Maximum Resolution"
 msgstr ""
 
-#: modules/video/widgets/video.php:818
-#: modules/video-gallery/widgets/video-gallery.php:394
+#: modules/video/widgets/video.php:856
+#: modules/video-gallery/widgets/video-gallery.php:412
 msgid "High Quality"
 msgstr ""
 
-#: modules/video/widgets/video.php:819
-#: modules/video-gallery/widgets/video-gallery.php:395
+#: modules/video/widgets/video.php:857
+#: modules/video-gallery/widgets/video-gallery.php:413
 msgid "Medium Quality"
 msgstr ""
 
-#: modules/video/widgets/video.php:820
-#: modules/video-gallery/widgets/video-gallery.php:396
+#: modules/video/widgets/video.php:858
+#: modules/video-gallery/widgets/video-gallery.php:414
 msgid "Standard Quality"
 msgstr ""
 
-#: modules/video/widgets/video.php:832
-#: modules/video-gallery/widgets/video-gallery.php:408
+#: modules/video/widgets/video.php:870
+#: modules/video-gallery/widgets/video-gallery.php:426
 msgid "Custom Thumbnail"
 msgstr ""
 
-#: modules/video/widgets/video.php:911
-#: modules/video-gallery/widgets/video-gallery.php:1480
+#: modules/video/widgets/video.php:949
+#: modules/video-gallery/widgets/video-gallery.php:1732
 #: modules/welcome-music/widgets/welcome-music.php:319
 msgid "Play Button"
 msgstr ""
 
-#: modules/video/widgets/video.php:1307
+#: modules/video/widgets/video.php:1345
 msgid "Close Icon Hover Color"
 msgstr ""
 
-#: modules/video/widgets/video.php:1319
+#: modules/video/widgets/video.php:1357
 msgid "Content Width"
 msgstr ""
 
-#: modules/video/widgets/video.php:1338
+#: modules/video/widgets/video.php:1376
 msgid "Content Position"
 msgstr ""
 
-#: modules/video/widgets/video.php:1357
+#: modules/video/widgets/video.php:1395
 msgid "Entrance Animation"
 msgstr ""
 
-#: modules/video/widgets/video.php:1358
+#: modules/video/widgets/video.php:1396
 msgid "Note: Entrance animation will work only at the frontend."
 msgstr ""
 
-#: modules/video/widgets/video.php:1377
+#: modules/video/widgets/video.php:1415
 msgid "Sticky Video"
 msgstr ""
 
-#: modules/video/widgets/video.php:1384
+#: modules/video/widgets/video.php:1422
 msgid "Enable Sticky Video"
 msgstr ""
 
-#: modules/video/widgets/video.php:1395
+#: modules/video/widgets/video.php:1433
 msgid "Video Width (px)"
 msgstr ""
 
-#: modules/video/widgets/video.php:1430
+#: modules/video/widgets/video.php:1468
 msgid "Sticky Alignment"
 msgstr ""
 
-#: modules/video/widgets/video.php:1453
+#: modules/video/widgets/video.php:1491
 msgid ""
 "Note: This is spacing around the sticky video with respect to the Alignment "
 "chosen."
 msgstr ""
 
-#: modules/video/widgets/video.php:1507
+#: modules/video/widgets/video.php:1545
 msgid "Hide Sticky Video on"
 msgstr ""
 
-#: modules/video/widgets/video.php:1582
+#: modules/video/widgets/video.php:1620
 msgid "Info Bar"
 msgstr ""
 
-#: modules/video/widgets/video.php:1595
+#: modules/video/widgets/video.php:1633
 msgid "Enable this option to display the informative text under Sticky video."
 msgstr ""
 
-#: modules/video/widgets/video.php:1698
+#: modules/video/widgets/video.php:1736
 msgid "YouTube Subscribe Bar"
 msgstr ""
 
-#: modules/video/widgets/video.php:1708
+#: modules/video/widgets/video.php:1746
 msgid "Enable Subscribe Bar"
 msgstr ""
 
-#: modules/video/widgets/video.php:1727
+#: modules/video/widgets/video.php:1765
 msgid "Use Channel Name"
 msgstr ""
 
-#: modules/video/widgets/video.php:1728
+#: modules/video/widgets/video.php:1766
 msgid "Use Channel ID"
 msgstr ""
 
-#: modules/video/widgets/video.php:1741
+#: modules/video/widgets/video.php:1779
 msgid "YouTube Channel Name"
 msgstr ""
 
-#: modules/video/widgets/video.php:1756
+#: modules/video/widgets/video.php:1794
 msgid "YouTube Channel ID"
 msgstr ""
 
-#: modules/video/widgets/video.php:1775
+#: modules/video/widgets/video.php:1813
 #. translators: %s admin link
 msgid "Click %1$s here %2$s to find your YouTube Channel Name."
 msgstr ""
 
-#: modules/video/widgets/video.php:1790
+#: modules/video/widgets/video.php:1828
 #. translators: %s admin link
 msgid "Click %1$s here %2$s to find your YouTube Channel ID."
 msgstr ""
 
-#: modules/video/widgets/video.php:1804
+#: modules/video/widgets/video.php:1842
 msgid "Subscribe to Channel Text"
 msgstr ""
 
-#: modules/video/widgets/video.php:1818
+#: modules/video/widgets/video.php:1856
 msgid "Show Subscribers Count"
 msgstr ""
 
-#: modules/video/widgets/video.php:1897
+#: modules/video/widgets/video.php:1935
 msgid "Choose a breakpoint where the subscribe bar content will stack."
 msgstr ""
 
-#: modules/video/widgets/video.php:1953
+#: modules/video/widgets/video.php:1991
 msgid "Video Schema"
 msgstr ""
 
-#: modules/video/widgets/video.php:1972
+#: modules/video/widgets/video.php:2010
 msgid "Video Title"
 msgstr ""
 
-#: modules/video/widgets/video.php:1975
-#: modules/video-gallery/widgets/video-gallery.php:520
-#: modules/video-gallery/widgets/video-gallery.php:531
-#: modules/video-gallery/widgets/video-gallery.php:542
-#: modules/video-gallery/widgets/video-gallery.php:553
-#: modules/video-gallery/widgets/video-gallery.php:564
-#: modules/video-gallery/widgets/video-gallery.php:575
-#: modules/video-gallery/widgets/video-gallery.php:587
+#: modules/video/widgets/video.php:2013
+#: modules/video-gallery/widgets/video-gallery.php:538
+#: modules/video-gallery/widgets/video-gallery.php:549
+#: modules/video-gallery/widgets/video-gallery.php:560
+#: modules/video-gallery/widgets/video-gallery.php:571
+#: modules/video-gallery/widgets/video-gallery.php:582
+#: modules/video-gallery/widgets/video-gallery.php:593
+#: modules/video-gallery/widgets/video-gallery.php:604
+#: modules/video-gallery/widgets/video-gallery.php:616
 msgid "Title of the video."
 msgstr ""
 
-#: modules/video/widgets/video.php:1985
+#: modules/video/widgets/video.php:2023
 msgid "Video Description"
 msgstr ""
 
-#: modules/video/widgets/video.php:1988
-#: modules/video-gallery/widgets/video-gallery.php:521
-#: modules/video-gallery/widgets/video-gallery.php:532
-#: modules/video-gallery/widgets/video-gallery.php:543
-#: modules/video-gallery/widgets/video-gallery.php:554
-#: modules/video-gallery/widgets/video-gallery.php:565
-#: modules/video-gallery/widgets/video-gallery.php:576
-#: modules/video-gallery/widgets/video-gallery.php:588
+#: modules/video/widgets/video.php:2026
+#: modules/video-gallery/widgets/video-gallery.php:539
+#: modules/video-gallery/widgets/video-gallery.php:550
+#: modules/video-gallery/widgets/video-gallery.php:561
+#: modules/video-gallery/widgets/video-gallery.php:572
+#: modules/video-gallery/widgets/video-gallery.php:583
+#: modules/video-gallery/widgets/video-gallery.php:594
+#: modules/video-gallery/widgets/video-gallery.php:605
+#: modules/video-gallery/widgets/video-gallery.php:617
 msgid "Description of the video."
 msgstr ""
 
-#: modules/video/widgets/video.php:1998
+#: modules/video/widgets/video.php:2036
 msgid "Video Thumbnail"
 msgstr ""
 
-#: modules/video/widgets/video.php:2013
+#: modules/video/widgets/video.php:2051
 msgid "Video Upload Date & Time"
 msgstr ""
 
-#: modules/video/widgets/video.php:2015
+#: modules/video/widgets/video.php:2053
 msgid "yyyy-mm-dd"
 msgstr ""
 
-#: modules/video/widgets/video.php:2067
+#: modules/video/widgets/video.php:2105
 #. translators: %1$s doc link
 msgid "%1$s Unable to edit Video widget » %2$s"
 msgstr ""
 
-#: modules/video/widgets/video.php:2077
+#: modules/video/widgets/video.php:2115
 #. translators: %1$s doc link
 msgid "%1$s Display YouTube Subscribe Bar for Video. » %2$s"
 msgstr ""
 
-#: modules/video/widgets/video.php:2087
+#: modules/video/widgets/video.php:2125
 #. translators: %1$s doc link
 msgid "%1$s Find YouTube Channel Name and Channel ID. » %2$s"
 msgstr ""
 
-#: modules/video/widgets/video.php:2097
+#: modules/video/widgets/video.php:2135
 #. translators: %1$s doc link
 msgid "%1$s Enable Sticky Video » %2$s"
 msgstr ""
 
-#: modules/video/widgets/video.php:2107
-#: modules/video-gallery/widgets/video-gallery.php:1073
+#: modules/video/widgets/video.php:2145
+#: modules/video-gallery/widgets/video-gallery.php:1102
 #. translators: %1$s doc link
 msgid "%1$s Get Wistia Link and Thumbnail text » %2$s"
 msgstr ""
 
-#: modules/video/widgets/video.php:2385
+#: modules/video/widgets/video.php:2433
 msgid "from "
 msgstr ""
 
-#: modules/video/widgets/video.php:2663
+#: modules/video/widgets/video.php:2721
 msgid "Please choose a file."
 msgstr ""
 
-#: modules/video/widgets/video.php:2743
+#: modules/video/widgets/video.php:2802
 msgid "Please set a custom thumbnail to display video schema properly."
 msgstr ""
 
-#: modules/video/widgets/video.php:2745
+#: modules/video/widgets/video.php:2804
 msgid ""
 "Some fields are empty under the video schema section. Please fill in all "
 "required fields."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:168
+#: modules/video-gallery/widgets/video-gallery.php:171
 msgid "YouTube Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:169
+#: modules/video-gallery/widgets/video-gallery.php:172
 msgid "Vimeo Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:170
+#: modules/video-gallery/widgets/video-gallery.php:173
 msgid "Wistia Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:171
+#: modules/video-gallery/widgets/video-gallery.php:175
 msgid "Bunny.net Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:369
+#: modules/video-gallery/widgets/video-gallery.php:289
+#. translators: %1$s doc link
+msgid ""
+"<b>Note:</b> Use the standard Rumble video URL from the browser address "
+"bar.</br></br><b>Valid:</b>&nbsp;https://rumble.com/v1abcd-video-title."
+"html</br><b>Valid:</b>&nbsp;https://rumble.com/v1abcd</br><b>Invalid:</b>&"
+"nbsp;https://rumble.com/embed/v1abcd"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:387
 msgid "This title will be visible on hover."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:376
+#: modules/video-gallery/widgets/video-gallery.php:394
 msgid "Categories"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:383
+#: modules/video-gallery/widgets/video-gallery.php:401
 msgid ""
 "Add comma separated categories. These categories will be shown for "
 "filteration."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:428
+#: modules/video-gallery/widgets/video-gallery.php:446
 msgid "This image will act as a placeholder image for the video."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:463
+#: modules/video-gallery/widgets/video-gallery.php:481
 msgid "Schema"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:500
+#: modules/video-gallery/widgets/video-gallery.php:518
 msgid "Upload Date & Time"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:519
+#: modules/video-gallery/widgets/video-gallery.php:537
 msgid "First Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:530
+#: modules/video-gallery/widgets/video-gallery.php:548
 msgid "Second Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:541
+#: modules/video-gallery/widgets/video-gallery.php:559
 msgid "Third Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:552
+#: modules/video-gallery/widgets/video-gallery.php:570
 msgid "Fourth Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:563
+#: modules/video-gallery/widgets/video-gallery.php:581
 msgid "Fifth Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:574
+#: modules/video-gallery/widgets/video-gallery.php:592
 msgid "Sixth Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:586
+#: modules/video-gallery/widgets/video-gallery.php:603
 msgid "Seventh Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:604
+#: modules/video-gallery/widgets/video-gallery.php:615
+msgid "Eighth Video"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:633
 msgid "Note: This option enables the VideoObject Schema."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:732
+#: modules/video-gallery/widgets/video-gallery.php:761
 msgid "Filterable Video Gallery"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:750
+#: modules/video-gallery/widgets/video-gallery.php:779
 #. translators: %1$s admin link
 msgid "Learn : %1$sHow to design filterable Video Gallery?%2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:826
+#: modules/video-gallery/widgets/video-gallery.php:855
 msgid "Title for Filterable Tab"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:842
+#: modules/video-gallery/widgets/video-gallery.php:871
 msgid "Title Text"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:844
+#: modules/video-gallery/widgets/video-gallery.php:873
 msgid "My Videos"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1013
+#: modules/video-gallery/widgets/video-gallery.php:1042
 #. translators: %1$s doc link
 msgid "%1$s Set categories for videos » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1023
+#: modules/video-gallery/widgets/video-gallery.php:1052
 #. translators: %1$s doc link
 msgid "%1$s Display specific video category tab as a default on page load » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1033
+#: modules/video-gallery/widgets/video-gallery.php:1062
 #. translators: %1$s doc link
 msgid "%1$s Design filterable Video Gallery » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1043
+#: modules/video-gallery/widgets/video-gallery.php:1072
 #. translators: %1$s doc link
 msgid "%1$s Set a custom placeholder image for the video » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1053
+#: modules/video-gallery/widgets/video-gallery.php:1082
 #. translators: %1$s doc link
 msgid "%1$s Set overlay color on the video thumbnail on mouse hover » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1063
+#: modules/video-gallery/widgets/video-gallery.php:1092
 #. translators: %1$s doc link
 msgid "%1$s Show video caption on hover » %2$s"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1234
+#: modules/video-gallery/widgets/video-gallery.php:1263
 msgid "Stack On"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1235
+#: modules/video-gallery/widgets/video-gallery.php:1264
 msgid "Choose at what breakpoint the Title & Filter Tabs will stack."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1592
-#: modules/video-gallery/widgets/video-gallery.php:1771
+#: modules/video-gallery/widgets/video-gallery.php:1498
+msgid "Hover Effects"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1602
+msgid "Corner Radius"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1621
+msgid "Transition Duration (ms)"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1648
+msgid "Effect Color"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1686
+msgid "Video Effects"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1704
+msgid "Apply To"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1709
+msgid "On Play"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1710
+msgid "Both"
+msgstr ""
+
+#: modules/video-gallery/widgets/video-gallery.php:1844
+#: modules/video-gallery/widgets/video-gallery.php:2023
 msgid "Shrink"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1593
-#: modules/video-gallery/widgets/video-gallery.php:1772
+#: modules/video-gallery/widgets/video-gallery.php:1845
+#: modules/video-gallery/widgets/video-gallery.php:2024
 msgid "Pulse"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1594
-#: modules/video-gallery/widgets/video-gallery.php:1773
+#: modules/video-gallery/widgets/video-gallery.php:1846
+#: modules/video-gallery/widgets/video-gallery.php:2025
 msgid "Pulse Grow"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1595
-#: modules/video-gallery/widgets/video-gallery.php:1774
+#: modules/video-gallery/widgets/video-gallery.php:1847
+#: modules/video-gallery/widgets/video-gallery.php:2026
 msgid "Pulse Shrink"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1597
-#: modules/video-gallery/widgets/video-gallery.php:1776
+#: modules/video-gallery/widgets/video-gallery.php:1849
+#: modules/video-gallery/widgets/video-gallery.php:2028
 msgid "Pop"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1665
-#: modules/video-gallery/widgets/video-gallery.php:1740
+#: modules/video-gallery/widgets/video-gallery.php:1917
+#: modules/video-gallery/widgets/video-gallery.php:1992
 msgid "Icon Shadow"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1836
+#: modules/video-gallery/widgets/video-gallery.php:2088
 msgid "Overlay Hover Color"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1873
+#: modules/video-gallery/widgets/video-gallery.php:2125
 msgid "Below Video"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1887
+#: modules/video-gallery/widgets/video-gallery.php:2139
 msgid "Caption Color"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1925
+#: modules/video-gallery/widgets/video-gallery.php:2177
 msgid "Show Category on Hover"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:1937
+#: modules/video-gallery/widgets/video-gallery.php:2189
 msgid "Category Color"
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:2855
+#: modules/video-gallery/widgets/video-gallery.php:3196
 msgid "Please set a custom thumbnail to display video gallery schema properly."
 msgstr ""
 
-#: modules/video-gallery/widgets/video-gallery.php:2857
+#: modules/video-gallery/widgets/video-gallery.php:3198
 msgid ""
 "Some fields are empty under the video gallery schema section. Please fill "
 "in all required fields."

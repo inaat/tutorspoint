@@ -149,18 +149,20 @@ class Onboarding {
         $builder_type = get_option( 'hostinger_builder_type' );
 
         if ( $builder_type === 'ai' ) {
-            $hostinger_ai_version = get_option( 'hostinger_ai_version', false );
+            $themes                = wp_get_themes();
+            $is_ai_theme_installed = array_key_exists( 'hostinger-ai-theme', $themes );
+            $is_ai_theme_active    = ( get_stylesheet() === 'hostinger-ai-theme' );
+            $is_ai_theme_ready     = $is_ai_theme_installed && $is_ai_theme_active;
 
             $step->set_image_url( HOSTINGER_EASY_ONBOARDING_ASSETS_URL . '/images/steps/ai_step.svg' );
 
-            if ( empty( $hostinger_ai_version ) ) {
+            if ( ! $is_ai_theme_ready ) {
                 $step->set_title( __( 'Create a site with AI', 'hostinger-easy-onboarding' ) );
                 $step->set_description( __( 'Build a professional, custom-designed site in moments. Just a few clicks and AI handles the rest.', 'hostinger-easy-onboarding' ) );
 
                 $primary_button = new Button();
                 $primary_button->set_title( __( 'Create site with AI', 'hostinger-easy-onboarding' ) );
-                $primary_button->set_url( admin_url( 'admin.php?page=hostinger-ai-website-creation&redirect=hostinger-easy-onboarding' ) );
-                $primary_button->set_is_completable( false );
+                $primary_button->set_modal_name( 'CreateWebsiteWithAiBuilderModal' );
 
                 $secondary_button = new Button();
                 $secondary_button->set_title( __( 'Not now', 'hostinger-easy-onboarding' ) );

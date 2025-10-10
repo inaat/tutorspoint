@@ -2,7 +2,7 @@
 Tags: AI, AI assistant
 Requires PHP: 8.0
 Tested up to: 6.8
-Stable tag: 3.0.5
+Stable tag: 3.0.7
 Requires at least: 5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -341,3 +341,14 @@ This section describes how to install the plugin and get it working.
 - Fix: Unresponsive click events in Google Site Kit
 - Dev: Added unit tests
 - Dev: Added pull request comment template, frontend unit testing infrastructure
+
+3.0.6 (2025-09-30)
+- Feature: Enable destructive actions MCP
+- Tweak: Bump dependencies
+- Tweak: Security updates
+- Dev: Fix Release updater
+
+3.0.7 (2025-10-07)
+- Introduce suggestive actions chatbot
+- Fixed Google Sitekit loadash conflict
+- Update chatbot widget version

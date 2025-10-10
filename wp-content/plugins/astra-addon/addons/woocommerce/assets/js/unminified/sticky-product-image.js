@@ -28,6 +28,12 @@
 		const originalWrapper = productImage.parentElement;
 
 		const saleTag = originalWrapper.querySelector('.ast-onsale-card');
+
+		// Bail early if the sale tag is inside the related products..
+		if ( saleTag?.closest( '.related.products' ) ) {
+			return;
+		}
+
 		const wrapper = document.createElement('div');
 
 		originalWrapper.prepend(wrapper);

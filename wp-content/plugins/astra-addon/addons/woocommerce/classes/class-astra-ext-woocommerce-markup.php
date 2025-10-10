@@ -921,6 +921,10 @@ if ( ! class_exists( 'ASTRA_Ext_WooCommerce_Markup' ) ) {
 			$previous_products = $this->get_adjacent_products( $prev_args );
 			$next_products     = $this->get_adjacent_products( $next_args );
 
+			// Add This Filters to - allows filtering of products before processing.
+			$previous_products = apply_filters( 'astra_woo_product_navigation_previous_products', $previous_products, $post->ID );
+			$next_products     = apply_filters( 'astra_woo_product_navigation_next_products', $next_products, $post->ID );
+
 			$previous_product = ! empty( $previous_products ) ? $previous_products[0] : null;
 			$next_product     = ! empty( $next_products ) ? $next_products[0] : null;
 

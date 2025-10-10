@@ -15,32 +15,32 @@ msgstr ""
 msgid "Activated"
 msgstr ""
 
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:173
-msgid "Activate"
-msgstr ""
-
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:200
-msgid "Free"
-msgstr ""
-
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:222
-msgid "Visit Site"
-msgstr ""
-
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:234
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:220
 msgid "Activate Theme"
 msgstr ""
 
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:238
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:224
 msgid "Are you sure you want to switch your current theme to Astra?"
 msgstr ""
 
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:243
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:229
 msgid "Yes"
 msgstr ""
 
-#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:246
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:232
 msgid "Close"
+msgstr ""
+
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:269
+msgid "Visit Site"
+msgstr ""
+
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:271
+msgid "Activate"
+msgstr ""
+
+#: src/Components/Dashboard/ExtendWebsiteWidget.jsx:272
+msgid "Install & Activate"
 msgstr ""
 
 #: src/Components/Dashboard/ExtendWebsiteWidget.jsx:72
@@ -107,6 +107,14 @@ msgstr ""
 
 #: src/Components/Dashboard/QuickAccess.js:90
 msgid "Help Centre"
+msgstr ""
+
+#: src/Components/Dashboard/QuickSettings.jsx:39
+msgid "Quick Settings"
+msgstr ""
+
+#: src/Components/Dashboard/QuickSettings.jsx:91
+msgid "Configure"
 msgstr ""
 
 #: src/Components/Dashboard/TemplateSection.js:65
@@ -248,19 +256,14 @@ msgstr ""
 msgid "Create New Page"
 msgstr ""
 
-#: src/Components/Dashboard/WelcomeContainer.js:151
-msgid "Read full guide"
-msgstr ""
-
 #: src/Components/Dashboard/WelcomeContainer.js:24
 msgid "Hello,"
 msgstr ""
 
 #: src/Components/Dashboard/WelcomeContainer.js:27
 msgid ""
-"Thanks for choosing  Pro! You're now part of an exclusive community of "
-"website builders. Explore the features and enjoy creating something "
-"amazing. Let's take your site to the next level together."
+"Effortlessly design modern websites with  using our powerful range of "
+"widgets & features. Get started by selecting an option based on your needs."
 msgstr ""
 
 #: src/Components/Dashboard/WelcomeContainer.js:61

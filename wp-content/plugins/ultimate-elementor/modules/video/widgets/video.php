@@ -136,6 +136,7 @@ class Video extends Common_Widget {
 						'vimeo'   => __( 'Vimeo', 'uael' ),
 						'wistia'  => __( 'Wistia', 'uael' ),
 						'bunny'   => __( 'Bunny.net', 'uael' ),
+						'rumble'  => __( 'Rumble', 'uael' ),
 						'hosted'  => __( 'Self Hosted', 'uael' ),
 					),
 				)
@@ -201,7 +202,8 @@ class Video extends Common_Widget {
 			$default_vimeo = apply_filters( 'uael_video_default_vimeo_link', 'https://vimeo.com/274860274' );
 
 			$default_bunny = apply_filters( 'uael_video_default_bunny_link', 'https://iframe.mediadelivery.net/play/432016/13530e19-ff52-4f20-a422-0075cccd73d4' );
-			
+
+			$default_rumble = apply_filters( 'uael_video_default_rumble_link', 'https://rumble.com/v6ze3ru-video-placeholder-brainstorm-force.html' );
 
 			$default_wistia = apply_filters( 'uael_video_default_wistia_link', '<p><a href="https://pratikc.wistia.com/medias/gyvkfithw2?wvideo=gyvkfithw2"><img src="https://embed-ssl.wistia.com/deliveries/53eec5fa72737e60aa36731b57b607a7c0636f52.webp?image_play_button_size=2x&amp;image_crop_resized=960x540&amp;image_play_button=1&amp;image_play_button_color=54bbffe0" width="400" height="225" style="width: 400px; height: 225px;"></a></p><p><a href="https://pratikc.wistia.com/medias/gyvkfithw2?wvideo=gyvkfithw2">Video Placeholder - Brainstorm Force - pratikc</a></p>' );
 
@@ -354,6 +356,39 @@ class Video extends Common_Widget {
 			);
 
 			$this->add_control(
+				'rumble_link',
+				array(
+					'label'       => __( 'Link', 'uael' ),
+					'type'        => Controls_Manager::TEXT,
+					'dynamic'     => array(
+						'active'     => true,
+						'categories' => array(
+							TagsModule::POST_META_CATEGORY,
+							TagsModule::URL_CATEGORY,
+						),
+					),
+					'default'     => $default_rumble,
+					'label_block' => true,
+					'condition'   => array(
+						'video_type' => 'rumble',
+					),
+				)
+			);
+
+			$this->add_control(
+				'rumble_link_doc',
+				array(
+					'type'            => Controls_Manager::RAW_HTML,
+					'raw'             => sprintf( __( '<b>Note:</b> Use the direct Rumble video URL format.</br></br><b>Valid:</b>&nbsp;https://rumble.com/v6ze3ru-video-placeholder-brainstorm-force.html</br></br><b>Important:</b> Not all Rumble videos are embeddable. If you get a 410 error, the video owner may have disabled embedding or the video may be restricted.', 'uael' ) ),
+					'content_classes' => 'uael-editor-doc',
+					'condition'       => array(
+						'video_type' => 'rumble',
+					),
+					'separator'       => 'none',
+				)
+			);
+
+			$this->add_control(
 				'bunny_cdn_prefix',
 				array(
 					'label'       => __( 'Bunny CDN Prefix', 'uael' ),
@@ -433,6 +468,9 @@ class Video extends Common_Widget {
 					'label'     => __( 'Video Options', 'uael' ),
 					'type'      => Controls_Manager::HEADING,
 					'separator' => 'before',
+					'condition' => array(
+						'video_type!' => 'rumble',
+					),
 				)
 			);
 
@@ -443,7 +481,7 @@ class Video extends Common_Widget {
 					'label'     => __( 'Lightbox', 'uael' ),
 					'type'      => Controls_Manager::SWITCHER,
 					'condition' => array(
-						'video_type!' => 'bunny',
+						'video_type!' => array( 'bunny', 'rumble' ),
 					),
 				)
 			);
@@ -760,7 +798,7 @@ class Video extends Common_Widget {
 					'content_classes' => 'elementor-descriptor',
 					'condition'       => array(
 						'lightbox'    => 'yes',
-						'video_type!' => 'bunny',
+						'video_type!' => array( 'bunny', 'rumble' ),
 					),
 				)
 			);
@@ -1215,7 +1253,7 @@ class Video extends Common_Widget {
 					'label'     => __( 'Background Color', 'uael' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => array(
-						'{{WRAPPER}} .uael-youtube-icon-bg, {{WRAPPER}} .uael-vimeo-icon-bg' => 'fill: {{VALUE}}',
+						'{{WRAPPER}} .uael-youtube-icon-bg, {{WRAPPER}} .uael-vimeo-icon-bg, {{WRAPPER}} .uael-rumble-icon-bg' => 'fill: {{VALUE}}',
 						'{{WRAPPER}} .uael-video-wistia-play' => 'background-color: {{VALUE}}',
 					),
 					'condition' => array(
@@ -1230,7 +1268,7 @@ class Video extends Common_Widget {
 					'label'     => __( 'Hover Background Color', 'uael' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => array(
-						'{{WRAPPER}} .uael-video__outer-wrap:hover .uael-video__play-icon .uael-youtube-icon-bg, {{WRAPPER}} .uael-video__outer-wrap:hover .uael-video__play-icon .uael-vimeo-icon-bg' => 'fill: {{VALUE}}',
+						'{{WRAPPER}} .uael-video__outer-wrap:hover .uael-video__play-icon .uael-youtube-icon-bg, {{WRAPPER}} .uael-video__outer-wrap:hover .uael-video__play-icon .uael-vimeo-icon-bg, {{WRAPPER}} .uael-video__outer-wrap:hover .uael-video__play-icon .uael-rumble-icon-bg' => 'fill: {{VALUE}}',
 						'{{WRAPPER}} .uael-video__outer-wrap:hover .uael-video-wistia-play' => 'background-color: {{VALUE}}',
 					),
 					'condition' => array(
@@ -2175,6 +2213,10 @@ class Video extends Common_Widget {
 						$thumb = 'https://' . $cdn_prefix . '.b-cdn.net/' . $video_id . '/thumbnail.jpg';
 					}
 				}
+			} elseif ( 'rumble' === $settings['video_type'] ) {
+				$rumble_url  = $settings['rumble_link'];
+				$rumble_data = $this->get_rumble_oembed_data( $rumble_url );
+				$thumb       = $rumble_data['thumbnail_url'];
 			}
 		}
 		return $thumb;
@@ -2227,6 +2269,9 @@ class Video extends Common_Widget {
 			if ( empty( $id ) ) {
 				$id = 'bunny-video';
 			}       
+		} elseif ( 'rumble' === $settings['video_type'] ) {
+			$rumble_data = $this->get_rumble_oembed_data( $url );
+			$id          = $rumble_data['video_id'];
 		}
 
 		return $id;
@@ -2299,12 +2344,15 @@ class Video extends Common_Widget {
 			}
 			return $url;
 
+		} elseif ( 'rumble' === $settings['video_type'] ) {
+			$url = 'https://rumble.com/embed/' . $id;
+			return $url;
 		}
 
 		$url = add_query_arg( $params, $url . $id );
 
-		// Don't add extra autoplay parameter for Bunny.net as it's already handled.
-		if ( 'bunny' !== $settings['video_type'] ) {
+		// Don't add extra autoplay parameter for Bunny.net and Rumble as it's already handled.
+		if ( 'bunny' !== $settings['video_type'] && 'rumble' !== $settings['video_type'] ) {
 			$url .= ( empty( $params ) ) ? '?' : '&';
 		}
 
@@ -2463,6 +2511,10 @@ class Video extends Common_Widget {
 				$autoplay = ( 'yes' === $settings['bunny_autoplay'] ) ? '1' : '0';
 				break;
 
+			case 'rumble':
+				$autoplay = '0'; // Rumble doesn't support autoplay via embed parameters.
+				break;
+
 			case 'hosted':
 				$autoplay = ( 'yes' === $settings['autoplay'] ) ? '1' : '0';
 				break;
@@ -2532,6 +2584,12 @@ class Video extends Common_Widget {
 					$this->add_render_attribute( 'video-play', 'class', 'uael-video__bunny-play' );
 
 					$html = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="uael-bunny-icon-bg" x="0px" y="0px" width="100%" height="100%" viewBox="0 14.375 95 66.25" enable-background="new 0 14.375 95 66.25" xml:space="preserve" fill="rgba(23,34,35,.75)"><path d="M12.5,14.375c-6.903,0-12.5,5.597-12.5,12.5v41.25c0,6.902,5.597,12.5,12.5,12.5h70c6.903,0,12.5-5.598,12.5-12.5v-41.25 c0-6.903-5.597-12.5-12.5-12.5H12.5z"/><polygon fill="#FFFFFF" points="39.992,64.299 39.992,30.701 62.075,47.5 "/></svg>';
+					break;
+
+				case 'rumble':
+					$this->add_render_attribute( 'video-play', 'class', 'uael-video__rumble-play' );
+
+					$html = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="uael-rumble-icon-bg" x="0px" y="0px" width="100%" height="100%" viewBox="0 14.375 95 66.25" enable-background="new 0 14.375 95 66.25" xml:space="preserve" fill="rgba(23,34,35,.75)"><path d="M12.5,14.375c-6.903,0-12.5,5.597-12.5,12.5v41.25c0,6.902,5.597,12.5,12.5,12.5h70c6.903,0,12.5-5.598,12.5-12.5v-41.25 c0-6.903-5.597-12.5-12.5-12.5H12.5z"/><polygon fill="#FFFFFF" points="39.992,64.299 39.992,30.701 62.075,47.5 "/></svg>';
 					break;
 
 				case 'hosted':
@@ -2664,7 +2722,8 @@ class Video extends Common_Widget {
 				echo '</div>';
 				?>
 			</span>
-		<?php } elseif ( ! empty( $video_url ) ) { ?>
+		<?php } ?>
+		<?php if ( ! empty( $video_url ) ) { ?>
 		<div <?php echo wp_kses_post( $this->get_render_attribute_string( 'video-outer' ) ); ?>>
 			<?php $this->get_header_wrap( $id ); ?>
 			<div class="uael-video-inner-wrap">
@@ -2765,6 +2824,10 @@ class Video extends Common_Widget {
 		}
 
 		if ( '' === $settings['bunny_link'] && 'bunny' === $settings['video_type'] ) {
+			return '';
+		}
+
+		if ( '' === $settings['rumble_link'] && 'rumble' === $settings['video_type'] ) {
 			return '';
 		}
 
@@ -2997,7 +3060,76 @@ class Video extends Common_Widget {
 			// Note: Bunny.net does not support end time parameter.	
 		}
 
+		// Rumble embed parameters are limited.
+		// Most parameters are controlled by the video owner's settings.
+		// Note: Rumble doesn't support additional parameters like start/end time.
+		// The embed URL format is: https://rumble.com/embed/{video_id}/.
+
 		return $params;
+	}
+
+	/**
+	 * Get Rumble data using oEmbed API.
+	 *
+	 * @param string $url Rumble URL.
+	 * @return array Rumble oEmbed response data.
+	 * @since 1.5.0
+	 * @access private
+	 */
+	private function get_rumble_oembed_data( $url ) {
+		$response = array(
+			'thumbnail_url' => '',
+			'duration'      => '',
+			'html'          => '',
+			'video_id'      => '',
+		);
+
+		$cache_key   = 'uael_rumble_' . md5( $url );
+		$cache_value = wp_cache_get( $cache_key );
+
+		if ( is_array( $cache_value ) ) {
+			$response = array_merge( $response, $cache_value );
+			return $response;
+		}
+
+		$api_response = wp_remote_get( 'https://rumble.com/api/Media/oembed.json?url=' . urlencode( $url ), array( 'timeout' => 15 ) );
+
+		if ( is_array( $api_response ) && ! is_wp_error( $api_response ) && 200 === wp_remote_retrieve_response_code( $api_response ) ) {
+			$api_response = json_decode( $api_response['body'] );
+
+			if ( isset( $api_response->thumbnail_url ) ) {
+				$response['thumbnail_url'] = $api_response->thumbnail_url;
+			}
+
+			if ( isset( $api_response->duration ) ) {
+				$response['duration'] = $api_response->duration;
+			}
+
+			if ( isset( $api_response->html ) ) {
+				$response['html'] = $api_response->html;
+				
+				// Extract video ID from the HTML iframe.
+				if ( preg_match( '/rumble\.com\/embed\/([^\/\?"]+)/', $api_response->html, $matches ) ) {
+					$response['video_id'] = $matches[1];
+				}
+			}
+		}
+
+		// Fallback: try to extract video ID from URL using improved regex.
+		if ( empty( $response['video_id'] ) ) {
+			// Handle various Rumble URL formats.
+			if ( preg_match( '/rumble\.com\/v([^-\/?]+)/', $url, $matches ) ) {
+				$response['video_id'] = 'v' . $matches[1];
+			} elseif ( preg_match( '/rumble\.com\/([^-\/?]+)/', $url, $matches ) ) {
+				$response['video_id'] = $matches[1];
+			}
+		}
+
+		if ( ! empty( $response['thumbnail_url'] ) || ! empty( $response['video_id'] ) ) {
+			wp_cache_set( $cache_key, $response, '', HOUR_IN_SECONDS );
+		}
+
+		return $response;
 	}
 }
 

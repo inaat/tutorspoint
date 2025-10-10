@@ -1062,55 +1062,24 @@ class UAEL_Config {
 
 		$plugins = array(
 
-			'header-footer-elementor/header-footer-elementor.php' => array(
-				'icon'         => $uaelite_logo,
+			'surerank/surerank.php'           => array(
+				'icon'         => $images_url . 'surerank.svg',
 				'type'         => 'plugin',
-				// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-				// 'name'    => UAEL_PLUGIN_NAME . esc_html__( ' - Lite', 'uael' ),
-				'name'         => html_entity_decode( $uaelite_title ),
-				'desc'         => html_entity_decode( esc_html__( 'Enhance headers/footers & pages with elementor.', 'uael' ) ),
-				'wporg'        => 'https://wordpress.org/plugins/header-footer-elementor/',
-				'url'          => 'https://downloads.wordpress.org/plugin/header-footer-elementor.zip',
-				'siteurl'      => $uaelite_site,
-				'slug'         => 'header-footer-elementor',
+				'name'         => esc_html__( 'Boost Your Traffic with Easy SEO Optimization!', 'uael' ),
+				'desc'         => esc_html__( 'Rank higher with effortless SEO optimization. SureRank offers a simple, clutter-free interface with lightweight code, minimal setup, clear meta and schema settings, and smart content optimization that actually makes sense, helping you grow your traffic easily.', 'uael' ),
+				'wporg'        => 'https://wordpress.org/plugins/surerank/',
+				'url'          => 'https://downloads.wordpress.org/plugin/surerank.zip',
+				'siteurl'      => 'https://surerank.com/',
 				'isFree'       => true,
-				'status'       => self::get_plugin_status( 'header-footer-elementor/header-footer-elementor.php' ),
-				'settings_url' => $uaelite_settings_url,
+				'slug'         => 'surerank',
+				'status'       => self::get_plugin_status( 'surerank/surerank.php' ),
+				'settings_url' => admin_url( 'admin.php?page=surerank_onboarding' ),
 			),
-
-			'astra'                                        => array(
-				'icon'         => ! empty( $white_labels['theme_icon'] ) ? $white_labels['theme_icon'] : $images_url . 'astra.svg',
-				'type'         => 'theme',
-				'name'         => $white_labels['theme_name'],
-				'desc'         => esc_html__( 'Fast and customizable theme for your website.', 'uael' ),
-				'wporg'        => 'https://wordpress.org/themes/astra/',
-				'url'          => 'https://downloads.wordpress.org/theme/astra.zip',
-				'siteurl'      => $white_labels['author_url'],
-				'slug'         => 'astra',
-				'isFree'       => true,
-				'status'       => self::get_theme_status( 'astra' ),
-				'settings_url' => admin_url( 'admin.php?page=astra' ),
-			),
-
-			'astra-sites/astra-sites.php'                  => array(
-				'icon'         => $images_url . 'stemplates.svg',
-				'type'         => 'plugin',
-				'name'         => esc_html__( 'Starter Templates', 'uael' ),
-				'desc'         => esc_html__( 'Launch websites with AI or ready-made templates.', 'uael' ),
-				'wporg'        => 'https://wordpress.org/plugins/astra-sites/',
-				'url'          => 'https://downloads.wordpress.org/plugin/astra-sites.zip',
-				'siteurl'      => 'https://startertemplates.com/',
-				'slug'         => 'astra-sites',
-				'isFree'       => true,
-				'status'       => self::get_plugin_status( 'astra-sites/astra-sites.php' ),
-				'settings_url' => admin_url( 'admin.php?page=starter-templates' ),
-			),
-
-			'surecart/surecart.php'                        => array(
+			'surecart/surecart.php'           => array(
 				'icon'         => $images_url . 'surecart.svg',
 				'type'         => 'plugin',
-				'name'         => esc_html__( 'SureCart', 'uael' ),
-				'desc'         => esc_html__( 'Sell your products easily on WordPress.', 'uael' ),
+				'name'         => esc_html__( 'Sell Products Effortlessly with SureCart!', 'uael' ),
+				'desc'         => esc_html__( 'Sell your products effortlessly with a modern, flexible eCommerce system. SureCart makes it easy to set up one-click checkout, manage subscriptions, recover abandoned carts, and collect secure payments, helping you launch and grow your online store confidently.', 'uael' ),
 				'wporg'        => 'https://wordpress.org/plugins/surecart/',
 				'url'          => 'https://downloads.wordpress.org/plugin/surecart.zip',
 				'siteurl'      => 'https://surecart.com/',
@@ -1119,26 +1088,11 @@ class UAEL_Config {
 				'status'       => self::get_plugin_status( 'surecart/surecart.php' ),
 				'settings_url' => admin_url( 'admin.php?page=sc-getting-started' ),
 			),
-
-			'presto-player/presto-player.php'              => array(
-				'icon'         => $images_url . 'pplayer.svg',
-				'type'         => 'plugin',
-				'name'         => esc_html__( 'Presto Player', 'uael' ),
-				'desc'         => html_entity_decode( esc_html__( 'Display seamless & interactive videos.', 'uael' ) ),
-				'wporg'        => 'https://wordpress.org/plugins/presto-player/',
-				'url'          => 'https://downloads.wordpress.org/plugin/presto-player.zip',
-				'siteurl'      => 'https://prestoplayer.com/',
-				'slug'         => 'presto-player',
-				'isFree'       => true,
-				'status'       => self::get_plugin_status( 'presto-player/presto-player.php' ),
-				'settings_url' => admin_url( 'edit.php?post_type=pp_video_block' ),
-			),
-
-			'sureforms/sureforms.php'                      => array(
+			'sureforms/sureforms.php'         => array(
 				'icon'         => $images_url . 'sureforms.svg',
 				'type'         => 'plugin',
-				'name'         => esc_html__( 'SureForms', 'uael' ),
-				'desc'         => esc_html__( 'Create high-converting forms with ease.', 'uael' ),
+				'name'         => esc_html__( 'Build Powerful Forms in Minutes with SureForms!', 'uael' ),
+				'desc'         => esc_html__( 'Build powerful forms in minutes without complexity. SureForms lets you create contact forms, payment forms, and surveys using an AI-assisted, clean interface with conversational layouts, conditional logic, payment collection, and mobile optimization for a seamless experience.', 'uael' ),
 				'wporg'        => 'https://wordpress.org/plugins/sureforms/',
 				'url'          => 'https://downloads.wordpress.org/plugin/sureforms.zip',
 				'siteurl'      => 'https://sureforms.com/',
@@ -1147,12 +1101,24 @@ class UAEL_Config {
 				'status'       => self::get_plugin_status( 'sureforms/sureforms.php' ),
 				'settings_url' => admin_url( 'admin.php?page=sureforms_menu' ),
 			),
-
-			'suretriggers/suretriggers.php'                => array(
+			'presto-player/presto-player.php' => array(
+				'icon'         => $images_url . 'pplayer.svg',
+				'type'         => 'plugin',
+				'name'         => esc_html__( 'Add Engaging Videos Seamlessly with Presto Player!', 'uael' ),
+				'desc'         => html_entity_decode( esc_html__( 'Add engaging videos seamlessly in minutes without complexity. Presto Player lets you enhance your website with videos using branding, chapters, and call-to-actions while providing fast load times, detailed analytics, and user-friendly controls for a seamless viewing experience.', 'uael' ) ),
+				'wporg'        => 'https://wordpress.org/plugins/presto-player/',
+				'url'          => 'https://downloads.wordpress.org/plugin/presto-player.zip',
+				'siteurl'      => 'https://prestoplayer.com/',
+				'slug'         => 'presto-player',
+				'isFree'       => true,
+				'status'       => self::get_plugin_status( 'presto-player/presto-player.php' ),
+				'settings_url' => admin_url( 'edit.php?post_type=pp_video_block' ),
+			),
+			'suretriggers/suretriggers.php'   => array(
 				'icon'         => $images_url . 'OttoKit-Symbol-Primary.svg',
 				'type'         => 'plugin',
-				'name'         => esc_html__( 'OttoKit (Formerly SureTriggers)', 'uael' ),
-				'desc'         => esc_html__( 'Automate WordPress tasks effortlessly.', 'uael' ),
+				'name'         => esc_html__( 'Automate Your Workflows Easily with Ottokit!', 'uael' ),
+				'desc'         => esc_html__( 'Automate workflows effortlessly in minutes without complexity. Ottokit lets you connect your WordPress site with web apps to automate tasks, sync data, and run actions using a clean visual builder with scheduling, filters, conditions, and webhooks for a seamless experience.', 'uael' ),
 				'wporg'        => 'https://wordpress.org/plugins/suretriggers/',
 				'url'          => 'https://downloads.wordpress.org/plugin/suretriggers.zip',
 				'siteurl'      => 'https://ottokit.com/',
@@ -1160,20 +1126,6 @@ class UAEL_Config {
 				'isFree'       => true,
 				'status'       => self::get_plugin_status( 'suretriggers/suretriggers.php' ),
 				'settings_url' => admin_url( 'admin.php?page=suretriggers' ),
-			),
-
-			'all-in-one-schemaorg-rich-snippets/index.php' => array(
-				'icon'         => $images_url . 'aiosrs.svg',
-				'type'         => 'plugin',
-				'name'         => html_entity_decode( esc_html__( 'Schema – All In One Schema Rich Snippets', 'uael' ) ),
-				'desc'         => html_entity_decode( esc_html__( 'Boost SEO with rich results & structured data.', 'uael' ) ),
-				'wporg'        => 'https://wordpress.org/plugins/all-in-one-schemaorg-rich-snippets/',
-				'url'          => 'https://downloads.wordpress.org/plugin/all-in-one-schemaorg-rich-snippets.zip',
-				'siteurl'      => 'https://wordpress.org/plugins/all-in-one-schemaorg-rich-snippets/',
-				'slug'         => 'all-in-one-schemaorg-rich-snippets',
-				'isFree'       => true,
-				'status'       => self::get_plugin_status( 'all-in-one-schemaorg-rich-snippets/index.php' ),
-				'settings_url' => admin_url( 'admin.php?page=rich_snippet_dashboard' ),
 			),
 
 		);

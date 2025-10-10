@@ -7,6 +7,50 @@
  */
 if (!defined('ABSPATH')) exit;
 
+/* Override WordPress default From email and name */
+add_filter('wp_mail_from', 'tp_mail_from');
+function tp_mail_from($email) {
+    return 'support@fatooranow.com';
+}
+
+add_filter('wp_mail_from_name', 'tp_mail_from_name');
+function tp_mail_from_name($name) {
+    return 'Tutors Point';
+}
+
+/* Configure SMTP for email delivery */
+add_action('phpmailer_init', 'tp_configure_smtp', 10, 1);
+function tp_configure_smtp($phpmailer) {
+    $phpmailer->isSMTP();
+    $phpmailer->Host       = 'smtp.hostinger.com';
+    $phpmailer->SMTPAuth   = true;
+    $phpmailer->Port       = 465;
+    $phpmailer->Username   = 'support@fatooranow.com';
+    $phpmailer->Password   = '8Pl+/sO5!';
+    $phpmailer->SMTPSecure = 'ssl';
+    $phpmailer->SMTPDebug  = 0;
+}
+
+/* Log email errors */
+add_action('wp_mail_failed', 'tp_log_email_errors');
+function tp_log_email_errors($wp_error) {
+    error_log('WordPress mail error: ' . $wp_error->get_error_message());
+}
+
+/* Test email function - add ?test_email=your@email.com to any page */
+add_action('init', 'tp_test_email');
+function tp_test_email() {
+    if (isset($_GET['test_email']) && is_email($_GET['test_email'])) {
+        $test_email = sanitize_email($_GET['test_email']);
+        $sent = wp_mail($test_email, 'SMTP Test from Tutors Point', 'This is a test email to verify SMTP configuration is working.');
+        if ($sent) {
+            wp_die('Test email sent successfully to ' . $test_email);
+        } else {
+            wp_die('Test email failed to send to ' . $test_email . '. Check error logs.');
+        }
+    }
+}
+
 /* Ensure roles exist */
 add_action('init', function () {
     if (!get_role('student')) { add_role('student', 'Student', ['read' => true]); }
@@ -148,47 +192,118 @@ add_shortcode('tp_auth_portal', function () {
 
     <style>
       :root{
-        --tp-bg:#0b1220; --tp-panel:#0f172a; --tp-text:#ffffff; --tp-accent:#22d3ee; --tp-accent2:#10b981;
-        --tp-radius:12px; --tp-shadow:0 10px 30px rgba(0,0,0,.28);
+        --tp-bg:#e5f4ef; --tp-panel:#ffffff; --tp-text:#333333; --tp-accent:#3dba9f; --tp-accent2:#5cd4b6;
+        --tp-radius:16px; --tp-shadow:0 10px 30px rgba(61,186,159,.18);
       }
-      .tp-auth-btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(135deg,var(--tp-accent2),var(--tp-accent));color:#fff;border:0;cursor:pointer;box-shadow:var(--tp-shadow)}
-      .tp-auth-btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+
+      .tp-auth-btn{
+        display:inline-flex;align-items:center;justify-content:center;padding:10px 24px;
+        border-radius:6px;font:500 14px/1.3 'League Spartan',sans-serif;
+        background:#3dba9f;color:#fff;border:0;cursor:pointer;
+        box-shadow:0 4px 12px rgba(61,186,159,.3);transition:all .3s ease;
+      }
+      .tp-auth-btn:hover{background:#2da889;transform:translateY(-2px);box-shadow:0 6px 16px rgba(61,186,159,.4)}
       .tp-auth-wrap{position:relative;z-index:50;display:flex;gap:8px}
-      /* Auth modal styles — (unchanged from your file except compact sizes) */
-      .tp-auth-modal{position:fixed;inset:0;display:none;z-index:1000}
+
+      /* Auth modal styles */
+      .tp-auth-modal{position:fixed;inset:0;display:none;z-index:10000}
       .tp-auth-modal.open{display:block}
-      .tp-auth-overlay{position:absolute;inset:0;background:rgba(6,10,18,.55);backdrop-filter:blur(3px)}
-      .tp-auth-dialog{position:relative;width:100%;max-width:420px;margin:min(10vh,64px) auto;z-index:1;background:radial-gradient(900px 300px at 110% 120%, rgba(16,185,129,.12), transparent 40%),radial-gradient(900px 300px at 10% -20%, rgba(34,211,238,.12), transparent 40%),var(--tp-panel);color:var(--tp-text);border:1px solid rgba(255,255,255,.08);border-radius:var(--tp-radius);box-shadow:var(--tp-shadow);transform:translateY(10px);opacity:0;transition:.25s ease}
-      .tp-auth-modal.open .tp-auth-dialog{transform:translateY(0);opacity:1}
-      .tp-auth-header{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
-      .tp-auth-header h6{margin:0;color:#fff;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-      .tp-auth-close{appearance:none;border:0;background:transparent;color:#cbd5e1;font-size:16px;cursor:pointer;padding:4px;border-radius:8px}
-      .tp-auth-close:hover{color:#fff;background:rgba(255,255,255,.08)}
-      .tp-auth-tabs{display:grid;grid-auto-flow:column;gap:6px}
-      .tp-auth-tabs button{appearance:none;border:0;padding:6px 10px;border-radius:10px;cursor:pointer;color:#cbd5e1;background:transparent;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-      .tp-auth-tabs button.is-active{color:#fff;background:rgba(34,211,238,.18);box-shadow:0 0 0 2px rgba(34,211,238,.22) inset}
-      .tp-auth-main{padding:12px}
+      .tp-auth-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+      .tp-auth-dialog{
+        position:relative;width:100%;max-width:520px;margin:min(8vh,50px) auto;z-index:1;
+        background:white;
+        border-radius:var(--tp-radius);box-shadow:0 20px 60px rgba(0,0,0,.2);
+        transform:translateY(30px) scale(0.95);opacity:0;transition:.3s ease;
+      }
+      .tp-auth-modal.open .tp-auth-dialog{transform:translateY(0) scale(1);opacity:1}
+
+      .tp-auth-header{
+        display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;
+        padding:20px 24px;border-bottom:1px solid #e5e5e5;
+        background:linear-gradient(135deg,rgba(61,186,159,.05),rgba(92,212,182,.05));
+      }
+      .tp-auth-header h6{margin:0;color:#333;font:600 18px/1.3 'League Spartan',sans-serif}
+      .tp-auth-close{
+        appearance:none;border:0;background:transparent;color:#666;font-size:24px;
+        cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s;
+      }
+      .tp-auth-close:hover{color:#3dba9f;background:rgba(61,186,159,.1)}
+
+      .tp-auth-tabs{display:grid;grid-auto-flow:column;gap:8px}
+      .tp-auth-tabs button{
+        appearance:none;border:0;padding:8px 16px;border-radius:6px;cursor:pointer;
+        color:#666;background:transparent;font:500 13px/1.3 'League Spartan',sans-serif;
+        transition:all .2s;
+      }
+      .tp-auth-tabs button.is-active{
+        color:#fff;background:#3dba9f;box-shadow:0 2px 8px rgba(61,186,159,.3)
+      }
+
+      .tp-auth-main{padding:24px}
       .tp-auth-form{display:none}.tp-auth-form.is-active{display:block}
-      .tp-seg{display:grid;grid-auto-flow:column;gap:6px;background:rgba(255,255,255,.05);padding:6px;border-radius:10px;margin-bottom:10px}
+
+      .tp-seg{
+        display:grid;grid-auto-flow:column;gap:8px;background:rgba(61,186,159,.08);
+        padding:6px;border-radius:10px;margin-bottom:16px;
+      }
       .tp-seg input{display:none}
-      .tp-seg label{user-select:none;padding:6px 8px;border-radius:8px;text-align:center;cursor:pointer;color:#0077ff;font:400 25px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-      .tp-seg input:checked + label{color:#fff;background:rgba(34,211,238,.24);box-shadow:0 0 0 2px rgba(34,211,238,.22) inset}
-      .tp-field{display:grid;gap:4px;margin:8px 0}
-      .tp-field label{color:#f8fbfd;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;letter-spacing:.2px}
-      .tp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-      .tp-control{display:grid;grid-template-columns:1fr auto;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px}
-      .tp-control input,.tp-field input{all:unset;padding:8px 10px;color:#00d4ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+      .tp-seg label{
+        user-select:none;padding:10px 16px;border-radius:8px;text-align:center;cursor:pointer;
+        color:#666;font:600 14px/1.3 'League Spartan',sans-serif;transition:all .2s;
+      }
+      .tp-seg input:checked + label{color:#fff;background:#3dba9f;box-shadow:0 2px 8px rgba(61,186,159,.3)}
+
+      .tp-field{display:grid;gap:6px;margin:12px 0}
+      .tp-field label{color:#333;font:600 13px/1.3 'League Spartan',sans-serif;letter-spacing:.3px}
+      .tp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+      .tp-control{
+        display:grid;grid-template-columns:1fr auto;align-items:center;
+        background:#f8f9fa;border:1px solid #ddd;border-radius:8px;transition:all .2s;
+      }
+      .tp-control:focus-within{border-color:#3dba9f;background:#fff;box-shadow:0 0 0 3px rgba(61,186,159,.1)}
+
+      .tp-control input,.tp-field input{
+        all:unset;padding:11px 14px;color:#333;
+        background:#f8f9fa;border:1px solid #ddd;border-radius:8px;
+        font:500 14px/1.3 'League Spartan',sans-serif;transition:all .2s;
+      }
+      .tp-field input:focus{border-color:#3dba9f;background:#fff;box-shadow:0 0 0 3px rgba(61,186,159,.1)}
       .tp-control input{border:0;background:transparent}
-      .tp-reveal{appearance:none;border:0;background:transparent;color:#94a3b8;padding:0 8px;cursor:pointer}
-      .tp-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px}
-      .tp-link{color:#a5b4fc;text-decoration:none;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-      .tp-link:hover{text-decoration:underline}
-      .tp-primary{appearance:none;border:0;cursor:pointer;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:8px 12px;border-radius:10px;color:#fff;background:linear-gradient(135deg,var(--tp-accent2),var(--tp-accent));box-shadow:var(--tp-shadow)}
-      .tp-primary:hover{filter:brightness(1.05);transform:translateY(-1px)}
-      .tp-helper.small{font:400 12px/1.4 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#93a3b3}
-      .tp-msg{margin-top:8px;font:400 12px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-      .tp-msg.ok{color:#34d399}.tp-msg.err{color:#f87171}
-      @media (max-width:480px){.tp-row{grid-template-columns:1fr}.tp-auth-dialog{margin:10vh 12px}}
+      .tp-control input:focus{box-shadow:none}
+
+      .tp-reveal{
+        appearance:none;border:0;background:transparent;color:#999;padding:0 12px;
+        cursor:pointer;transition:color .2s;
+      }
+      .tp-reveal:hover{color:#3dba9f}
+
+      .tp-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
+      .tp-link{color:#3dba9f;text-decoration:none;font:500 13px/1.3 'League Spartan',sans-serif}
+      .tp-link:hover{text-decoration:underline;color:#2da889}
+
+      .tp-primary{
+        appearance:none;border:0;cursor:pointer;
+        font:600 14px/1.3 'League Spartan',sans-serif;padding:11px 24px;
+        border-radius:6px;color:#fff;background:#3dba9f;
+        box-shadow:0 4px 12px rgba(61,186,159,.3);transition:all .3s ease;
+      }
+      .tp-primary:hover{background:#2da889;transform:translateY(-2px);box-shadow:0 6px 16px rgba(61,186,159,.4)}
+
+      .tp-helper.small{font:400 12px/1.5 'League Spartan',sans-serif;color:#777}
+      .tp-helper.small a{color:#3dba9f;text-decoration:none}
+      .tp-helper.small a:hover{text-decoration:underline}
+
+      .tp-msg{margin-top:12px;font:500 13px/1.4 'League Spartan',sans-serif;padding:10px 12px;border-radius:6px}
+      .tp-msg.ok{color:#0d9267;background:rgba(61,186,159,.1)}
+      .tp-msg.err{color:#dc2626;background:rgba(220,38,38,.1)}
+
+      @media (max-width:480px){
+        .tp-row{grid-template-columns:1fr}
+        .tp-auth-dialog{margin:10vh 16px;max-width:none}
+        .tp-auth-header{padding:16px 20px}
+        .tp-auth-main{padding:20px}
+      }
 
       /* Terms modal (tiny, scrollable both axes, small font) */
       .tp-terms-modal{position:fixed;inset:0;display:none;z-index:1100}
@@ -337,6 +452,19 @@ function tp_auth_login_cb(){
     $user = get_user_by('email', $email);
     if (!$user) wp_send_json_error(['message' => 'No account found for this email.']);
 
+    if (in_array('student', $user->roles)) {
+        global $wpdb;
+        // Get the most recent record for this email
+        $student = $wpdb->get_row($wpdb->prepare(
+            "SELECT status FROM wpC_student_register WHERE email = %s ORDER BY created_at DESC LIMIT 1",
+            $email
+        ));
+
+        if ($student && $student->status == 0) {
+            wp_send_json_error(['message' => 'Please verify your email address before logging in. Check your inbox for the verification link.']);
+        }
+    }
+
     $creds = ['user_login'=>$user->user_login,'user_password'=>$password,'remember'=>true];
     $signon = wp_signon($creds, false);
     if (is_wp_error($signon)) wp_send_json_error(['message'=>'Invalid credentials.']);
@@ -371,17 +499,60 @@ function tp_auth_signup_cb(){
     $now = current_time('mysql');
 
     if ($wp_role === 'student') {
-        $wpdb->insert('wpC_student_register', [
-            'full_name'  => $name,
-            'email'      => $email,
-            'password'   => wp_hash_password($pass),
-            'status'     => 1,
-            'created_at' => $now,
-        ]);
-        wp_set_current_user($user_id);
-        wp_set_auth_cookie($user_id);
-        do_action('wp_login', $email, get_user_by('id', $user_id));
-        wp_send_json_success(['message'=>'Welcome! Your student account has been created. Redirecting…','reload'=>true]);
+        $verification_token = wp_generate_password(32, false, false);
+
+        // Check if student already exists in the table
+        $existing_student = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM wpC_student_register WHERE email = %s ORDER BY created_at DESC LIMIT 1",
+            $email
+        ));
+
+        if ($existing_student) {
+            // Update existing record instead of inserting new one
+            $wpdb->update(
+                'wpC_student_register',
+                [
+                    'full_name' => $name,
+                    'password' => wp_hash_password($pass),
+                    'status' => 0,
+                    'verification_token' => $verification_token,
+                    'created_at' => $now,
+                ],
+                ['email' => $email],
+                ['%s', '%s', '%d', '%s', '%s'],
+                ['%s']
+            );
+        } else {
+            // Insert new record
+            $wpdb->insert('wpC_student_register', [
+                'full_name'  => $name,
+                'email'      => $email,
+                'password'   => wp_hash_password($pass),
+                'status'     => 0,
+                'verification_token' => $verification_token,
+                'created_at' => $now,
+            ]);
+        }
+        
+        $verification_link = add_query_arg([
+            'token' => $verification_token,
+            'email' => urlencode($email)
+        ], home_url('/verify-email/'));
+        $subject = 'Tutors Point - Verify Your Email Address';
+        $message = "Hi {$name},\n\n";
+        $message .= "Thank you for signing up with Tutors Point! Please verify your email address by clicking the link below:\n\n";
+        $message .= $verification_link . "\n\n";
+        $message .= "If you didn't create this account, please ignore this email.\n\n";
+        $message .= "Best regards,\nTutors Point Team";
+        
+        $sent = wp_mail($email, $subject, $message);
+        
+        if ($sent) {
+            wp_send_json_success(['message'=>'Account created! Please check your email and click the verification link to activate your account.']);
+        } else {
+            error_log('Email verification failed for: ' . $email);
+            wp_send_json_error(['message'=>'Account created but verification email could not be sent. Please contact support.']);
+        }
     } else {
         $wpdb->insert('wpC_teachers_main', [
             'FullName'   => $name,
@@ -425,5 +596,255 @@ function tp_send_terms_pdf_cb(){
     );
     if (!$sent) wp_send_json_error(['message'=>'Email could not be sent.']);
     wp_send_json_success(['message'=>'Email sent.']);
+}
+
+/* Verification Page Shortcode */
+add_shortcode('tp_verify_email', function() {
+    ob_start(); ?>
+    <div class="tp-verify-container">
+        <div class="tp-verify-card">
+            <div class="tp-verify-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" class="tp-verify-circle"/>
+                    <path d="M9 12L11 14L15 10" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tp-verify-check"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="tp-verify-title">Email Verification</h1>
+            <p class="tp-verify-message">Please wait while we verify your email address...</p>
+            <div class="tp-verify-spinner">
+                <div class="tp-spinner"></div>
+            </div>
+            <p class="tp-verify-footer">This will only take a moment</p>
+        </div>
+    </div>
+
+    <style>
+        .tp-verify-container {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            margin: -60px -9999px 0;
+            padding: 60px 9999px;
+        }
+
+        .tp-verify-card {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(34, 211, 238, 0.05) 100%),
+                        rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        0 0 100px rgba(34, 211, 238, 0.1) inset;
+            backdrop-filter: blur(10px);
+            animation: tp-card-enter 0.6s ease-out;
+        }
+
+        @keyframes tp-card-enter {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .tp-verify-icon {
+            margin-bottom: 30px;
+            animation: tp-icon-float 3s ease-in-out infinite;
+        }
+
+        @keyframes tp-icon-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .tp-verify-circle {
+            stroke-dasharray: 63;
+            stroke-dashoffset: 63;
+            animation: tp-circle-draw 2s ease-out forwards;
+        }
+
+        @keyframes tp-circle-draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .tp-verify-check {
+            stroke-dasharray: 12;
+            stroke-dashoffset: 12;
+            animation: tp-check-draw 0.5s ease-out 1.5s forwards;
+        }
+
+        @keyframes tp-check-draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .tp-verify-title {
+            font-size: 32px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #10b981, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 16px 0;
+            animation: tp-title-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes tp-title-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .tp-verify-message {
+            color: #cbd5e1;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 0 0 40px 0;
+            font-weight: 400;
+        }
+
+        .tp-verify-spinner {
+            margin: 0 0 30px 0;
+        }
+
+        .tp-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #22d3ee);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 4px;
+            animation: tp-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            position: relative;
+        }
+
+        .tp-spinner::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #22d3ee);
+            opacity: 0.2;
+            filter: blur(8px);
+            animation: tp-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes tp-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes tp-pulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.1); }
+        }
+
+        .tp-verify-footer {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        @media (max-width: 640px) {
+            .tp-verify-card {
+                padding: 40px 24px;
+                border-radius: 20px;
+            }
+
+            .tp-verify-title {
+                font-size: 26px;
+            }
+
+            .tp-verify-message {
+                font-size: 16px;
+            }
+
+            .tp-spinner {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+    <?php
+    return ob_get_clean();
+});
+
+/* Email Verification Handler - supports both query params and dedicated page */
+add_action('template_redirect', 'tp_handle_email_verification');
+function tp_handle_email_verification() {
+    // Check if this is the verify-email page or has verification params
+    $is_verify_page = is_page('verify-email');
+    $has_verify_param = isset($_GET['tp_verify_email']);
+
+    if (!$is_verify_page && !$has_verify_param) {
+        return;
+    }
+
+    // Only process if we have token and email
+    if (!isset($_GET['token']) || !isset($_GET['email'])) {
+        return;
+    }
+
+    global $wpdb;
+    $token = sanitize_text_field($_GET['token']);
+    $email = sanitize_email($_GET['email']);
+
+    if (!$token || !$email) {
+        wp_die('Invalid verification link.', 'Email Verification Error');
+    }
+
+    $student = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM wpC_student_register WHERE email = %s AND verification_token = %s",
+        $email, $token
+    ));
+
+    if (!$student) {
+        wp_die('Invalid or expired verification link.', 'Email Verification Error');
+    }
+
+    if ($student->status == 1) {
+        wp_die('Email has already been verified.', 'Email Already Verified');
+    }
+
+    $updated = $wpdb->update(
+        'wpC_student_register',
+        ['status' => 1, 'verification_token' => null],
+        ['email' => $email, 'verification_token' => $token],
+        ['%d', '%s'],
+        ['%s', '%s']
+    );
+
+    if ($updated) {
+        $wp_user = get_user_by('email', $email);
+        if ($wp_user) {
+            wp_set_current_user($wp_user->ID);
+            wp_set_auth_cookie($wp_user->ID);
+            do_action('wp_login', $wp_user->user_login, $wp_user);
+        }
+
+        wp_redirect(home_url('/student-dashboard/?verified=1'));
+        exit;
+    } else {
+        wp_die('Verification failed. Please try again or contact support.', 'Email Verification Error');
+    }
 }
 

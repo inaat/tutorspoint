@@ -122,22 +122,22 @@ class Assets {
             $themes = wp_get_themes();
 
             $localize_data = array(
-                'promotional_link'      => $this->helper->get_promotional_link_url( get_locale() ),
-                'completed_steps'       => get_option( 'hostinger_onboarding_steps', array() ),
-                'list_visibility'       => get_option( StepRoutes::LIST_VISIBILITY_OPTION, 1 ),
-                'site_url'              => get_site_url(),
-                'edit_site_url'         => $edit_site_url,
-                'cta_site_edit'         => $this->helper->get_edit_site_url(),
-                'plugin_url_path'       => HOSTINGER_EASY_ONBOARDING_PLUGIN_URL,
-                'admin_url'             => admin_url( 'admin-ajax.php' ),
-                'admin_path'            => parse_url( admin_url(), PHP_URL_PATH ),
-                'user_locale'           => get_user_locale(),
-                'plugin_assets_url'     => HOSTINGER_EASY_ONBOARDING_ASSETS_URL,
-                'reseller_domain'       => $this->helper->get_reseller_domain(),
-                'plugin_url'            => $this->helper->get_hostinger_plugin_url(),
-                'addons_banner'         => $this->helper->get_addons_banner_status(),
-                'reach_banner'          => $this->helper->get_reach_banner_status(),
-                'translations'          => array(
+                'promotional_link'        => $this->helper->get_promotional_link_url( get_locale() ),
+                'completed_steps'         => get_option( 'hostinger_onboarding_steps', array() ),
+                'list_visibility'         => get_option( StepRoutes::LIST_VISIBILITY_OPTION, 1 ),
+                'site_url'                => get_site_url(),
+                'edit_site_url'           => $edit_site_url,
+                'cta_site_edit'           => $this->helper->get_edit_site_url(),
+                'plugin_url_path'         => HOSTINGER_EASY_ONBOARDING_PLUGIN_URL,
+                'admin_url'               => admin_url( 'admin-ajax.php' ),
+                'admin_path'              => parse_url( admin_url(), PHP_URL_PATH ),
+                'user_locale'             => get_user_locale(),
+                'plugin_assets_url'       => HOSTINGER_EASY_ONBOARDING_ASSETS_URL,
+                'reseller_domain'         => $this->helper->get_reseller_domain(),
+                'plugin_url'              => $this->helper->get_hostinger_plugin_url(),
+                'addons_banner'           => $this->helper->get_addons_banner_status(),
+                'reach_banner'            => $this->helper->get_reach_banner_status(),
+                'translations'            => array(
                     'hostinger_easy_onboarding_create_website'                                      => __( 'How to Create a WordPress Website in 10 Minutes Using Hostinger', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_installation_failed'                                 => __( 'Installation failed', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_theme_has_been_succesfully_activated'                => __( 'Theme has been succesfully activated', 'hostinger-easy-onboarding' ),
@@ -294,11 +294,35 @@ class Assets {
                     'hostinger_easy_onboarding_other'                                               => __( 'Other', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_pre_built_websites_and_themes'                       => __( 'Pre-built websites and themes', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_cash_on_delivery'                                    => __( 'Cash on delivery', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_cash_on_delivery_description'                        => __( 'Take payments in cash upon delivery.', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_direct_bank_transfer'                                => __( 'Direct bank transfer', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_direct_bank_transfer_description'                    => __( 'Take payments via bank transfer.', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_free_shipping'                                       => __( 'Free shipping', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_free_shipping_description'                           => __( 'Free shipping is a great way to increase conversions.', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_flat_rate'                                           => __( 'Flat rate', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_flat_rate_description'                               => __( 'Charge a fixed rate for shipping regardless of the order.', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_local_pickup'                                        => __( 'Local pickup', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_local_pickup_description'                            => __( 'Allow customers to pick up orders themselves.', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_shipping_settings'                                   => __( 'Shipping settings', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_manage_shipping'                                     => __( 'Manage shipping', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_current_zone'                                        => __( 'Current zone', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_shipping_option'                                     => __( 'Shipping option', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_free_shipping_requires'                              => __( 'Free shipping requires', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_most_popular'                                        => __( 'Most popular', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_are_goods_taxable'                                   => __( 'Is shipping cost taxable?', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_minimum_spend_free_shipping'                         => __( 'Minimum spend for free shipping', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_no_requirement'                                      => __( 'No requirement', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_minimum_order_amount'                                => __( 'A minimum order amount', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_valid_coupon'                                        => __( 'A valid free shipping coupon', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_min_amount_or_coupon'                                => __( 'A minimum order amount OR coupon', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_min_amount_and_coupon'                               => __( 'A minimum order amount AND coupon', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_shipping_cost'                                       => __( 'Shipping cost', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_pickup_cost'                                         => __( 'Pickup cost', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_finish'                                              => __( 'Finish', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_view_more'                                           => __( 'View more', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_view_less'                                           => __( 'View less', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_add_shipping_method'                                 => __( 'Add shipping method', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_shipping_method_saved'                               => __( 'Shipping method saved successfully!', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_set_up_your_site'                                    => __( 'Set up your site', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_add_shipping_without_additional_plugins'             => __( 'You can also set up a shipping method without installing additional plugins.', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_or_use_payment_plugins'                              => __( 'Or use payment plugins', 'hostinger-easy-onboarding' ),
@@ -384,27 +408,29 @@ class Assets {
                     'hostinger_easy_onboarding_verify_phone'                                        => __( 'Verify phone', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_more_info'                                           => __( 'More info', 'hostinger-easy-onboarding' ),
                     'hostinger_easy_onboarding_something_went_wrong'                                => __( 'Something went wrong', 'hostinger-easy-onboarding' ),
+                    'hostinger_easy_onboarding_apply_minimum_order_rule_before_discount'            => __( 'Apply minimum order rule before discount', 'hostinger-easy-onboarding' ),
                 ),
-                'rest_base_url'         => esc_url_raw( rest_url() ),
-                'nonce'                 => wp_create_nonce( 'wp_rest' ),
-                'ajax_nonce'            => wp_create_nonce( 'updates' ),
-                'google_site_kit_state' => array(
+                'rest_base_url'           => esc_url_raw( rest_url() ),
+                'nonce'                   => wp_create_nonce( 'wp_rest' ),
+                'ajax_nonce'              => wp_create_nonce( 'updates' ),
+                'wc_shipping_zones_nonce' => wp_create_nonce( 'wc_shipping_zones_nonce' ),
+                'google_site_kit_state'   => array(
                     'is_installed' => array_key_exists( 'google-site-kit/google-site-kit.php', $all_plugins ),
                     'is_active'    => is_plugin_active( 'google-site-kit/google-site-kit.php' ),
                 ),
-                'astra_plugin_state'    => array(
+                'astra_plugin_state'      => array(
                     'is_installed' => array_key_exists( 'astra-sites/astra-sites.php', $all_plugins ),
                     'is_active'    => is_plugin_active( 'astra-sites/astra-sites.php' ),
                 ),
-                'astra_theme_state'     => array(
+                'astra_theme_state'       => array(
                     'is_installed' => array_key_exists( 'astra', $themes ),
                     'is_active'    => ( get_stylesheet() === 'astra' ),
                 ),
-                'ai_theme_state'        => array(
+                'ai_theme_state'          => array(
                     'is_installed' => array_key_exists( 'hostinger-ai-theme', $themes ),
                     'is_active'    => ( get_stylesheet() === 'hostinger-ai-theme' ),
                 ),
-                'reach_state'           => array(
+                'reach_state'             => array(
                     'is_installed' => array_key_exists( 'hostinger-reach/hostinger-reach.php', $all_plugins ),
                     'is_active'    => is_plugin_active( 'hostinger-reach/hostinger-reach.php' ),
                 ),
@@ -412,8 +438,13 @@ class Assets {
 
             if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 
+                $currency_code   = get_woocommerce_currency();
+                $currency_symbol = html_entity_decode( get_woocommerce_currency_symbol( $currency_code ), ENT_QUOTES, 'UTF-8' );
+
                 $localize_data['woo'] = array(
                     'store_email'      => get_bloginfo( 'admin_email' ),
+                    'currency'         => $currency_code,
+                    'currency_symbol'  => $currency_symbol,
                     'type_of_products' => array(
                         array(
                             'name'  => 'digital',

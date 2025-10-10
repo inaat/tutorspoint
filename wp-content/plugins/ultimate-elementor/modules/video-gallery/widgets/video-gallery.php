@@ -123,6 +123,7 @@ class Video_Gallery extends Common_Widget {
 		$this->register_style_layout_controls();
 		$this->register_style_title_filter_controls();
 		$this->register_style_filter_controls();
+		$this->register_style_video_effects_controls();
 		$this->register_style_play_controls();
 		$this->register_style_caption_controls();
 		$this->register_style_navigation_controls();
@@ -147,6 +148,8 @@ class Video_Gallery extends Common_Widget {
 
 			$youtube = apply_filters( 'uael_video_gallery_youtube_link', 'https://www.youtube.com/watch?v=HJRzUQMhJMQ' );
 
+			$rumble = apply_filters( 'uael_video_gallery_rumble_link', 'https://rumble.com/v6ze3ru-video-placeholder-brainstorm-force.html' );
+
 			$bunny = apply_filters( 'uael_video_gallery_bunny_link', 'https://iframe.mediadelivery.net/play/432016/13530e19-ff52-4f20-a422-0075cccd73d4' );
 
 			$wistia = apply_filters( 'uael_video_gallery_wistia_link', '<p><a href="https://pratikc.wistia.com/medias/gyvkfithw2?wvideo=gyvkfithw2"><img src="https://embedwistia-a.akamaihd.net/deliveries/53eec5fa72737e60aa36731b57b607a7c0636f52.webp?image_play_button_size=2x&amp;image_crop_resized=960x540&amp;image_play_button=1&amp;image_play_button_color=54bbffe0" width="400" height="225" style="width: 400px; height: 225px;"></a></p><p><a href="https://pratikc.wistia.com/medias/gyvkfithw2?wvideo=gyvkfithw2">Video Placeholder - Brainstorm Force - pratikc</a></p>' );
@@ -168,6 +171,7 @@ class Video_Gallery extends Common_Widget {
 						'youtube' => __( 'YouTube Video', 'uael' ),
 						'vimeo'   => __( 'Vimeo Video', 'uael' ),
 						'wistia'  => __( 'Wistia Video', 'uael' ),
+						'rumble'  => __( 'Rumble Video', 'uael' ),
 						'bunny'   => __( 'Bunny.net Video', 'uael' ),
 						'hosted'  => __( 'Self Hosted', 'uael' ),
 					),
@@ -244,7 +248,7 @@ class Video_Gallery extends Common_Widget {
 						),
 					),
 					'condition'   => array(
-						'type' => array( 'youtube', 'vimeo' ),
+						'type' => array( 'youtube', 'vimeo', 'rumble' ),
 					),
 				)
 			);
@@ -272,6 +276,20 @@ class Video_Gallery extends Common_Widget {
 					'content_classes' => 'uael-editor-doc',
 					'condition'       => array(
 						'type' => 'vimeo',
+					),
+					'separator'       => 'none',
+				)
+			);
+
+			$repeater->add_control(
+				'rumble_link_doc',
+				array(
+					'type'            => Controls_Manager::RAW_HTML,
+					/* translators: %1$s doc link */
+					'raw'             => sprintf( __( '<b>Note:</b> Use the standard Rumble video URL from the browser address bar.</br></br><b>Valid:</b>&nbsp;https://rumble.com/v6ze3ru-video-placeholder-brainstorm-force.html</br><b>Invalid:</b>&nbsp;https://rumble.com/embed/v1abcd', 'uael' ) ),
+					'content_classes' => 'uael-editor-doc',
+					'condition'       => array(
+						'type' => 'rumble',
 					),
 					'separator'       => 'none',
 				)
@@ -414,6 +432,20 @@ class Video_Gallery extends Common_Widget {
 					'condition'    => array(
 						'type!' => 'hosted',
 					),
+				)
+			);
+			
+			$repeater->add_control(
+				'rumble_note_thumbnail',
+				array(
+					'type'            => Controls_Manager::RAW_HTML,
+					/* translators: %1$s doc link */
+					'raw'             => sprintf( __( '<b>Note:</b> You can upload a custom thumbnail if the video thumbnail is not available or not loading.', 'uael' ) ),
+					'content_classes' => 'uael-editor-doc',
+					'condition'       => array(
+						'type' => 'rumble',
+					),
+					'separator'       => 'none',
 				)
 			);
 
@@ -569,21 +601,10 @@ class Video_Gallery extends Common_Widget {
 							'placeholder_image'  => '',
 						),
 						array(
-							'type'               => 'wistia',
-							'wistia_url'         => $wistia,
-							'title'              => __( 'Sixth Video', 'uael' ),
-							'schema_title'       => __( 'Title of the video.', 'uael' ),
-							'schema_description' => __( 'Description of the video.', 'uael' ),
-							'schema_thumbnail'   => '',
-							'schema_upload_date' => gmdate( 'Y-m-d H:i' ),
-							'tags'               => 'Wistia',
-							'placeholder_image'  => '',
-						),
-						array(
 							'type'               => 'bunny',
 							'bunny_url'          => $bunny,
 							'bunny_cdn_prefix'   => 'vz-f9672ed3-d10',
-							'title'              => __( 'Seventh Video', 'uael' ),
+							'title'              => __( 'Sixth Video', 'uael' ),
 							'schema_title'       => __( 'Title of the video.', 'uael' ),
 							'schema_description' => __( 'Description of the video.', 'uael' ),
 							'schema_thumbnail'   => '',
@@ -1463,6 +1484,229 @@ class Video_Gallery extends Common_Widget {
 
 		$this->end_controls_tabs();
 
+		$this->add_control(
+			'cat_hover_effects_heading',
+			array(
+				'label'     => __( 'Hover Effects', 'uael' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					'show_filter' => 'yes',
+					'layout'      => 'grid',
+				),
+			)
+		);
+
+		$this->add_control(
+			'cat_hover_effect',
+			array(
+				'label'     => __( 'Effect', 'uael' ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => array(
+					'none'        => __( 'None', 'uael' ),
+					'underline'   => __( 'Underline', 'uael' ),
+					'overline'    => __( 'Overline', 'uael' ),
+					'framed'      => __( 'Framed', 'uael' ),
+					'double_line' => __( 'Double Line', 'uael' ),
+				),
+				'default'   => 'none',
+				'condition' => array(
+					'show_filter' => 'yes',
+					'layout'      => 'grid',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'cat_hover_effect_thickness',
+			array(
+				'label'     => __( 'Thickness', 'uael' ),
+				'type'      => Controls_Manager::SLIDER,
+				'range'     => array(
+					'px' => array(
+						'min' => 1,
+						'max' => 10,
+					),
+				),
+				'default'   => array(
+					'size' => 2,
+					'unit' => 'px',
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .uael-video__gallery-filter:after,
+					 {{WRAPPER}} .uael-video__gallery-filter:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter.uael-filter__current:after' => 'height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"].uael-filter__current:after' => 'border-width: {{SIZE}}{{UNIT}};',
+				),
+				'condition' => array(
+					'show_filter'       => 'yes',
+					'layout'            => 'grid',
+					'cat_hover_effect!' => 'none',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'cat_hover_effect_offset',
+			array(
+				'label'     => __( 'Offset', 'uael' ),
+				'type'      => Controls_Manager::SLIDER,
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 8,
+					),
+				),
+				'default'   => array(
+					'size' => 0,
+					'unit' => 'px',
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="underline"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="underline"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="underline"].uael-filter__current:after' => 'bottom: calc(-{{SIZE}}{{UNIT}} - 2px);',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="overline"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="overline"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="overline"].uael-filter__current:after' => 'top: calc(-{{SIZE}}{{UNIT}} - 2px);',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"].uael-filter__current:after' => 'top: -{{SIZE}}{{UNIT}}; right: -{{SIZE}}{{UNIT}}; bottom: -{{SIZE}}{{UNIT}}; left: -{{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"].uael-filter__current:after' => 'bottom: calc(-{{SIZE}}{{UNIT}} - 2px);',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"]:before,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"]:hover:before,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="double_line"].uael-filter__current:before' => 'top: calc(-{{SIZE}}{{UNIT}} - 2px);',
+				),
+				'condition' => array(
+					'show_filter'       => 'yes',
+					'layout'            => 'grid',
+					'cat_hover_effect!' => 'none',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'cat_hover_effect_corner_radius',
+			array(
+				'label'      => __( 'Corner Radius', 'uael' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"].uael-filter__current:after' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'condition'  => array(
+					'show_filter'      => 'yes',
+					'layout'           => 'grid',
+					'cat_hover_effect' => 'framed',
+				),
+			)
+		);
+
+		$this->add_control(
+			'cat_hover_effect_transition',
+			array(
+				'label'     => __( 'Transition Duration (ms)', 'uael' ),
+				'type'      => Controls_Manager::SLIDER,
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 2000,
+					),
+				),
+				'default'   => array(
+					'size' => 300,
+					'unit' => 'px',
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .uael-video__gallery-filter:after,
+					 {{WRAPPER}} .uael-video__gallery-filter:before' => 'transition: all {{SIZE}}ms ease;',
+				),
+				'condition' => array(
+					'show_filter'       => 'yes',
+					'layout'            => 'grid',
+					'cat_hover_effect!' => 'none',
+				),
+			)
+		);
+
+		$this->add_control(
+			'cat_hover_effect_color',
+			array(
+				'label'     => __( 'Effect Color', 'uael' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#FF6B6B',
+				'global'    => array(
+					'default' => Global_Colors::COLOR_ACCENT,
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .uael-video__gallery-filter:after,
+					 {{WRAPPER}} .uael-video__gallery-filter:before,
+					 {{WRAPPER}} .uael-video__gallery-filter:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter:hover:before,
+					 {{WRAPPER}} .uael-video__gallery-filter.uael-filter__current:after,
+					 {{WRAPPER}} .uael-video__gallery-filter.uael-filter__current:before' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"]:hover:after,
+					 {{WRAPPER}} .uael-video__gallery-filter[data-hover-effect="framed"].uael-filter__current:after' => 'border-color: {{VALUE}};',
+				),
+				'condition' => array(
+					'cat_hover_effect!' => 'none',
+				),
+			)
+		);
+
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Register Video Effects Controls.
+	 *
+	 * @since 1.40.2
+	 * @access protected
+	 */
+	protected function register_style_video_effects_controls() {
+
+		$this->start_controls_section(
+			'section_video_effects',
+			array(
+				'label' => __( 'Video Effects', 'uael' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+			$this->add_control(
+				'video_effect',
+				array(
+					'label'   => __( 'Effect', 'uael' ),
+					'type'    => Controls_Manager::SELECT,
+					'default' => 'normal',
+					'options' => $this->video_filter_options(),
+				)
+			);
+
+			$this->add_control(
+				'video_effect_apply_to',
+				array(
+					'label'     => __( 'Apply To', 'uael' ),
+					'type'      => Controls_Manager::SELECT,
+					'default'   => 'thumbnail',
+					'options'   => array(
+						'thumbnail' => __( 'Thumbnail', 'uael' ),
+						'on_play'   => __( 'On Play', 'uael' ),
+						'both'      => __( 'Both', 'uael' ),
+					),
+					'condition' => array(
+						'video_effect!' => 'normal',
+					),
+				)
+			);
+
 		$this->end_controls_section();
 	}
 
@@ -2308,9 +2552,10 @@ class Video_Gallery extends Common_Widget {
 	 */
 	public function get_placeholder_image( $item ) {
 
-		$url       = '';
-		$vid_id    = '';
-		$video_url = '';
+		$url         = '';
+		$vid_id      = '';
+		$video_url   = '';
+		$rumble_data = array(); // Store rumble data to avoid multiple API calls.
 
 		if ( 'wistia' === $item['type'] ) {
 			$video_url = $item['wistia_url'];
@@ -2328,6 +2573,9 @@ class Video_Gallery extends Common_Widget {
 			if ( preg_match( '%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $video_url, $regs ) ) {
 				$vid_id = $regs[3];
 			}
+		} elseif ( 'rumble' === $item['type'] ) {
+			$rumble_data = $this->get_rumble_oembed_data( $video_url );
+			$vid_id      = $rumble_data['video_id'];
 		} elseif ( 'wistia' === $item['type'] ) {
 			$vid_id = $this->getStringBetween( $video_url, 'wvideo=', '"' );
 		} elseif ( 'bunny' === $item['type'] ) {
@@ -2354,10 +2602,8 @@ class Video_Gallery extends Common_Widget {
 		}
 
 		if ( ( 'yes' === $item['custom_placeholder'] && 'hosted' !== $item['type'] ) || 'hosted' === $item['type'] ) {
-
 			$url = $item['placeholder_image']['url'];
 		} else {
-
 			if ( 'youtube' === $item['type'] ) {
 
 				$url = 'https://i.ytimg.com/vi/' . $vid_id . '/' . apply_filters( 'uael_vg_youtube_image_quality', $item['yt_thumbnail_size'] ) . '.jpg';
@@ -2379,6 +2625,12 @@ class Video_Gallery extends Common_Widget {
 				}
 			} elseif ( 'wistia' === $item['type'] ) {
 				$url = 'https://embed-ssl.wistia.com/deliveries/' . $this->getStringBetween( $video_url, 'deliveries/', '?' );
+			} elseif ( 'rumble' === $item['type'] ) {
+				// Use cached rumble data from above.
+				if ( empty( $rumble_data ) ) {
+					$rumble_data = $this->get_rumble_oembed_data( $video_url );
+				}
+				$url = $rumble_data['thumbnail_url'];
 			} elseif ( 'bunny' === $item['type'] ) {
 				$cdn_prefix   = ! empty( $item['bunny_cdn_prefix'] ) ? $item['bunny_cdn_prefix'] : '';
 				$vid_id_parts = explode( '/', $vid_id );
@@ -2408,6 +2660,70 @@ class Video_Gallery extends Common_Widget {
 		$id  = substr( $sub, 0, strpos( $sub, $to ) );
 
 		return $id;
+	}
+
+	/**
+	 * Get Rumble data using oEmbed API.
+	 *
+	 * @param string $url Rumble URL.
+	 * @return array Rumble oEmbed response data.
+	 * @since 1.5.0
+	 * @access private
+	 */
+	private function get_rumble_oembed_data( $url ) {
+		$response = array(
+			'thumbnail_url' => '',
+			'duration'      => '',
+			'html'          => '',
+			'video_id'      => '',
+		);
+
+		$cache_key   = 'uael_rumble_' . md5( $url );
+		$cache_value = wp_cache_get( $cache_key );
+
+		if ( is_array( $cache_value ) ) {
+			$response = array_merge( $response, $cache_value );
+			return $response;
+		}
+
+		$api_response = wp_remote_get( 'https://rumble.com/api/Media/oembed.json?url=' . urlencode( $url ), array( 'timeout' => 15 ) );
+
+		if ( is_array( $api_response ) && ! is_wp_error( $api_response ) && 200 === wp_remote_retrieve_response_code( $api_response ) ) {
+			$api_response = json_decode( $api_response['body'] );
+
+			if ( isset( $api_response->thumbnail_url ) ) {
+				$response['thumbnail_url'] = $api_response->thumbnail_url;
+			}
+
+			if ( isset( $api_response->duration ) ) {
+				$response['duration'] = $api_response->duration;
+			}
+
+			if ( isset( $api_response->html ) ) {
+				$response['html'] = $api_response->html;
+				
+				// Extract video ID from the HTML iframe.
+				if ( preg_match( '/rumble\.com\/embed\/([^\/\?"]+)/', $api_response->html, $matches ) ) {
+					$response['video_id'] = $matches[1];
+				}
+			}
+		}
+
+		// Fallback: try to extract video ID from URL using improved regex.
+		if ( empty( $response['video_id'] ) ) {
+			// Handle various Rumble URL formats.
+			if ( preg_match( '/rumble\.com\/v([^-\/?]+)/', $url, $matches ) ) {
+				$response['video_id'] = 'v' . $matches[1];
+			} elseif ( preg_match( '/rumble\.com\/([^-\/?]+)/', $url, $matches ) ) {
+				$response['video_id'] = $matches[1];
+			}
+		}
+
+		if ( ! empty( $response['thumbnail_url'] ) || ! empty( $response['video_id'] ) ) {
+			wp_cache_set( $cache_key, $response, '', HOUR_IN_SECONDS );
+		}
+
+		return $response;
 	}
 
 	/**
@@ -2502,6 +2818,11 @@ class Video_Gallery extends Common_Widget {
 				$video_url = 'https://fast.wistia.net/embed/iframe/' . $wistia_id . '?videoFoam=true';
 			}
 
+			if ( 'rumble' === $item['type'] ) {
+				$rumble_id = $url['video_id'];
+				$video_url = 'https://rumble.com/embed/' . $rumble_id . '/';
+			}
+
 			$this->add_render_attribute( 'grid-item' . $index, 'class', 'uael-video__gallery-item' );
 			$this->add_render_attribute( 'grid-item' . $index, 'id', 'uael-video__gallery-item' . ( $videocount++ ) );
 
@@ -2519,6 +2840,61 @@ class Video_Gallery extends Common_Widget {
 				}
 			}
 
+			// Generate embed video URL for both inline and lightbox modes.
+			$vurl = '';
+			switch ( $item['type'] ) {
+				case 'youtube':
+					$vurl = 'https://www.youtube.com/embed/' . $url['video_id'] . '?autoplay=1&version=3&enablejsapi=1';
+					break;
+
+				case 'vimeo':
+					$vurl = 'https://player.vimeo.com/video/' . $url['video_id'] . '?autoplay=1&version=3&enablejsapi=1';
+
+					/**
+					 * Support Vimeo unlisted and private videos
+					 */
+					$h_param        = array();
+					$video_url_temp = $item['video_url'];
+					preg_match( '/(?|(?:[\?|\&]h={1})([\w]+)|\d\/([\w]+))/', $video_url_temp, $h_param );
+
+					if ( ! empty( $h_param ) ) {
+						$vurl .= '&h=' . $h_param[1];
+					}
+					break;
+
+				case 'rumble':
+					$vurl = 'https://rumble.com/embed/' . $url['video_id'];
+					break;
+				
+				case 'bunny':
+					// For Bunny.net, construct URL from library ID and video ID.
+					if ( ! empty( $url['video_id'] ) && strpos( $url['video_id'], '/' ) !== false ) {
+							// ID format is "libraryId/videoId".
+							$vurl = 'https://iframe.mediadelivery.net/embed/' . $url['video_id'];
+					} else {
+							// Fallback: use the original link but clean it.
+							$vurl = $item['bunny_url'];
+							// Convert /play/ URLs to /embed/ format if needed.
+							$vurl = str_replace( '/play/', '/embed/', $vurl );
+							// Remove any existing parameters from the original URL.
+							$vurl = strtok( $vurl, '?' );
+					}
+					break;
+					
+				case 'wistia':
+					$wistia_id = $this->getStringBetween( $item['wistia_url'], 'wvideo=', '"' );
+					$vurl      = 'https://fast.wistia.net/embed/iframe/' . $wistia_id . '?videoFoam=true&autoplay=1';
+					break;
+					
+				case 'hosted':
+					$vurl = $video_url . '?&autoplay=1';
+					break;
+
+				default:
+					$vurl = $video_url;
+					break;
+			}
+
 			// Render video link attributes.
 			$this->add_render_attribute(
 				'video-grid-item' . $index,
@@ -2531,11 +2907,11 @@ class Video_Gallery extends Common_Widget {
 				'video-container-link' . $index,
 				array(
 					'class' => 'elementor-clickable uael-vg__play_full',
-					'href'  => $video_url,
+					'href'  => $vurl,
 				)
 			);
 
-			if ( 'wistia' === $item['type'] || 'bunny' === $item['type'] ) {
+			if ( 'wistia' === $item['type'] || 'bunny' === $item['type'] || 'rumble' === $item['type'] ) {
 				$this->add_render_attribute(
 					'video-container-link' . $index,
 					array(
@@ -2551,52 +2927,6 @@ class Video_Gallery extends Common_Widget {
 				$this->add_render_attribute( 'video-container-link' . $index, 'data-fancybox', 'uael-video-gallery-' . $this->get_id() );
 
 			} else {
-
-				switch ( $item['type'] ) {
-					case 'youtube':
-						$vurl = 'https://www.youtube.com/embed/' . $url['video_id'] . '?autoplay=1&version=3&enablejsapi=1';
-						break;
-
-					case 'vimeo':
-						$vurl = 'https://player.vimeo.com/video/' . $url['video_id'] . '?autoplay=1&version=3&enablejsapi=1';
-
-						/**
-						 * Support Vimeo unlisted and private videos
-						 */
-						$h_param   = array();
-						$video_url = $item['video_url'];
-						preg_match( '/(?|(?:[\?|\&]h={1})([\w]+)|\d\/([\w]+))/', $video_url, $h_param );
-
-						if ( ! empty( $h_param ) ) {
-							$vurl .= '&h=' . $h_param[1];
-						}
-
-						break;
-					
-					case 'bunny':
-						// For Bunny.net, construct URL from library ID and video ID.
-						if ( ! empty( $url['video_id'] ) && strpos( $url['video_id'], '/' ) !== false ) {
-								// ID format is "libraryId/videoId".
-								$vurl = 'https://iframe.mediadelivery.net/embed/' . $url['video_id'];
-						} else {
-								// Fallback: use the original link but clean it.
-								$vurl = $item['bunny_url'];
-								// Convert /play/ URLs to /embed/ format if needed.
-								$vurl = str_replace( '/play/', '/embed/', $vurl );
-								// Remove any existing parameters from the original URL.
-								$vurl = strtok( $vurl, '?' );
-						}
-						break;
-						
-					case 'wistia':
-					case 'hosted':
-						$vurl = $video_url . '?&autoplay=1';
-						break;
-
-					default:
-						break;
-				}
-
 				$this->add_render_attribute( 'video-container-link' . $index, 'data-url', $vurl );
 			}
 			?>
@@ -2762,6 +3092,9 @@ class Video_Gallery extends Common_Widget {
 			$default = '.filter-' . $default;
 		}
 
+		$hover_effect      = isset( $settings['cat_hover_effect'] ) ? $settings['cat_hover_effect'] : 'none';
+		$hover_effect_attr = ( 'none' !== $hover_effect ) ? ' data-hover-effect="' . esc_attr( $hover_effect ) . '"' : '';
+
 		?>
 		<div class="uael-video-gallery-filters-wrap<?php echo esc_attr( $tab_responsive ); ?>">
 			<?php
@@ -2774,12 +3107,12 @@ class Video_Gallery extends Common_Widget {
 					</div>
 			<?php } ?>
 					<ul class="uael-video__gallery-filters" data-default="<?php echo esc_attr( $default ); ?>">
-						<li class="uael-video__gallery-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></li>
+						<li class="uael-video__gallery-filter uael-filter__current" data-filter="*"<?php echo wp_kses_post( $hover_effect_attr ); ?>><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></li>
 						<?php
 						foreach ( $filters as $key => $value ) {
 							$special_char = preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $value ) );
 							?>
-							<li class="uael-video__gallery-filter" data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"><?php echo esc_html( $value ); ?></li>
+							<li class="uael-video__gallery-filter" data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"<?php echo wp_kses_post( $hover_effect_attr ); ?>><?php echo esc_html( $value ); ?></li>
 						<?php } ?>
 					</ul>
 
@@ -2788,12 +3121,12 @@ class Video_Gallery extends Common_Widget {
 							<div class="uael-filters-dropdown-button"><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></div>
 
 							<ul class="uael-filters-dropdown-list uael-video__gallery-filters" data-default="<?php echo esc_attr( $default ); ?>">
-								<li class="uael-filters-dropdown-item uael-video__gallery-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></li>
+								<li class="uael-filters-dropdown-item uael-video__gallery-filter uael-filter__current" data-filter="*"<?php echo wp_kses_post( $hover_effect_attr ); ?>><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></li>
 								<?php
 								foreach ( $filters as $key => $value ) {
 									$special_char = preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $value ) );
 									?>
-									<li class="uael-filters-dropdown-item uael-video__gallery-filter " data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"><?php echo esc_html( $value ); ?></li>
+									<li class="uael-filters-dropdown-item uael-video__gallery-filter " data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"<?php echo wp_kses_post( $hover_effect_attr ); ?>><?php echo esc_html( $value ); ?></li>
 								<?php } ?>
 							</ul>
 						</div>
@@ -2869,6 +3202,14 @@ class Video_Gallery extends Common_Widget {
 		$this->add_render_attribute( 'wrap', 'data-layout', $settings['layout'] );
 		$this->add_render_attribute( 'wrap', 'class', 'uael-aspect-ratio-' . $settings['video_ratio'] );
 
+		// Add video effects data attributes and CSS class.
+		if ( ! empty( $settings['video_effect'] ) && 'normal' !== $settings['video_effect'] ) {
+			$this->add_render_attribute( 'wrap', 'data-video-effect', $settings['video_effect'] );
+			$this->add_render_attribute( 'wrap', 'data-video-effect-apply-to', ! empty( $settings['video_effect_apply_to'] ) ? $settings['video_effect_apply_to'] : 'thumbnail' );
+			// Add CSS class for video effect styling.
+			$this->add_render_attribute( 'wrap', 'class', 'uael-vgallery-' . $settings['video_effect'] );
+		}
+
 		foreach ( $filters as $key => &$value ) {
 			$value = preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $value ) );
 			$value = 'filter-' . esc_attr( $value );
@@ -2884,6 +3225,99 @@ class Video_Gallery extends Common_Widget {
 			$this->render_gallery_filters();
 		}
 
+		// Add hover effects CSS.
+		$hover_effect = isset( $settings['cat_hover_effect'] ) ? $settings['cat_hover_effect'] : 'none';
+		$widget_id    = $this->get_id();
+		
+		if ( 'none' !== $hover_effect ) {
+			echo '<style>
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter {
+					position: relative;
+					overflow: hidden;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect]:before,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect]:after {
+					content: "";
+					position: absolute;
+					opacity: 0;
+					transition: all 300ms ease;
+					pointer-events: none;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="underline"]:after {
+					left: 0;
+					right: 0;
+					bottom: -2px;
+					height: 2px;
+					transform: scaleX(0);
+					transform-origin: center;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="underline"]:hover:after,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="underline"].uael-filter__current:after {
+					opacity: 1;
+					transform: scaleX(1);
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="overline"]:after {
+					left: 0;
+					right: 0;
+					top: -2px;
+					height: 2px;
+					transform: scaleX(0);
+					transform-origin: center;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="overline"]:hover:after,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="overline"].uael-filter__current:after {
+					opacity: 1;
+					transform: scaleX(1);
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="framed"]:after {
+					top: 0;
+					right: 0;
+					bottom: 0;
+					left: 0;
+					border: 2px solid transparent;
+					transform: scale(0.8);
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="framed"]:hover:after,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="framed"].uael-filter__current:after {
+					opacity: 1;
+					transform: scale(1);
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"]:before {
+					left: 0;
+					right: 0;
+					top: -2px;
+					height: 2px;
+					transform: scaleX(0);
+					transform-origin: center;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"]:after {
+					left: 0;
+					right: 0;
+					bottom: -2px;
+					height: 2px;
+					transform: scaleX(0);
+					transform-origin: center;
+				}
+
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"]:hover:before,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"]:hover:after,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"].uael-filter__current:before,
+				.elementor-element-' . esc_attr( $widget_id ) . ' .uael-video__gallery-filter[data-hover-effect="double_line"].uael-filter__current:after {
+					opacity: 1;
+					transform: scaleX(1);
+				}
+			</style>';
+		}
+
 		echo '<div ' . wp_kses_post( sanitize_text_field( $this->get_render_attribute_string( 'wrap' ) ) ) . ' ' . wp_kses_post( sanitize_text_field( $this->get_slider_attr() ) ) . '>';
 
 			$this->render_gallery_inner_data();
@@ -2891,6 +3325,31 @@ class Video_Gallery extends Common_Widget {
 		echo '</div>';
 
 		$this->render_masonry_script();
+	}
+
+	/**
+	 * Get filter options for video effects.
+	 *
+	 * @since 1.40.2
+	 * @access protected
+	 * @return array Filters.
+	 */
+	protected function video_filter_options() {
+		$filter = array(
+			'normal'    => __( 'Normal', 'uael' ),
+			'a-1977'    => __( '1977', 'uael' ),
+			'aden'      => __( 'Aden', 'uael' ),
+			'earlybird' => __( 'Earlybird', 'uael' ),
+			'hudson'    => __( 'Hudson', 'uael' ),
+			'inkwell'   => __( 'Inkwell', 'uael' ),
+			'perpetua'  => __( 'Perpetua', 'uael' ),
+			'poprocket' => __( 'Poprocket', 'uael' ),
+			'sutro'     => __( 'Sutro', 'uael' ),
+			'toaster'   => __( 'Toaster', 'uael' ),
+			'willow'    => __( 'Willow', 'uael' ),
+		);
+
+		return $filter;
 	}
 
 }

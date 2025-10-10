@@ -111,7 +111,7 @@ msgstr ""
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1767
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-general-configs.php:496
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-general-configs.php:765
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:362
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:387
 msgid "Border Radius"
 msgstr ""
 
@@ -222,9 +222,9 @@ msgid "Billing details"
 msgstr ""
 
 #: addons/advanced-hooks/classes/class-astra-ext-advanced-hooks-loader.php:342
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1917
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2154
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2186
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1921
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2158
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2190
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:846
 #: addons/advanced-hooks/theme-builder/build/index.js:1
 msgid "Quick View"
@@ -407,7 +407,7 @@ msgstr ""
 msgid "Checkout Page"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1353
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1357
 msgid "Sale!"
 msgstr ""
 
@@ -467,12 +467,12 @@ msgstr "Color de icono al posar el puntero"
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-color-switcher-configs.php:57
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-search-configs.php:89
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:315
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:449
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:474
 msgid "Icon Color"
 msgstr "Color de icono"
 
 #: addons/blog-pro/classes/sections/class-astra-customizer-blog-pro-single-configs.php:888
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:228
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:253
 msgid "Icon Size"
 msgstr "Tamaño de icono"
 
@@ -1259,9 +1259,9 @@ msgstr "Ancho completo"
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1718
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:253
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:331
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:369
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:403
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:426
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:394
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:428
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:451
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:259
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:277
 msgid "Left"
@@ -1322,9 +1322,9 @@ msgstr "Izquierda"
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1717
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:252
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:330
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:368
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:402
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:425
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:393
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:427
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:450
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:258
 #: addons/advanced-hooks/react/build/index.js:1
 msgid "Bottom"
@@ -1390,9 +1390,9 @@ msgstr "Inferior"
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1716
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:251
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:329
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:367
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:401
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:424
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:392
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:426
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:449
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:257
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:279
 msgid "Right"
@@ -1455,9 +1455,9 @@ msgstr "Derecha"
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:250
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:274
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-configs.php:328
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:366
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:400
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:423
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:391
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:425
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:448
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:256
 #: addons/advanced-hooks/react/build/index.js:1
 msgid "Top"
@@ -2295,7 +2295,7 @@ msgstr "El tamaño de espaciado puede tener cualquier número positivo con o sin
 #: addons/spacing/classes/sections/class-astra-customizer-header-builder-menu-configs.php:120
 #: addons/spacing/classes/sections/class-astra-customizer-header-builder-menu-configs.php:186
 #: addons/spacing/classes/sections/class-astra-customizer-site-identity-spacing-configs.php:54
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:379
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:404
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:231
 #: addons/advanced-hooks/react/build/index.js:1
 msgid "Spacing"
@@ -3046,7 +3046,7 @@ msgstr ""
 #: addons/nav-menu/classes/class-astra-ext-nav-menu-markup.php:1371
 #: addons/nav-menu/classes/class-astra-ext-nav-menu-markup.php:1689
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1683
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:419
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:444
 msgid "Padding"
 msgstr ""
 
@@ -4176,7 +4176,7 @@ msgstr ""
 
 #: addons/advanced-hooks/classes/class-astra-ext-advanced-hooks-loader.php:1408
 #: addons/blog-pro/classes/sections/class-astra-customizer-blog-pro-configs.php:853
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:278
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:303
 msgid "Visibility"
 msgstr ""
 
@@ -4486,8 +4486,8 @@ msgstr ""
 
 #. translators: %s: filter to enable svg icons
 #: addons/advanced-search/classes/sections/class-astra-customizer-adv-search-configs.php:90
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:190
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:216
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:215
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:241
 #, php-format
 msgid "SVG icons are currently disabled. To enable them, use the filter `%s`."
 msgstr ""
@@ -4857,8 +4857,8 @@ msgstr ""
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:389
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:390
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:561
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:332
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:479
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:357
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:504
 #: addons/nav-menu/react/build/index.js:1
 msgid "Normal"
 msgstr ""
@@ -4987,8 +4987,8 @@ msgstr ""
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:404
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:405
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-shop-single-configs.php:586
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:346
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:493
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:371
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:518
 #: classes/builder/type/header/account/class-astra-ext-header-account-component-configs.php:123
 #: addons/nav-menu/react/build/index.js:1
 msgid "Hover"
@@ -5046,7 +5046,7 @@ msgstr ""
 #: addons/nav-menu/classes/class-astra-ext-nav-menu-markup.php:1662
 #: addons/spacing/classes/sections/class-astra-customizer-header-builder-menu-configs.php:163
 #: addons/spacing/classes/sections/class-astra-customizer-header-builder-menu-configs.php:229
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:396
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:421
 #: classes/builder/type/base/configurations/class-astra-divider-component-configs.php:252
 msgid "Margin"
 msgstr ""
@@ -5288,8 +5288,8 @@ msgstr ""
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1395
 #: addons/sticky-header/classes/sections/class-astra-sticky-header-configs.php:1429
 #: addons/woocommerce/classes/sections/class-astra-woocommerce-general-configs.php:594
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:316
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:464
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:341
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:489
 msgid "Background"
 msgstr ""
 
@@ -6595,7 +6595,7 @@ msgid "Already a member?"
 msgstr ""
 
 #: addons/woocommerce/classes/class-astra-ext-woocommerce-loader.php:537
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3047
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3051
 msgid "Login"
 msgstr ""
 
@@ -6641,237 +6641,237 @@ msgctxt "WooCommerce Product Catalog: Shop Load More Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1188
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1192
 msgctxt "WooCommerce Product Catalog: Shop Filter Button Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1282
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1286
 msgctxt "WooCommerce Single Product: Extras Title (Free shipping on orders over $50!)"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1296
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1300
 msgctxt "Extras item 1"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1297
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1301
 msgctxt "Extras item 2"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1298
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1302
 msgctxt "Extras item 3"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1299
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1303
 msgctxt "Extras item 4"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1300
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1304
 msgctxt "Extras item 5"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1301
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1305
 msgctxt "Extras item 6"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1302
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1306
 msgctxt "Extras item 7"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1303
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1307
 msgctxt "Extras item 8"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1304
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1308
 msgctxt "Extras item 9"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1305
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:1309
 msgctxt "Extras item 10"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2781
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2785
 msgid "1"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2785
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2789
 msgid "Shopping Cart"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2792
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2796
 msgid "2"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2796
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2800
 msgid "Checkout details"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2803
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2807
 msgid "3"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2807
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2811
 msgid "Order Complete"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2826
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2830
 msgctxt "WooCommerce Checkout: Back to Cart Text (« Back to Cart)"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2980
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2984
 msgid "Exist."
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2980
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:2984
 msgid "Not exist"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3002
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3006
 msgctxt "WooCommerce Checkout: Customer information Text"
 msgid "%astra%"
 msgstr ""
 
 #. translators: %1$s: Link HTML start, %2$s Link HTML End
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3009
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3013
 #, php-format
 msgid "Already have an account? %1$s Log in%2$s"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3022
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3023
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3026
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3027
 msgid "Username or Email Address"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3022
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3023
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3026
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3027
 msgid "Email Address"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3040
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3041
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3044
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3045
 msgid "Password"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3048
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3052
 #: classes/builder/type/header/account/class-astra-ext-header-account-component-configs.php:286
 #: classes/builder/type/header/account/classes/class-astra-addon-header-account-markup.php:116
 msgid "Lost your password?"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3053
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3057
 msgid "Login is optional, you can continue with your order below."
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3066
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3070
 msgid "Create an account?"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3081
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3082
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3085
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3086
 msgid "Account username"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3094
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3095
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3098
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3099
 msgid "Create account password"
 msgstr ""
 
 #. translators: %1$s: username, %2$s emailid
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3105
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3109
 #, php-format
 msgid " Welcome Back %1$s (%2$s)"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3138
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3142
 msgctxt "WooCommerce Checkout: Button Text (Place Order)"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3157
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3161
 msgctxt "WooCommerce Checkout: Payment Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3474
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3478
 msgid "Select a country / region&hellip; *"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3478
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3482
 msgid "Select an option&hellip; *"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3582
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3586
 msgctxt "WooCommerce Misc: Coupon Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3583
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3587
 msgctxt "WooCommerce Misc: Coupon Input Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3584
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3588
 msgctxt "WooCommerce Misc: Coupon Apply Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3589
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3593
 msgid "coupon:"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3651
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3655
 msgctxt "WooCommerce Checkout: Step One Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3652
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3656
 msgctxt "WooCommerce Checkout: Step One Sub Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3653
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3657
 msgctxt "WooCommerce Checkout: Step Two Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3654
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3658
 msgctxt "WooCommerce Checkout: Step Two Sub Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3694
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3698
 msgctxt "WooCommerce Checkout: Note Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3711
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3715
 msgctxt "WooCommerce Checkout: Offer Button Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3712
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3716
 msgctxt "WooCommerce Checkout: Offer Button Sub Title"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3908
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3912
 msgctxt "WooCommerce Single Product: Recently Viewed Products Text"
 msgid "%astra%"
 msgstr ""
 
-#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3993
+#: addons/woocommerce/classes/class-astra-ext-woocommerce-markup.php:3997
 msgid "Your Cart Is Empty Let's Fix That."
 msgstr ""
 
@@ -7957,7 +7957,7 @@ msgid "If you have a moment, please share why you are deactivating Astra Pro:"
 msgstr ""
 
 #: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:69
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:452
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:477
 #: classes/class-astra-builder.php:96
 #: classes/class-astra-builder.php:157
 msgid "Color Switcher"
@@ -7993,31 +7993,31 @@ msgstr ""
 msgid "`System Default` adapts to your device's and browser's light or dark mode setting automatically."
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:163
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:188
 msgid "Force Reload"
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:164
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:189
 msgid "Enable this option to trigger a full page reload when switching the color palette. This can improve performance in cases where dark mode compatibility CSS is applied dynamically."
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:176
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:201
 msgid "Default Mode Icon"
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:202
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:227
 msgid "Alternate Mode Icon"
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:249
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:274
 msgid "Default Mode Label"
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:263
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:288
 msgid "Alternate Mode Label"
 msgstr ""
 
-#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:304
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:329
 msgid "Icon / Text Color"
 msgstr ""
 
@@ -8569,4 +8569,20 @@ msgstr ""
 #: classes/class-astra-theme-extension.php:630
 #, php-format
 msgid "Please update %1$s Theme to version %2$s or higher.%4$s<a href=\"%3$s\">Update now</a>%4$sor ignore if already updated."
+msgstr ""
+
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:163
+msgid "Dark Mode Logo"
+msgstr ""
+
+#: classes/builder/type/base/configurations/class-astra-color-switcher-component-configs.php:164
+msgid "Upload a logo to be used when the dark color palette is active. If not set, the default logo will be used."
+msgstr ""
+
+#: admin/core/assets/build/dashboard-app.js:1
+msgid "To use this feature, please activate your license."
+msgstr ""
+
+#: admin/core/assets/build/dashboard-app.js:1
+msgid "Go to License Settings"
 msgstr ""

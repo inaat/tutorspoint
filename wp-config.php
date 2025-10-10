@@ -1,8 +1,8 @@
 <?php
 
-define('WP_DEBUG', true);
-define('WP_DEBUG_LOG', true);
-define('WP_DEBUG_DISPLAY', false);
+//define('WP_DEBUG', true);
+//define('WP_DEBUG_LOG', true);
+//define('WP_DEBUG_DISPLAY', false);
 
 
 
@@ -41,6 +41,7 @@ define( 'DB_USER', 'root' );
 
 /** Database password */
 define( 'DB_PASSWORD', 'Root123!' );
+
 
 /** Database hostname */
 define( 'DB_HOST', '127.0.0.1' );
@@ -101,9 +102,9 @@ if (!defined('ZEGO_SERVER_SECRET')) {
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-// Local development URL overrides
-define('WP_HOME','http://public_html.test');
-define('WP_SITEURL','http://public_html.test');
+// Force correct site URL (prevents redirects)
+define('WP_HOME', 'http://public_html.test');
+define('WP_SITEURL', 'http://public_html.test');
 
 
 

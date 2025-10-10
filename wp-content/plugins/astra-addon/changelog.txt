@@ -1,5 +1,11 @@
 *** Astra Pro Changelog ***
 
+2025-10-07 - version 4.11.10
+* Improvement: Improved two-step checkout navigation buttons to work smoothly.
+* Fix: Corrected LifterLMS course grid display in Astra Pro to prevent individual course boxes from appearing shrunk in a three-column layout.
+* Fix: The "Sale" badge was incorrectly showing on single product pages when the Enable Sticky Product Image option was enabled, even if the product was not on sale.
+* Fix: Resolved a scrolling glitch that occurred after opening the sticky header menu when the Move Body option was enabled.
+
 2025-09-09 - version 4.11.9
 * New: Added support for Dark Mode logo.
 * Improvement: Enhanced the loading performance of the Quantity Plus and Minus buttons by using placeholders.

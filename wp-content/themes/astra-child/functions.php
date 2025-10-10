@@ -1,5 +1,43 @@
 <?php
 
+// Load the Teachers shortcode (once)
+add_action('init', function () {
+    $file = trailingslashit( get_stylesheet_directory() ) . 'General/tp_teachers_home.php';
+    if ( file_exists( $file ) ) {
+        require_once $file; // include once
+    }
+});
+
+
+// Load TP pricing badges shortcode
+add_action('init', function () {
+    // adjust the path if you put the file elsewhere
+    $file = trailingslashit( get_stylesheet_directory() ) . 'General/tp-pricing-badges.php';
+    if ( file_exists( $file ) ) {
+        require_once $file; // include once
+    }
+});
+
+
+
+
+// ... existing code
+add_action('after_setup_theme', function () {
+  $file = get_stylesheet_directory() . '/General/tp-blog-shortcode.php';
+  if (file_exists($file)) { require_once $file; }
+});
+
+
+
+// Admin Dashboard button (header)
+require_once get_stylesheet_directory() . '/General/admin-header-dashboard-btn.php';
+
+
+
+// Load Admin Dashboard pill
+//require_once get_stylesheet_directory() . '/General/admin-fab.php';
+
+
 // Load Admin Dashboard
 require_once get_stylesheet_directory() . '/admin-dashboard/admin-dashboard.php';
 
@@ -27,7 +65,7 @@ add_action('wp_enqueue_scripts', 'tp_enqueue_jquery');
 
 //require_once get_stylesheet_directory() . '/General/HomePage-Levels.php';
 
-require_once get_stylesheet_directory() . '/General/book-free-session.php';
+//require_once get_stylesheet_directory() . '/General/book-free-session.php';
 
 require_once get_stylesheet_directory() . '/ajax/tutorspoint-subjects.php';
 
@@ -50,11 +88,30 @@ require_once get_stylesheet_directory() . '/General/HomePage-Levels.php';
 require_once get_stylesheet_directory() . '/includes/zegocloud-integration.php';
 
 
+// Hide WP admin bar on the front-end for all logged-in users
+add_action('after_setup_theme', function () {
+  if ( ! is_admin() ) {
+    show_admin_bar(false);           // turn off
+    add_filter('show_admin_bar', '__return_false'); // enforce
+  }
+});
+
 
 
 
 // Shortcodes
 require_once get_stylesheet_directory() . '/General/tp-liveclassroom.php';
+
+
+
+// Make sure teacher-dashboard AJAX handlers are loaded on admin-ajax.php
+add_action('init', function () {
+  if ( defined('DOING_AJAX') && DOING_AJAX ) {
+    $p = get_stylesheet_directory() . '/General/teacher-dashboard/teacher-dashboard.php';
+    if ( file_exists($p) ) { require_once $p; }
+  }
+});
+
 
 
 
@@ -89,7 +146,7 @@ add_filter('the_content', function ($content) {
 }, 1); // run early so it wins *
 
 
-require_once get_stylesheet_directory() . '/General/book-lecture.php';
+//require_once get_stylesheet_directory() . '/General/book-lecture.php';
 
 
 // Load Zego Classroom shortcode
@@ -309,6 +366,155 @@ add_action('tp_autocreate_meeting_links', function () {
 
 
 
+
+// =============== Toggle teacher active/inactive ===============
+add_action('wp_ajax_tp_adm_t_toggle', function () {
+    if ( ! current_user_can('manage_options') ) {
+        wp_send_json_error('Permission denied');
+    }
+    check_ajax_referer('tp_adm_teacher');
+
+    global $wpdb;
+
+    $teacher_id = isset($_POST['teacher_id']) ? (int) $_POST['teacher_id'] : 0;
+    $to         = isset($_POST['to']) ? sanitize_text_field($_POST['to']) : '';
+    if (!$teacher_id || !in_array($to, ['active','inactive'], true)) {
+        wp_send_json_error('Bad request');
+    }
+
+    $t = $wpdb->get_row( $wpdb->prepare(
+        "SELECT teacher_id, Email FROM wpC_teachers_main WHERE teacher_id=%d LIMIT 1",
+        $teacher_id
+    ) );
+    if (!$t) wp_send_json_error('Teacher not found');
+
+    $user = get_user_by('email', $t->Email);
+
+    // 1) Update main table (NOTE: column name is Status per your DB)
+    $newStatus = ($to === 'active') ? 1 : 0;
+    $upd = $wpdb->update(
+        'wpC_teachers_main',
+        ['Status' => $newStatus],
+        ['teacher_id' => $teacher_id],
+        ['%d'],
+        ['%d']
+    );
+    if ($upd === false) {
+        wp_send_json_error('DB update failed on wpC_teachers_main');
+    }
+
+    // 2) Gate WP login via meta
+    if ($user) {
+        if ($to === 'inactive') {
+            update_user_meta($user->ID, 'account_disabled', 1);
+        } else {
+            delete_user_meta($user->ID, 'account_disabled');
+        }
+    }
+
+    wp_send_json_success(['status' => $newStatus]);
+});
+
+// =============== Create teacher (name, email, password) ===============
+add_action('wp_ajax_tp_adm_t_add', function () {
+    if ( ! current_user_can('manage_options') ) {
+        wp_send_json_error('Permission denied');
+    }
+    check_ajax_referer('tp_adm_teacher');
+
+    global $wpdb;
+
+    $name = sanitize_text_field($_POST['name'] ?? '');
+    $email= sanitize_email($_POST['email'] ?? '');
+    $pass = (string) ($_POST['password'] ?? '');
+
+    if (!$name || !$email || !$pass) {
+        wp_send_json_error('Name, Email and Password are required.');
+    }
+    if (email_exists($email)) {
+        wp_send_json_error('Email already exists.');
+    }
+
+    // Create WP user (teacher role)
+    $login = sanitize_user(current(explode('@', $email)));
+    if (username_exists($login)) $login .= '_' . wp_generate_password(4, false, false);
+
+    $user_id = wp_create_user($login, $pass, $email);
+    if (is_wp_error($user_id)) {
+        wp_send_json_error('Could not create WP user: ' . $user_id->get_error_message());
+    }
+    $wp_user = new WP_User($user_id);
+    if (!in_array('teacher', (array)$wp_user->roles, true)) $wp_user->add_role('teacher');
+    wp_update_user(['ID'=>$user_id, 'display_name'=>$name]);
+
+    // Insert into wpC_teachers_main if not exists (Status=1 active)
+    $exists = $wpdb->get_var( $wpdb->prepare(
+        "SELECT COUNT(*) FROM wpC_teachers_main WHERE Email=%s", $email
+    ) );
+    if (!$exists) {
+        $wpdb->insert('wpC_teachers_main', [
+            'FullName' => $name,
+            'Email'    => $email,
+            'Status'   => 1,
+            'created_at' => current_time('mysql'),
+        ], ['%s','%s','%d','%s']);
+    }
+
+    wp_send_json_success(['user_id'=>$user_id]);
+});
+
+// =============== Block login for disabled teachers ===============
+add_filter('authenticate', function ($user_or_error, $username, $password) {
+    if ($user_or_error instanceof WP_User) {
+        $disabled = get_user_meta($user_or_error->ID, 'account_disabled', true);
+        if ($disabled) {
+            return new WP_Error('account_disabled', __('Your account is deactivated. Please contact support.'));
+        }
+    }
+    return $user_or_error;
+}, 30, 3);
+
+// =============== Save hourly rate into wpC_teacher_Hour_Rate ===============
+add_action('wp_ajax_tp_adm_t_rate_set', function () {
+    if ( ! current_user_can('manage_options') ) {
+        wp_send_json_error('Permission denied');
+    }
+    check_ajax_referer('tp_adm_teacher');
+
+    global $wpdb;
+    $teacher_id       = (int) ($_POST['teacher_id'] ?? 0);
+    $subject_level_id = (int) ($_POST['subject_level_id'] ?? 0);
+    $hourly_rate      = (float) ($_POST['hourly_rate'] ?? 0);
+
+    if (!$teacher_id || !$subject_level_id || $hourly_rate <= 0) {
+        wp_send_json_error('All fields are required.');
+    }
+
+    // Upsert into wpC_teacher_Hour_Rate (idempotent)
+    $existing_id = $wpdb->get_var( $wpdb->prepare(
+        "SELECT hour_rate_id FROM wpC_teacher_Hour_Rate WHERE teacher_id=%d AND subject_level_id=%d LIMIT 1",
+        $teacher_id, $subject_level_id
+    ) );
+
+    if ($existing_id) {
+        $ok = $wpdb->update('wpC_teacher_Hour_Rate',
+            ['hourly_rate' => $hourly_rate, 'updated_at' => current_time('mysql')],
+            ['hour_rate_id' => $existing_id],
+            ['%f','%s'], ['%d']
+        );
+        if ($ok === false) wp_send_json_error('Failed to update rate.');
+        wp_send_json_success(['hour_rate_id' => (int)$existing_id]);
+    } else {
+        $ok = $wpdb->insert('wpC_teacher_Hour_Rate', [
+            'teacher_id'       => $teacher_id,
+            'subject_level_id' => $subject_level_id,
+            'hourly_rate'      => $hourly_rate,
+            'created_at'       => current_time('mysql'),
+        ], ['%d','%d','%f','%s']);
+        if (!$ok) wp_send_json_error('Failed to insert rate.');
+        wp_send_json_success(['hour_rate_id' => (int)$wpdb->insert_id]);
+    }
+});
 
 
 
@@ -664,6 +870,145 @@ function mark_as_taught_ajax() {
 
     wp_die();
 }
+
+
+// Block login for disabled accounts (teachers or any user flagged)
+add_filter('authenticate', function($user){
+    if (is_wp_error($user) || !$user) return $user;
+    if (get_user_meta($user->ID, 'account_disabled', true)) {
+        return new WP_Error('disabled', __('Your account is disabled. Contact support.'));
+    }
+    return $user;
+}, 99);
+
+
+
+// AJAX: activate / inactivate teacher
+add_action('wp_ajax_tp_adm_t_toggle', function () {
+    if ( ! current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Permission denied.'], 403);
+    }
+    check_ajax_referer('tp_adm_teacher'); // nonce from your JS
+
+    global $wpdb;
+    $teacher_id = isset($_POST['teacher_id']) ? (int) $_POST['teacher_id'] : 0;
+    $to         = isset($_POST['to']) ? sanitize_text_field($_POST['to']) : '';
+    if (!$teacher_id || ! in_array($to, ['active','inactive'], true)) {
+        wp_send_json_error(['message' => 'Bad request.']);
+    }
+
+    // Fetch teacher first (we need their email, and to verify it exists)
+    $teacher = $wpdb->get_row($wpdb->prepare(
+        "SELECT teacher_id, Email, Status FROM wpC_teachers_main WHERE teacher_id = %d LIMIT 1",
+        $teacher_id
+    ));
+    if ( ! $teacher) {
+        wp_send_json_error(['message' => 'Teacher not found.']);
+    }
+
+    // Map intent to DB + WP meta
+    $new_status      = ($to === 'active') ? 1 : 0;      // wpC_teachers_main.Status  (CAPITAL S)
+    $account_disable = ($to === 'active') ? 0 : 1;      // user meta account_disabled
+
+    // Update wpC_teachers_main — NOTE the capitalized column name "Status"
+    $updated = $wpdb->update(
+        'wpC_teachers_main',
+        ['Status' => $new_status],
+        ['teacher_id' => $teacher_id],
+        ['%d'],
+        ['%d']
+    );
+
+    // If update failed, return details (don’t fake success)
+    if ($updated === false) {
+        wp_send_json_error([
+            'message' => 'DB error: ' . $wpdb->last_error,
+            'query'   => $wpdb->last_query,
+        ], 500);
+    }
+
+    // Update WP user’s login ability based on teacher’s email
+    if (!empty($teacher->Email)) {
+        $user = get_user_by('email', $teacher->Email);
+
+        // Some sites keep teacher users under role "teacher", adjust if different
+        if ($user) {
+            if ($account_disable) {
+                update_user_meta($user->ID, 'account_disabled', 1);
+            } else {
+                delete_user_meta($user->ID, 'account_disabled');
+            }
+        }
+    }
+
+    wp_send_json_success([
+        'message' => ($to === 'active') ? 'Teacher activated' : 'Teacher inactivated',
+        'status'  => $new_status,
+    ]);
+});
+
+
+
+//add hourly rate
+add_action('wp_ajax_tp_adm_t_rate_set', function(){
+    if ( ! current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Permission denied.'], 403);
+    }
+    check_ajax_referer('tp_adm_teacher');
+
+    global $wpdb;
+    $teacher_id       = isset($_POST['teacher_id']) ? (int) $_POST['teacher_id'] : 0;
+    $subject_level_id = isset($_POST['subject_level_id']) ? (int) $_POST['subject_level_id'] : 0;
+    $hourly_rate      = isset($_POST['hourly_rate']) ? (float) $_POST['hourly_rate'] : 0.0;
+
+    if (!$teacher_id || !$subject_level_id || $hourly_rate <= 0) {
+        wp_send_json_error(['message' => 'All fields are required.']);
+    }
+
+    // Upsert pattern: if a row exists -> update, else insert
+    $row = $wpdb->get_row($wpdb->prepare(
+        "SELECT id FROM wpC_teacher_Hour_Rate WHERE teacher_id=%d AND subject_level_id=%d LIMIT 1",
+        $teacher_id, $subject_level_id
+    ));
+
+    if ($row) {
+        $ok = $wpdb->update(
+            'wpC_teacher_Hour_Rate',
+            ['hourly_rate' => $hourly_rate, 'updated_at' => current_time('mysql')],
+            ['id' => (int)$row->id],
+            ['%f','%s'],
+            ['%d']
+        );
+    } else {
+        $ok = $wpdb->insert(
+            'wpC_teacher_Hour_Rate',
+            [
+                'teacher_id'       => $teacher_id,
+                'subject_level_id' => $subject_level_id,
+                'hourly_rate'      => $hourly_rate,
+                'created_at'       => current_time('mysql'),
+                'updated_at'       => current_time('mysql'),
+            ],
+            ['%d','%d','%f','%s','%s']
+        );
+    }
+
+    if ($ok === false) {
+        wp_send_json_error(['message' => 'DB error: '.$wpdb->last_error]);
+    }
+    wp_send_json_success(['message' => 'Hourly rate saved']);
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 

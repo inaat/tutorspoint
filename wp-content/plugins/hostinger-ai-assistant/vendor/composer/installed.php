@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4b9533e2ecb0ed33711be2c885e7b4ef5e0dd46f',
+        'reference' => '6b9fc961a306e00d83a0da61a9ba1392d92b2864',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4b9533e2ecb0ed33711be2c885e7b4ef5e0dd46f',
+            'reference' => '6b9fc961a306e00d83a0da61a9ba1392d92b2864',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'automattic/jetpack-autoloader' => array(
             'pretty_version' => 'dev-trunk',
             'version' => 'dev-trunk',
-            'reference' => '41cda67f84f276b63eb4baf42c90cf854e364930',
+            'reference' => 'a1769dcdebfe41c0bd06709da8f79238d54c6a71',
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../automattic/jetpack-autoloader',
             'aliases' => array(
@@ -58,9 +58,9 @@
             'dev_requirement' => false,
         ),
         'brick/math' => array(
-            'pretty_version' => 'v0.14.x-dev',
-            'version' => '0.14.9999999.9999999-dev',
-            'reference' => 'a7d3e3a33f801fd670d1f6b72cc56d9d2861071e',
+            'pretty_version' => '0.14.0',
+            'version' => '0.14.0.0',
+            'reference' => '113a8ee2656b882d4c3164fa31aa6e12cbb7aaa2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../brick/math',
             'aliases' => array(),
@@ -132,9 +132,9 @@
             'dev_requirement' => false,
         ),
         'hostinger/hostinger-wp-surveys' => array(
-            'pretty_version' => '1.1.16',
-            'version' => '1.1.16.0',
-            'reference' => '6d1640eb233316e187581a5aa0e88a1bd27e4162',
+            'pretty_version' => '1.1.17',
+            'version' => '1.1.17.0',
+            'reference' => 'aa4be24d62556614524caebcda8c8965bc719e63',
             'type' => 'library',
             'install_path' => __DIR__ . '/../hostinger/hostinger-wp-surveys',
             'aliases' => array(),
@@ -165,7 +165,7 @@
         'league/uri' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '938740efa2465e6744f17aca5e745d866c204f8c',
+            'reference' => '4e0edad772750a17b917f969ce9d293bae234987',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/uri',
             'aliases' => array(
@@ -176,7 +176,7 @@
         'league/uri-interfaces' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f3bcea34655e4b6aacebc64f8d8ea7d71541ba86',
+            'reference' => '658024990fd8606daa101c118f67b35804107b88',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/uri-interfaces',
             'aliases' => array(
@@ -196,7 +196,7 @@
         'mantle-framework/support' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '37ed3345f344745d87eec72806864ede99361d8b',
+            'reference' => '34e80bc2054a18a678fb100d6b0aa503031de8c3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mantle-framework/support',
             'aliases' => array(),
@@ -223,7 +223,7 @@
         'nesbot/carbon' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8e3643dcd149ae0fe1d2ff4f2c8e4bbfad7c165f',
+            'reference' => 'fa9852e9fd7be89313f492786ee643856618e112',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nesbot/carbon',
             'aliases' => array(
@@ -352,7 +352,7 @@
         'ramsey/uuid' => array(
             'pretty_version' => '4.x-dev',
             'version' => '4.9999999.9999999.9999999-dev',
-            'reference' => '7390d3a0adf7b55dc2a95e8277f91343650f44fa',
+            'reference' => 'cd47a01a1f7c9f54b34b06ec53148a80dc5fe181',
             'type' => 'library',
             'install_path' => __DIR__ . '/../ramsey/uuid',
             'aliases' => array(),
@@ -363,6 +363,15 @@
             'replaced' => array(
                 0 => '4.x-dev',
             ),
+        ),
+        'spatie/backtrace' => array(
+            'pretty_version' => '1.8.1',
+            'version' => '1.8.1.0',
+            'reference' => '8c0f16a59ae35ec8c62d85c3c17585158f430110',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/backtrace',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/clock' => array(
             'pretty_version' => '7.4.x-dev',
@@ -441,7 +450,7 @@
         'symfony/translation' => array(
             'pretty_version' => '7.4.x-dev',
             'version' => '7.4.9999999.9999999-dev',
-            'reference' => 'cfd2401d28ee4b92a54baafb3af91ba5bef2e76b',
+            'reference' => '7d843af0451b4a94ab380eea4f8aaf7ba17d28af',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation',
             'aliases' => array(),
@@ -467,7 +476,7 @@
         'symfony/var-dumper' => array(
             'pretty_version' => '7.4.x-dev',
             'version' => '7.4.9999999.9999999-dev',
-            'reference' => '59052532348d426af0fae6f0bbcc5d8ab598db39',
+            'reference' => '0c9272cc57ad469bbcb3f881f2c9d0b1295d477d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/var-dumper',
             'aliases' => array(),

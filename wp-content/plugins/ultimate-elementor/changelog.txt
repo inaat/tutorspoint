@@ -1,3 +1,9 @@
+Version 1.40.5 - 1st October 2025
+- Improvement: Video - Added support for Rumble platform.
+- Improvement: Video Gallery - Added support for Rumble platform.
+- Improvement: Video Gallery – Added new hover effects, improved filterable tabs & related customization settings.
+- Fix: Posts – Added support for non-Latin characters in filterable tabs and excerpts
+
 Version 1.40.4 - 15th September 2025
 - Improvement: Compatibility with latest Elementor and Elementor Pro 3.32 version.
 - Improvement: Updated required packages to the latest stable versions for improved compatibility and security.

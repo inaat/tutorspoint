@@ -53,6 +53,13 @@ function astra_ext_blog_pro_dynamic_css( $dynamic_css, $dynamic_css_filtered = '
 		),
 	);
 
+	// Added LifterLMS course list width fix only if LifterLMS is active
+	if ( class_exists( 'LifterLMS' ) ) {
+		$css_output['.llms-loop .llms-loop-list.llms-course-list .llms-loop-item.type-course '] = array(
+			'width' => '100%',
+		);
+	}
+
 	$blog_layout = astra_addon_get_blog_layout();
 	if ( astra_get_option( 'blog-date-box' ) && ( 'blog-layout-1' === $blog_layout || 'blog-layout-2' === $blog_layout || 'blog-layout-3' === $blog_layout ) ) {
 		$css_output['.ast-blog-featured-section.ast-blog-single-element'] = array(

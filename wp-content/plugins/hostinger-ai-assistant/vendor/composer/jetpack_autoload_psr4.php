@@ -50,6 +50,10 @@ return array(
 		'version' => '7.4.9999999.9999999-dev',
 		'path'    => array( $vendorDir . '/symfony/clock' )
 	),
+	'Spatie\\Backtrace\\' => array(
+		'version' => '1.8.1.0',
+		'path'    => array( $vendorDir . '/spatie/backtrace/src' )
+	),
 	'Ramsey\\Uuid\\' => array(
 		'version' => '4.9999999.9999999.9999999-dev',
 		'path'    => array( $vendorDir . '/ramsey/uuid/src' )
@@ -119,7 +123,7 @@ return array(
 		'path'    => array( $vendorDir . '/hostinger/hostinger-wp-helper/tests/phpunit' )
 	),
 	'Hostinger\\Surveys\\' => array(
-		'version' => '1.1.16.0',
+		'version' => '1.1.17.0',
 		'path'    => array( $vendorDir . '/hostinger/hostinger-wp-surveys/src' )
 	),
 	'Hostinger\\Amplitude\\' => array(
@@ -159,11 +163,11 @@ return array(
 		'path'    => array( $vendorDir . '/nesbot/carbon/src/Carbon' )
 	),
 	'Brick\\Math\\' => array(
-		'version' => '0.14.9999999.9999999-dev',
+		'version' => '0.14.0.0',
 		'path'    => array( $vendorDir . '/brick/math/src' )
 	),
 	'Automattic\\Jetpack\\Autoloader\\' => array(
-		'version' => '5.0.10',
+		'version' => '5.0.11-alpha',
 		'path'    => array( $vendorDir . '/automattic/jetpack-autoloader/src' )
 	),
 );

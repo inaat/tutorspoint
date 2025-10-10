@@ -17,6 +17,15 @@ class Hostinger_Frontend_Translations {
     }
 
     protected function setup_translations(): void {
+
+        $user_id   = get_current_user_id();
+        $user_info = get_userdata( $user_id );
+        if ( ! empty( $user_info->display_name ) ) {
+            $welcome_text = sprintf( esc_html__( 'Hello, %s 👋', 'hostinger-ai-assistant' ), $user_info->display_name );
+        } else {
+            $welcome_text = esc_html__( 'Hello 👋', 'hostinger-ai-assistant' );
+        }
+
         $this->frontend_translations = array(
             'tones_selected'     => esc_html__( 'tones selected', 'hostinger-ai-assistant' ),
             'voice_tones'        => array(
@@ -65,6 +74,10 @@ class Hostinger_Frontend_Translations {
                 'tooltip_kodee_responding_start_new_disabled' => esc_html__( 'Cannot start a new chat when Kodee is responding', 'hostinger-ai-assistant' ),
                 'active_conversation'                         => esc_html__( 'Active', 'hostinger-ai-assistant' ),
             ),
+            'start_screen'    => array(
+                'title'    => $welcome_text,
+                'subtitle' => esc_html__( 'How can I help you today?', 'hostinger-ai-assistant' ),
+            ),
             'system_messages' => array(
                 'conversation_closed' => esc_html__( 'Conversation was closed', 'hostinger-ai-assistant' ),
             ),
@@ -82,7 +95,7 @@ class Hostinger_Frontend_Translations {
             ),
             'modal_restart'   => array(
                 'title'          => esc_html__( 'Clear chat', 'hostinger-ai-assistant' ),
-                'description'    => esc_html__( 'After clearing history you won\'t be able to access previous chats.', 'hostinger-ai-assistant' ),
+                'description'    => __( 'After clearing history you won\'t be able to access previous chats.', 'hostinger-ai-assistant' ),
                 'cancel_button'  => esc_html__( 'Cancel', 'hostinger-ai-assistant' ),
                 'confirm_button' => esc_html__( 'Clear chat', 'hostinger-ai-assistant' ),
                 'start_new'      => array(
@@ -106,6 +119,73 @@ class Hostinger_Frontend_Translations {
                 'subtitle' => $mcp_subtitle,
                 'deny'     => esc_html__( 'No, thanks', 'hostinger-ai-assistant' ),
                 'accept'   => esc_html__( 'Grant Permission', 'hostinger-ai-assistant' ),
+            ),
+            'suggestions' => array(
+                'wpAddPage' => array(
+                    'title'       => esc_html__( 'Add a New Page', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Quickly create a new page on your WordPress site.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Create a new page titled About Us with content about our company values.", 'hostinger-ai-assistant' ),
+                ),
+                'wpUpdatePage' => array(
+                    'title'       => esc_html__( 'Update an Existing Page', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Edit the title or content of an existing page.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Update the Contact Us page to include our new support email address.", 'hostinger-ai-assistant' ),
+                ),
+                'getSiteInfo' => array(
+                    'title'       => esc_html__( 'Get Site Information', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Retrieve basic information about the WordPress site.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( 'Show me the site name, description, and WordPress version.', 'hostinger-ai-assistant' ),
+                ),
+                'wpUsersSearch' => array(
+                    'title'       => esc_html__( 'Search for Users', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Find users by name, email, or role.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Search for users with the role editor.", 'hostinger-ai-assistant' ),
+                ),
+                'wpAddPost' => array(
+                    'title'       => esc_html__( 'Publish a New Blog Post', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Write and publish a new article to your blog.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Write a new blog post titled Top 5 SEO Tips for 2025 with an introduction and list of tips.", 'hostinger-ai-assistant' ),
+                ),
+                'wpUpdatePost' => array(
+                    'title'       => esc_html__( 'Update an Existing Post', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Make changes to an existing blog post.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Update the post titled Holiday Sale to include the new discount code SAVE20.", 'hostinger-ai-assistant' ),
+                ),
+                'wpPostsSearch' => array(
+                    'title'       => esc_html__( 'Search for Blog Posts', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Find blog posts by title or keyword.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Search for posts that mention WordPress security.", 'hostinger-ai-assistant' ),
+                ),
+                'wpUpdateTag' => array(
+                    'title'       => esc_html__( 'Update a Tag', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Rename or edit an existing post tag.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Rename the tag webdev to web development.", 'hostinger-ai-assistant' ),
+                ),
+                'wpUpdateCategory' => array(
+                    'title'       => esc_html__( 'Update a Category', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Edit the name or description of a blog category.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Update the News category description to Latest company announcements and updates.", 'hostinger-ai-assistant' ),
+                ),
+                'wcAddProduct' => array(
+                    'title'       => esc_html__( 'Add a New Product', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Create and publish a new product in your WooCommerce store.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Add a new product called Wireless Earbuds Pro priced at 89.99 EUR with category Electronics.", 'hostinger-ai-assistant' ),
+                ),
+                'wcAddProductCategory' => array(
+                    'title'       => esc_html__( 'Add a Product Category', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Create a new category for your WooCommerce products.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( "Create a new product category called Smart Home Devices.", 'hostinger-ai-assistant' ),
+                ),
+                'wcOrdersSearch' => array(
+                    'title'       => esc_html__( 'Search for Orders', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Look up orders by ID, customer, or status.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( 'Find all completed orders from the past 7 days.', 'hostinger-ai-assistant' ),
+                ),
+                'wcReportsSales' => array(
+                    'title'       => esc_html__( 'View Sales Reports', 'hostinger-ai-assistant' ),
+                    'description' => esc_html__( 'Generate sales reports for a given period.', 'hostinger-ai-assistant' ),
+                    'prompt'      => esc_html__( 'Show me total sales and top products sold in the last 30 days.', 'hostinger-ai-assistant' ),
+                ),
             ),
         );
     }

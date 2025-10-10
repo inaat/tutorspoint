@@ -9,7 +9,7 @@
 
 ## Pages
 
-- [admin-dashboard](http://public_html.test/admin-dashboard/)
+- [admin-dashboard](http://public_html.test/admin-dashboard/): Administration Dashboard
 - [tp](http://public_html.test/tp/)
 - [termsandconditions](http://public_html.test/termsandconditions/): Privacy Policy – Tutors Point Ltd Effective Date: Company Name: Tutors Point Ltd Introduction Tutors Point (“we”, “us”) is a UK platform offering 1-to-1 live tutoring for UK students (KS1–A-Level). This policy explains how we collect, use, share, and protect personal data, drawing on practices at MyTutor.co.uk and aligning with UK GDPR and the Data Protection Act 2018. Personal Data We Collect Students &amp; Parents: Name, contact details, billing info, lesson history, communications. Tutors: Name, email, CV, qualifications, ID, DBS (if UK), teaching profile, and performance data. Session Content: Real-time word-level transcripts for monitoring language (via ZEGOCLOUD AI) Screenshots every [&hellip;]
 - [vClassRoom](http://public_html.test/vclassroom/)

@@ -8,6 +8,10 @@
 /**
  * Class BSF_WP_CLI_Command
  */
+if ( ! class_exists( 'WP_CLI_Command' ) ) {
+	return;
+}
+
 class BSF_WP_CLI_Command extends WP_CLI_Command {
 	/**
 	 * BSF_License Manager instance.

@@ -3,7 +3,7 @@ Tags: onboarding, hostinger
 Requires at least: 5.5
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 2.0.91
+Stable tag: 2.0.93
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -485,3 +485,11 @@ Watching for Changes: During development, you can use "npm run watch" to continu
 2.0.91 (2025-09-25)
 - Dev: Increment test coverage
 - Fix: Missed logo in AI Discovery Step
+
+2.0.92 (2025-09-30)
+- Fix: Redirect to website creation page if theme not exist
+- Tweak: Bump dependencies
+- Dev: Fix Release updater
+
+2.0.93 (2025-10-07)
+- Feature: Updated UX for WooCommerce shipping step

@@ -1303,4 +1303,152 @@ add_action('wp_ajax_tp_adm_book_print', function(){
 });
 
 
+// === Categories AJAX for Admin/Teacher Dashboard ===
+// Register endpoints (logged-in users only, via admin-ajax.php)
+add_action('wp_ajax_tp_list_categories',       'tdcats_list_categories');
+add_action('wp_ajax_tp_add_category',          'tdcats_add_category');
+add_action('wp_ajax_tp_rename_category',       'tdcats_rename_category');
+add_action('wp_ajax_tp_delete_category',       'tdcats_delete_category');
+add_action('wp_ajax_tp_set_default_category',  'tdcats_set_default_category');
+
+// Optional quick ping for debugging
+// add_action('wp_ajax_tp_cat_ping', function(){ wp_send_json_success(['ok'=>true]); });
+
+if (!function_exists('tdcats_guard')) {
+  function tdcats_guard(){
+    if (!is_user_logged_in() || !current_user_can('manage_categories')) {
+      wp_send_json_error('Unauthorized', 403);
+    }
+    $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
+    if (!$nonce || !wp_verify_nonce($nonce, 'tp_cat_manage')) {
+      wp_send_json_error('Bad nonce', 400);
+    }
+  }
+}
+
+if (!function_exists('tdcats_list_categories')) {
+  function tdcats_list_categories(){
+    tdcats_guard();
+    $search = isset($_POST['s']) ? sanitize_text_field($_POST['s']) : '';
+    $parent = isset($_POST['parent']) && $_POST['parent'] !== '' ? intval($_POST['parent']) : null;
+
+    $args = [
+      'taxonomy'   => 'category',
+      'hide_empty' => false,
+      'number'     => 200,
+      'orderby'    => 'name',
+      'order'      => 'ASC',
+    ];
+    if ($search) $args['search'] = $search;
+    if ($parent !== null) $args['parent'] = $parent;
+
+    $terms = get_terms($args);
+    if (is_wp_error($terms)) wp_send_json_error($terms->get_error_message(), 500);
+
+    $default_id = (int) get_option('default_category');
+    $uncat      = get_term_by('slug', 'uncategorized', 'category');
+    $uncat_id   = $uncat ? (int)$uncat->term_id : 0;
+
+    $items = [];
+    foreach ($terms as $t) {
+      $parent_name = '';
+      if ($t->parent) {
+        $p = get_term($t->parent, 'category');
+        if ($p && !is_wp_error($p)) $parent_name = $p->name;
+      }
+      $items[] = [
+        'id'              => (int)$t->term_id,
+        'name'            => $t->name,
+        'slug'            => $t->slug,
+        'parent'          => (int)$t->parent,
+        'parent_name'     => $parent_name,
+        'count'           => (int)$t->count,
+        'is_default'      => ((int)$t->term_id === $default_id),
+        'is_uncategorized'=> ((int)$t->term_id === $uncat_id),
+      ];
+    }
+    wp_send_json_success(['items' => $items]);
+  }
+}
+
+if (!function_exists('tdcats_add_category')) {
+  function tdcats_add_category(){
+    tdcats_guard();
+
+    $name   = isset($_POST['name'])  ? sanitize_text_field($_POST['name']) : '';
+    $slug   = isset($_POST['slug'])  ? sanitize_title($_POST['slug'])      : '';
+    $parent = isset($_POST['parent'])? intval($_POST['parent'])            : 0;
+    $desc   = isset($_POST['desc'])  ? sanitize_textarea_field($_POST['desc']) : '';
+
+    if ($name === '') wp_send_json_error('Name is required', 400);
+    if ($parent < 0)  $parent = 0;
+
+    // Unique slug to avoid "term_exists" errors
+    $base = $slug ?: sanitize_title($name);
+    $use  = $base ?: 'category';
+    $i = 2;
+    while (get_term_by('slug', $use, 'category')) {
+      $use = $base . '-' . $i++;
+    }
+
+    $args = ['description' => $desc, 'slug' => $use];
+    if ($parent) $args['parent'] = $parent;
+
+    $res = wp_insert_term($name, 'category', $args);
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => (int)$res['term_id'], 'slug' => $use]);
+  }
+}
+
+if (!function_exists('tdcats_rename_category')) {
+  function tdcats_rename_category(){
+    tdcats_guard();
+    $id   = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    if ($id <= 0 || $name === '') wp_send_json_error('Invalid data', 400);
+
+    $res = wp_update_term($id, 'category', ['name' => $name]);
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => $id]);
+  }
+}
+
+if (!function_exists('tdcats_delete_category')) {
+  function tdcats_delete_category(){
+    tdcats_guard();
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    if ($id <= 0) wp_send_json_error('Invalid ID', 400);
+
+    $default = (int)get_option('default_category');
+    $uncat   = get_term_by('slug', 'uncategorized', 'category');
+    $uncat_id= $uncat ? (int)$uncat->term_id : 0;
+
+    if ($id === $default || $id === $uncat_id) {
+      wp_send_json_error('Protected category cannot be deleted', 400);
+    }
+
+    $res = wp_delete_term($id, 'category');
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => $id]);
+  }
+}
+
+if (!function_exists('tdcats_set_default_category')) {
+  function tdcats_set_default_category(){
+    tdcats_guard();
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Insufficient permission', 403);
+    }
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    $term = get_term($id, 'category');
+    if (!$term || is_wp_error($term)) wp_send_json_error('Category not found', 404);
+
+    update_option('default_category', (int)$id);
+    wp_send_json_success(['id' => (int)$id]);
+  }
+}
+
 

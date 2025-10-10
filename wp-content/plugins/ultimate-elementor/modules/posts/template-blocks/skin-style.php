@@ -804,14 +804,26 @@ abstract class Skin_Style {
 		?>
 
 		<div class="uael-post__excerpt">
-			<?php 
-				$excerpt        = get_the_excerpt();
-				$words          = preg_split( '/\s+/', $excerpt );
-				$excerpt_length = (int) $_excerpt_length;
-				$excerpt_length = max( $excerpt_length, 25 );
-				$trim_excerpt   = implode( ' ', array_slice( $words, 0, $excerpt_length ) );
-			if ( count( $words ) > $excerpt_length ) {
+			<?php
+			$excerpt        = get_the_excerpt();
+			$words          = preg_split( '/\s+/', $excerpt );
+			$excerpt_length = (int) $_excerpt_length;
+			$excerpt_length = max( $excerpt_length, 25 );
+
+			// Check if text contains CJK characters using Unicode ranges.
+			$has_cjk = preg_match( '/[\x{4e00}-\x{9fff}\x{3400}-\x{4dbf}\x{20000}-\x{2a6df}\x{2a700}-\x{2b73f}\x{2b740}-\x{2b81f}\x{2b820}-\x{2ceaf}\x{2ceb0}-\x{2ebef}\x{30000}-\x{3134f}\x{3040}-\x{309f}\x{30a0}-\x{30ff}\x{31f0}-\x{31ff}\x{3200}-\x{32ff}\x{3300}-\x{33ff}\x{ac00}-\x{d7af}\x{1100}-\x{11ff}\x{3130}-\x{318f}\x{a960}-\x{a97f}\x{d7b0}-\x{d7ff}]/u', $excerpt );
+
+			// Handle CJK languages that don't use spaces or mixed content.
+			if ( $has_cjk || ( count( $words ) === 1 && mb_strlen( $excerpt ) > $excerpt_length ) ) {
+				// Character-based truncation for CJK content.
+				$trim_excerpt  = mb_substr( $excerpt, 0, $excerpt_length );
 				$trim_excerpt .= apply_filters( 'excerpt_more', '...' );
+			} else {
+				// Word-based truncation for space-separated languages.
+				$trim_excerpt = implode( ' ', array_slice( $words, 0, $excerpt_length ) );
+				if ( count( $words ) > $excerpt_length ) {
+					$trim_excerpt .= apply_filters( 'excerpt_more', '...' );
+				}
 			}
 			$allowed_tags           = wp_kses_allowed_html( 'post' );
 			$allowed_tags['iframe'] = array(
@@ -1319,7 +1331,7 @@ abstract class Skin_Style {
 			<ul class="uael-post__header-filters" aria-label="<?php esc_attr_e( 'Taxonomy Filter', 'uael' ); ?>">
 				<li class="uael-post__header-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $all_text ); ?></li>
 				<?php foreach ( $filters as $key => $value ) { ?>
-				<li class="uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>" tabindex="0"><?php echo esc_html( $value->name ); ?></li>
+				<li class="uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( urldecode( $value->slug ) ); ?>" tabindex="0"><?php echo esc_html( $value->name ); ?></li>
 				<?php } ?>
 			</ul>
 
@@ -1330,7 +1342,7 @@ abstract class Skin_Style {
 					<ul class="uael-filters-dropdown-list uael-post__header-filters">
 						<li class="uael-filters-dropdown-item uael-post__header-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $all_text ); ?></li>
 						<?php foreach ( $filters as $key => $value ) { ?>
-						<li class="uael-filters-dropdown-item uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>"><?php echo esc_html( $value->name ); ?></li>
+						<li class="uael-filters-dropdown-item uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( urldecode( $value->slug ) ); ?>"><?php echo esc_html( $value->name ); ?></li>
 						<?php } ?>
 					</ul>
 				</div>

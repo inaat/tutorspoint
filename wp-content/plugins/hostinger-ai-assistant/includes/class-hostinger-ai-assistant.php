@@ -170,6 +170,7 @@ class Hostinger_Ai_Assistant {
         $helper         = new Hostinger_Ai_Assistant_Helper();
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action( 'admin_init', $plugin_admin, 'check_and_update_mcp_settings' );
 
         $this->loader->add_filter( 'hostinger_menu_subpages', $plugin_admin, 'add_ai_assistant_menu_item', 40 );
         $this->loader->add_filter( 'hostinger_admin_menu_bar_items', $plugin_admin, 'add_admin_bar_item', 100 );

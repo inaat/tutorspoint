@@ -1064,6 +1064,26 @@
 		var action = selector.data( 'action' );
 		var all_filters = selector.data( 'all-filters' );
 		var $tabs_dropdown = $scope.find('.uael-filters-dropdown-list');
+		
+		// Video effects handling
+		var video_effect = selector.data('video-effect');
+		var apply_to = selector.data('video-effect-apply-to') || 'thumbnail';
+		var $video_items = selector.find( '.uael-video__gallery-item' );
+		
+		// Apply video effects based on "Apply To" setting
+		var applyVideoEffects = function() {
+			if (!video_effect || video_effect === 'normal') {
+				return;
+			}
+			
+			var effect_class = 'uael-vgallery-' + video_effect;
+			
+			// Add the effect class to the main wrapper
+			selector.addClass(effect_class);
+		};
+		
+		// Initialize video effects
+		applyVideoEffects();
 
 		if ( selector.length < 1 ) {
 			return;
@@ -1081,11 +1101,15 @@
 				var vurl 		= $this.data( 'url' );
 				var overlay		= $this.closest( '.uael-video__gallery-item' ).find( '.uael-vg__overlay' );
 				var wrap_outer = $this.closest( '.uael-video__gallery-iframe' );
+				var $video_item = $this.closest( '.uael-video__gallery-item' );
 
 				iframe.attr( 'src', vurl );
 				iframe.attr( 'frameborder', '0' );
 				iframe.attr( 'allowfullscreen', '1' );
 				iframe.attr( 'allow', 'autoplay;encrypted-media;' );
+
+				// Mark iframe wrapper as playing for effect application
+				wrap_outer.addClass('uael-video-playing');
 
 				wrap_outer.html( iframe );
 				wrap_outer.attr( 'style', 'background:#000;' );
@@ -1503,7 +1527,7 @@
 
 	        if ( 0 == selector.find( 'iframe' ).length ) {
 
-				if( outer_wrap.hasClass( 'uael-video-type-vimeo' ) || outer_wrap.hasClass( 'uael-video-type-youtube' ) || outer_wrap.hasClass( 'uael-video-type-wistia' ) || outer_wrap.hasClass( 'uael-video-type-bunny' ) ){
+				if( outer_wrap.hasClass( 'uael-video-type-vimeo' ) || outer_wrap.hasClass( 'uael-video-type-youtube' ) || outer_wrap.hasClass( 'uael-video-type-wistia' ) || outer_wrap.hasClass( 'uael-video-type-bunny' ) || outer_wrap.hasClass( 'uael-video-type-rumble' ) ){			
 					iframe.attr( 'src', vurl );
 				}
 				iframe.attr( 'frameborder', '0' );

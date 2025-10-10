@@ -56,7 +56,7 @@ class Instagram_Counter extends Counter {
 
 	public function get_count($global_cache_time = 43200) {
 
-		if(empty($this->global_options['access_token']) || empty($this->global_options['user_name']) || empty($this->global_options['user_id'])) {
+		if(empty($this->global_options['access_token']) || empty($this->global_options['user_id'])) {
 
 			/**
 			 * Client does not set up his access token, so just show defaults value
@@ -77,14 +77,11 @@ class Instagram_Counter extends Counter {
 
 			$access_token = $this->global_options['access_token'];
 			$user_id = $this->global_options['user_id'];
-			$username = $this->global_options['user_name'];
 
-			$url='https://graph.facebook.com/v11.0/'.$user_id.'?fields=business_discovery.username('.$username.'){username,follows_count,followers_count}&access_token=' . $access_token .'';
-
+			$url = "https://graph.instagram.com/$user_id?fields=username,followers_count&access_token=$access_token";
 			try {
 
 				$get_request = wp_remote_get($url, array('timeout' => 40, 'sslverify' => false,));
-
 				if(is_wp_error($get_request)) {
 
 					$result = -1;
@@ -102,8 +99,7 @@ class Instagram_Counter extends Counter {
 						$result = $this->get_default_fan_count();
 
 					} else {
-
-						$result = empty($dt['business_discovery']['followers_count']) ? 0 : intval($dt['business_discovery']['followers_count']);
+						$result = empty($dt->followers_count) ? 0 : intval($dt->followers_count);
 					}
 				}
 
@@ -112,7 +108,7 @@ class Instagram_Counter extends Counter {
 				set_transient($tran_key, $result, $expiration_time);
 				update_option(self::get_last_cache_key(), time());
 
-			} catch(Exception $e) {
+			} catch(\Exception $e) {
 
 				/**
 				 * todo - AR; need to get confirmation what should we do in case there are errors from Product Owner

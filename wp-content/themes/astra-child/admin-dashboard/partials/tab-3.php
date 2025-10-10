@@ -1,35 +1,49 @@
 <?php
-/** Tab 3: Teachers – refined layout + auto-load per tab */
+/** Admin Dashboard – Tab 3: Teachers */
 if (!defined('ABSPATH')) exit;
 
-$nonce_t  = wp_create_nonce('tp_adm_teacher');
-$nonce_lv = wp_create_nonce('tp_adm_lv');
-$nonce_sub= wp_create_nonce('tp_adm_sub');
+$nonce_t  = wp_create_nonce('tp_adm_teacher');   // teachers actions (list/toggle/add/alloc/rates/slots/payouts...)
+$nonce_lv = wp_create_nonce('tp_adm_lv');        // levels list
+$nonce_sub= wp_create_nonce('tp_adm_sub');       // subjects list
+$ajax     = admin_url('admin-ajax.php');
 ?>
 <div class="tp-teachers-wrap">
-  <!-- LEFT COLUMN -->
+  <!-- LEFT -->
   <div class="col left">
     <div class="card">
       <div class="head-row">
         <h3>Teachers</h3>
-        <div class="inline">
-          <input type="search" class="t-search" placeholder="Search by name/email…">
-          <button class="btn btn-sm ghost refresh" title="Reload list">Refresh</button>
-        </div>
+        <button class="btn btn-sm ghost refresh" title="Reload list">Refresh</button>
       </div>
+
+      <!-- Search sits directly under “Teachers” -->
+      <div class="inline" style="margin-top:8px">
+        <input type="search" class="t-search" placeholder="Search by name / email…">
+      </div>
+
       <ul class="t-list" role="list" aria-live="polite"></ul>
     </div>
 
     <div class="card">
       <h4>Add New Teacher</h4>
-      <div class="grid two">
+
+      <!-- Row 1: Name -->
+      <div class="grid one">
         <label>Name
           <input type="text" class="t-name" placeholder="Full name">
         </label>
+      </div>
+
+      <!-- Row 2: Email + Password on same row -->
+      <div class="grid two">
         <label>Email
           <input type="email" class="t-email" placeholder="name@example.com">
         </label>
+        <label>Password
+          <input type="password" class="t-pass" placeholder="Choose a password">
+        </label>
       </div>
+
       <div class="row-actions">
         <button class="btn add">Create</button>
         <span class="msg add-msg"></span>
@@ -37,7 +51,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
     </div>
   </div>
 
-  <!-- RIGHT COLUMN -->
+  <!-- RIGHT -->
   <div class="col right">
     <div class="card">
       <div class="head-row">
@@ -97,7 +111,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
           <button class="btn set-rate">Save Rate</button>
           <span class="msg rate-msg"></span>
         </div>
-        <div class="hint">Teacher’s hourly rate must be ≤ the standard level rate in your pricing table.</div>
+        <div class="hint">Teacher’s hourly rate must be ≤ the standard level rate in your pricing table <!--<code>wpC_teacher_Hour_Rate</code>-->>.</div>
       </div>
 
       <!-- Slots -->
@@ -138,6 +152,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   </div>
 </div>
 
+<!-- Toast host -->
 <style>
   /* layout */
   .tp-teachers-wrap{display:grid;grid-template-columns:320px 1fr;gap:16px;font-family:Roboto,Arial,sans-serif}
@@ -146,6 +161,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   .head-row,.subhead-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .inline{display:flex;gap:8px;align-items:center}
   .inline.wrap{flex-wrap:wrap}
+  .grid.one{display:grid;grid-template-columns:1fr;gap:10px}
   .grid.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .grid.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
   .grid.two.lg-gap{gap:14px}
@@ -164,24 +180,22 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
 
   /* lists */
   .t-list{list-style:none;margin:10px 0 0;padding:0;max-height:520px;overflow:auto;border-top:1px solid #eee}
-  /* teacher row: stacked layout so buttons align LEFT under email */
   .t-row{display:block;padding:10px 6px;border-bottom:1px solid #f5f5f5}
   .t-row:hover{background:#fafafa}
   .t-row .name{font-weight:600;margin-bottom:2px}
   .t-row .t-meta{font-size:12px;color:#6b7280;margin-bottom:6px}
-  .t-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap} /* left-aligned row */
+  .t-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
   .lv-list{list-style:none;margin:10px 0 0;padding:0;max-height:470px;overflow:auto;border-top:1px solid #eee}
   .lv-list li{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #f7f7f7}
   .lv-list li:hover{background:#fafafa}
 
-  /* buttons, pills */
+  /* buttons */
   .btn{background:#111827;color:#fff;border:0;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
   .btn-sm{padding:6px 10px;font-size:12px;border-radius:9px}
   .ghost{background:#fff;color:#111827;border:1px solid #d1d5db}
   .ghost:hover{background:#f9fafb}
-  .status-pill{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid}
-  .status-on{background:#ecfdf5;border-color:#34d399;color:#065f46}
-  .status-off{background:#f3f4f6;border-color:#d1d5db;color:#4b5563}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
 
   /* chips + tagbox */
   .chips{display:flex;flex-wrap:wrap;gap:8px;min-height:36px}
@@ -201,31 +215,67 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   .tbl{width:100%;border-collapse:collapse;font-size:13px}
   .tbl th,.tbl td{border-bottom:1px solid #f1f5f9;padding:8px;text-align:left;white-space:nowrap}
   .tbl .empty{color:#9ca3af}
-  .mini input{width:auto}
-  .msg{font-size:12px;color:#111827}
+
+  /* Toast (centered bubble) */
+  #adm-toast-host{
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 999999;
+    display: grid;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .adm-toast{
+    pointer-events: auto;
+    background:#10b981;
+    color:#fff;
+    font: 500 13px/1.2 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    padding:10px 14px;border-radius:12px;
+    box-shadow:0 10px 22px rgba(2,8,23,.18);
+    opacity:0; transform: translate(-50%,8px);
+    transition:opacity .22s ease, transform .22s ease;
+  }
+  .adm-toast.error{ background:#ef4444; }
+  .adm-toast.show{ opacity:1; transform: translate(-50%,0); }
 </style>
+<div id="adm-toast-host" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 (function(){
-  const ajax = "<?php echo esc_url(admin_url('admin-ajax.php')); ?>";
-  const nonceT  = "<?php echo esc_js($nonce_t); ?>";
-  const nonceLV = "<?php echo esc_js($nonce_lv); ?>";
-  const nonceSUB= "<?php echo esc_js($nonce_sub); ?>";
+  const ajax   = <?php echo json_encode($ajax); ?>;
+  const nonceT = <?php echo json_encode($nonce_t); ?>;
+  const nonceLV= <?php echo json_encode($nonce_lv); ?>;
+  const nonceSUB=<?php echo json_encode($nonce_sub); ?>;
 
-  // LEFT: list + add
-  const tList  = document.querySelector('.t-list');
-  const tSearch= document.querySelector('.t-search');
-  const addBtn = document.querySelector('.btn.add');
-  const nameIn = document.querySelector('.t-name');
-  const emailIn= document.querySelector('.t-email');
-  const addMsg = document.querySelector('.add-msg');
+  // Toast helper
+  const toastHost = document.getElementById('adm-toast-host');
+  function admToast(msg, type='ok', ms=2600){
+    const t = document.createElement('div');
+    t.className = 'adm-toast' + (type==='error'?' error':'');
+    t.textContent = msg;
+    toastHost.appendChild(t);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 220); }, ms);
+  }
 
-  // RIGHT: header + tabs/panes
+  // -------- Elements
+  const tList   = document.querySelector('.t-list');
+  const tSearch = document.querySelector('.t-search');
+  const btnRef  = document.querySelector('.btn.refresh');
   const selTeacher = document.querySelector('.sel-teacher');
+
+  const nameIn  = document.querySelector('.t-name');
+  const emailIn = document.querySelector('.t-email');
+  const passIn  = document.querySelector('.t-pass');
+  const addBtn  = document.querySelector('.btn.add');
+  const addMsg  = document.querySelector('.add-msg');
+
   const tabs = document.querySelectorAll('.tab');
   const panes= document.querySelectorAll('.pane');
 
-  // Allocations pane
+  // Allocations
   const lvList   = document.querySelector('.lv-list');
   const lvSearch = document.querySelector('.lv-search');
   const chips    = document.querySelector('.chips');
@@ -233,8 +283,8 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   const tagInput = document.querySelector('.tag-input');
   const sug      = document.querySelector('.suggest');
 
-  // Rates pane
-  const rateLevel   = document.querySelector('.rate-level');
+  // Rates
+  const rateLevel = document.querySelector('.rate-level');
   const rateSubject = document.querySelector('.rate-subject');
   const rateAmount  = document.querySelector('.rate-amount');
   const rateBtn     = document.querySelector('.set-rate');
@@ -248,103 +298,148 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   const dueBody   = document.querySelector('.due-body');
   const wdBody    = document.querySelector('.wd-body');
 
-  // State
+  // -------- State
   let currentTeacher = null;
   let currentLevel   = null;
   let suggestions    = [];
   let activeIndex    = -1;
-  let debounceT      = null;
+  let debounceT;
 
-  // helpers
+  // -------- Helpers
   async function post(data){
-    const fd = new FormData(); Object.entries(data).forEach(([k,v])=>fd.append(k,v));
-    const res = await fetch(ajax,{method:'POST',body:fd});
+    const fd = new FormData();
+    Object.entries(data).forEach(([k,v])=>fd.append(k,v));
+    const res = await fetch(ajax, {method:'POST', body:fd, credentials:'same-origin'});
     return res.json();
   }
   function esc(s){return String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function setPane(k){
     panes.forEach(p=>p.classList.remove('show'));
     document.getElementById('pane-'+k).classList.add('show');
-    tabs.forEach(b=>b.classList.toggle('active',b.dataset.pane===k));
-    // Auto-load data for tabs when switched
+    tabs.forEach(b=>b.classList.toggle('active', b.dataset.pane===k));
     if(k==='due') loadDue();
     if(k==='withdrawn') loadWithdrawn();
-    if(k==='slots' && currentTeacher) loadSlots(); // convenience
+    if(k==='slots' && currentTeacher) loadSlots();
   }
   function showSuggest(show){ tagBox.setAttribute('aria-expanded', show?'true':'false'); sug.classList.toggle('show', !!show); }
   function hideSuggest(){ showSuggest(false); sug.innerHTML=''; activeIndex=-1; }
 
-  /* ---------- TEACHERS LIST ---------- */
+  // -------- Teachers list
   async function loadTeachers(q=''){
     tList.innerHTML = '<li class="t-row"><span class="t-meta">Loading…</span></li>';
-    const j = await post({action:'tp_adm_t_list', _ajax_nonce:nonceT, q});
+    const j = await post({ action:'tp_adm_t_list', _ajax_nonce:nonceT, q });
     tList.innerHTML='';
-    if(!j || !j.success || !j.data.items.length){ tList.innerHTML='<li class="t-row"><span class="t-meta">No teachers found.</span></li>'; return; }
+    if(!j || !j.success || !j.data.items.length){
+      tList.innerHTML='<li class="t-row"><span class="t-meta">No teachers found.</span></li>'; return;
+    }
     j.data.items.forEach(it=>{
-      const li=document.createElement('li'); li.className='t-row'; li.dataset.id = it.teacher_id;
+      const isActive = String(it.Status)==='1' || String(it.Status).toLowerCase()==='active';
+      const li = document.createElement('li');
+      li.className='t-row'; li.dataset.id = it.teacher_id;
+
+      const btnActivate = `
+        <button class="btn btn-sm ghost do-activate" ${isActive?'disabled':''}>
+          ${isActive?'Activated':'Activate'}
+        </button>`;
+      const btnInactivate = `
+        <button class="btn btn-sm ghost do-inactivate" ${!isActive?'disabled':''}>
+          ${!isActive?'Inactivated':'Inactivate'}
+        </button>`;
+
       li.innerHTML = `
         <div class="name">${esc(it.FullName || '—')}</div>
         <div class="t-meta">${esc(it.Email || '')}</div>
         <div class="actions">
-          <span class="status-pill ${it.Status==='active'?'status-on':'status-off'}">${it.Status==='active'?'Active':'Inactive'}</span>
           <button class="btn btn-sm ghost open">Open</button>
-          <button class="btn btn-sm ghost toggle" data-to="${it.Status==='active'?'inactive':'active'}">${it.Status==='active'?'Deactivate':'Activate'}</button>
+          ${btnActivate}
+          ${btnInactivate}
         </div>`;
       tList.appendChild(li);
     });
   }
-  document.querySelector('.btn.refresh').addEventListener('click', ()=> loadTeachers(tSearch.value.trim()));
+
+  btnRef.addEventListener('click', ()=> loadTeachers(tSearch.value.trim()));
   tSearch.addEventListener('input', e=> loadTeachers(e.target.value));
+
   tList.addEventListener('click', async (e)=>{
-    const li=e.target.closest('.t-row'); if(!li) return;
-    const id=parseInt(li.dataset.id,10);
-    if(e.target.classList.contains('open')) openTeacher(id, li.querySelector('.name').textContent);
-    if(e.target.classList.contains('toggle')){
-      const to=e.target.getAttribute('data-to');
-      const j=await post({action:'tp_adm_t_toggle', _ajax_nonce:nonceT, teacher_id:id, to});
-      if(j && j.success){ loadTeachers(tSearch.value.trim()); }
-      else alert('Failed to toggle');
+    const li = e.target.closest('.t-row'); if(!li) return;
+    const id = parseInt(li.dataset.id, 10);
+    const name = li.querySelector('.name')?.textContent || 'Teacher';
+
+    if(e.target.classList.contains('open')){
+      openTeacher(id, name);
+      return;
+    }
+
+    if(e.target.classList.contains('do-activate')){
+      e.target.disabled = true;
+      const j = await post({ action:'tp_adm_t_toggle', _ajax_nonce:nonceT, teacher_id:id, to:'active' });
+      if(j && j.success){
+        admToast('Teacher activated');
+        e.target.textContent = 'Activated';
+        const inBtn = li.querySelector('.do-inactivate');
+        if(inBtn){ inBtn.disabled = false; inBtn.textContent = 'Inactivate'; }
+      }else{
+        e.target.disabled = false;
+        admToast(j?.data || 'Failed to activate', 'error');
+      }
+      return;
+    }
+
+    if(e.target.classList.contains('do-inactivate')){
+      e.target.disabled = true;
+      const j = await post({ action:'tp_adm_t_toggle', _ajax_nonce:nonceT, teacher_id:id, to:'inactive' });
+      if(j && j.success){
+        admToast('Teacher inactivated');
+        e.target.textContent = 'Inactivated';
+        const aBtn = li.querySelector('.do-activate');
+        if(aBtn){ aBtn.disabled = false; aBtn.textContent = 'Activate'; }
+      }else{
+        e.target.disabled = false;
+        admToast(j?.data || 'Failed to inactivate', 'error');
+      }
+      return;
     }
   });
 
-  // add
+  // Create teacher (with password)
   addBtn.addEventListener('click', async ()=>{
-    const nm=nameIn.value.trim(), em=emailIn.value.trim();
-    if(!nm || !em){ addMsg.textContent='Name and Email are required.'; return; }
-    addBtn.disabled=true; addMsg.textContent='Creating…';
-    const j=await post({action:'tp_adm_t_add', _ajax_nonce:nonceT, name:nm, email:em});
+    const nm = nameIn.value.trim(), em = emailIn.value.trim(), pw = passIn.value.trim();
+    if(!nm || !em || !pw){ addMsg.textContent='Name, Email and Password are required.'; return; }
+    addMsg.textContent='Creating…'; addBtn.disabled=true;
+    const j = await post({ action:'tp_adm_t_add', _ajax_nonce:nonceT, name:nm, email:em, password:pw });
     addBtn.disabled=false;
-    if(j && j.success){ addMsg.textContent='Created.'; nameIn.value=''; emailIn.value=''; loadTeachers(tSearch.value.trim()); }
-    else addMsg.textContent=(j && j.data)? String(j.data):'Failed.';
+    if(j && j.success){
+      nameIn.value=''; emailIn.value=''; passIn.value='';
+      addMsg.textContent='Created.'; admToast('Teacher created');
+      loadTeachers(tSearch.value.trim());
+    }else{
+      addMsg.textContent = j?.data || 'Failed.'; admToast(j?.data || 'Failed', 'error');
+    }
   });
 
   async function openTeacher(id, name){
     currentTeacher = {id, name};
     selTeacher.textContent = `${name} (ID ${id})`;
     setPane('alloc');
-
-    // allocations: load levels & first level selection
     await loadLevels('');
-    // rates drop-downs
     await fillRateLevelOptions();
     rateSubject.innerHTML = '<option value="">Select a level first</option>';
-
-    // slots defaults
-    const today=new Date().toISOString().slice(0,10);
-    const seven=new Date(Date.now()+6*86400000).toISOString().slice(0,10);
+    const today = new Date().toISOString().slice(0,10);
+    const seven = new Date(Date.now()+6*86400000).toISOString().slice(0,10);
     slotFrom.value=today; slotTo.value=seven;
   }
 
-  /* ---------- ALLOCATIONS ---------- */
+  // -------- Allocations
   async function loadLevels(q=''){
-    const j=await post({action:'tp_adm_lv_list', _ajax_nonce:nonceLV, q});
+    const j = await post({ action:'tp_adm_lv_list', _ajax_nonce:nonceLV, q });
     lvList.innerHTML='';
     if(!j || !j.success || !j.data.items.length){ lvList.innerHTML='<li><em>No levels.</em></li>'; return; }
     j.data.items.forEach((it,i)=>{
       const li=document.createElement('li'); li.dataset.id=it.id;
       li.innerHTML=`<span>${esc(it.name)}</span><button class="btn btn-sm ghost open">Open</button>`;
       lvList.appendChild(li);
-      if(i===0){ openLevel(it.id, it.name); }
+      if(i===0) openLevel(it.id, it.name);
     });
   }
   lvSearch.addEventListener('input', e=> loadLevels(e.target.value));
@@ -359,7 +454,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   async function openLevel(id, name){
     currentLevel={id,name};
     chips.innerHTML='<em>Loading…</em>';
-    const j=await post({action:'tp_adm_t_alloc_list', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, level_id:id});
+    const j=await post({ action:'tp_adm_t_alloc_list', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, level_id:id });
     chips.innerHTML='';
     if(!j || !j.success){ chips.innerHTML='<em>Failed.</em>'; return; }
     const items=j.data.items||[];
@@ -373,15 +468,13 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
     await fillRateLevelOptions(id);
     await fillRateSubjectOptions(id);
   }
-
   chips.addEventListener('click', async (e)=>{
     const x=e.target.closest('.x'); if(!x) return;
     const chip=e.target.closest('.chip'); const id=chip.dataset.tasid;
-    const j=await post({action:'tp_adm_t_alloc_detach', _ajax_nonce:nonceT, teacher_allocated_subject_id:id});
-    if(j && j.success){ chip.remove(); } else alert('Failed to remove');
+    const j=await post({ action:'tp_adm_t_alloc_detach', _ajax_nonce:nonceT, teacher_allocated_subject_id:id });
+    if(j && j.success){ chip.remove(); admToast('Subject detached'); } else admToast('Failed to remove','error');
   });
 
-  // tag-like autocomplete
   function renderSuggest(list, query){
     sug.innerHTML='';
     if(!list.length){
@@ -396,8 +489,8 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
     activeIndex=0;
   }
   async function fetchSuggest(q){
-    const j=await post({action:'tp_adm_sub_list_all', _ajax_nonce:nonceSUB, q});
-    suggestions = (j && j.success && j.data.items) ? j.data.items : [];
+    const j=await post({ action:'tp_adm_sub_list_all', _ajax_nonce:nonceSUB, q });
+    suggestions=(j&&j.success&&j.data.items)? j.data.items : [];
     renderSuggest(suggestions, q); showSuggest(true);
   }
   tagInput.addEventListener('input', e=>{
@@ -436,20 +529,20 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
     if(q) attachSubject(null, q);
   }
   async function attachSubject(subject_id, subject_name){
-    if(!currentTeacher||!currentLevel){ alert('Select teacher and level'); return; }
+    if(!currentTeacher||!currentLevel){ admToast('Select teacher and level','error'); return; }
     hideSuggest();
     const j=await post({
       action:'tp_adm_t_alloc_attach', _ajax_nonce:nonceT,
       teacher_id: currentTeacher.id, level_id: currentLevel.id,
       subject_id: subject_id || '', subject_name: subject_name || ''
     });
-    if(j && j.success){ tagInput.value=''; openLevel(currentLevel.id, currentLevel.name); }
-    else alert((j && j.data)? String(j.data):'Failed.');
+    if(j && j.success){ tagInput.value=''; openLevel(currentLevel.id, currentLevel.name); admToast('Subject attached'); }
+    else admToast(j?.data || 'Failed', 'error');
   }
 
-  /* ---------- RATES ---------- */
+  // -------- Rates (saved into wpC_teacher_Hour_Rate)
   async function fillRateLevelOptions(preselectId=null){
-    const j=await post({action:'tp_adm_lv_list', _ajax_nonce:nonceLV, q:''});
+    const j=await post({ action:'tp_adm_lv_list', _ajax_nonce:nonceLV, q:'' });
     rateLevel.innerHTML='';
     if(!j || !j.success || !j.data.items.length){ rateLevel.innerHTML='<option value="">No levels</option>'; return; }
     j.data.items.forEach(it=>{
@@ -460,7 +553,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   }
   async function fillRateSubjectOptions(levelId){
     rateSubject.innerHTML='<option value="">Loading…</option>';
-    const j=await post({action:'tp_adm_t_alloc_list', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, level_id: levelId});
+    const j=await post({ action:'tp_adm_t_alloc_list', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, level_id: levelId });
     rateSubject.innerHTML='';
     const items=(j && j.success && j.data.items) ? j.data.items : [];
     if(!items.length){ rateSubject.innerHTML='<option value="">No subjects allocated for this level</option>'; return; }
@@ -472,19 +565,22 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   rateLevel.addEventListener('change', ()=> fillRateSubjectOptions(rateLevel.value));
   rateBtn.addEventListener('click', async ()=>{
     if(!currentTeacher){ rateMsg.textContent='Select a teacher.'; return; }
-    const sl=rateLevel.value, sls=rateSubject.value, amt=parseFloat(rateAmount.value||0);
+    const sl = rateLevel.value;
+    const sls= rateSubject.value;
+    const amt= parseFloat(rateAmount.value||0);
     if(!sl || !sls || !amt){ rateMsg.textContent='All fields are required.'; return; }
     rateBtn.disabled=true; rateMsg.textContent='Saving…';
-    const j=await post({action:'tp_adm_t_rate_set', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, subject_level_id: sls, hourly_rate: amt});
+    const j=await post({ action:'tp_adm_t_rate_set', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, subject_level_id: sls, hourly_rate: amt });
     rateBtn.disabled=false;
-    rateMsg.textContent = (j&&j.success) ? 'Saved.' : ((j&&j.data)? String(j.data):'Failed.');
+    if(j && j.success){ rateMsg.textContent='Saved.'; admToast('Hourly rate saved'); }
+    else { rateMsg.textContent = j?.data || 'Failed.'; admToast(j?.data || 'Failed','error'); }
   });
 
-  /* ---------- SLOTS ---------- */
+  // -------- Slots / payouts (unchanged from your previous)
   async function loadSlots(){
-    if(!currentTeacher){ return; }
+    if(!currentTeacher) return;
     const from=slotFrom.value, to=slotTo.value;
-    const j=await post({action:'tp_adm_t_slots', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, from, to});
+    const j=await post({ action:'tp_adm_t_slots', _ajax_nonce:nonceT, teacher_id: currentTeacher.id, from, to });
     slotsBody.innerHTML='';
     if(!j || !j.success){ slotsBody.innerHTML='<tr><td colspan="6">Failed.</td></tr>'; return; }
     const items=j.data.items||[];
@@ -498,10 +594,9 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   }
   slotsBtn.addEventListener('click', loadSlots);
 
-  /* ---------- PAYOUTS ---------- */
   async function loadDue(){
     if(!currentTeacher) return;
-    const j=await post({action:'tp_adm_t_due', _ajax_nonce:nonceT, teacher_id: currentTeacher.id});
+    const j=await post({ action:'tp_adm_t_due', _ajax_nonce:nonceT, teacher_id: currentTeacher.id });
     dueBody.innerHTML='';
     if(!j || !j.success){ dueBody.innerHTML='<tr><td colspan="4">Failed.</td></tr>'; return; }
     const rows=j.data.items||[];
@@ -514,7 +609,7 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
   }
   async function loadWithdrawn(){
     if(!currentTeacher) return;
-    const j=await post({action:'tp_adm_t_withdrawn', _ajax_nonce:nonceT, teacher_id: currentTeacher.id});
+    const j=await post({ action:'tp_adm_t_withdrawn', _ajax_nonce:nonceT, teacher_id: currentTeacher.id });
     wdBody.innerHTML='';
     if(!j || !j.success){ wdBody.innerHTML='<tr><td colspan="4">Failed.</td></tr>'; return; }
     const rows=j.data.items||[];
@@ -526,12 +621,15 @@ $nonce_sub= wp_create_nonce('tp_adm_sub');
     });
   }
 
-  // Tab switching + auto-loads
-  document.querySelectorAll('.tab').forEach(tb=>{
-    tb.addEventListener('click', ()=> setPane(tb.dataset.pane));
-  });
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tb=> tb.addEventListener('click', ()=> setPane(tb.dataset.pane)));
 
-  // init
+  // Init
   loadTeachers('');
+  
+  
+  
+  
+  
 })();
 </script>

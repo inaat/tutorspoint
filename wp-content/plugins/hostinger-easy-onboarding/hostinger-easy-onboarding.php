@@ -3,7 +3,7 @@
  * Plugin Name: Hostinger Easy Onboarding
  * Plugin URI: https://hostinger.com
  * Description: Hostinger Easy Onboarding WordPress plugin.
- * Version: 2.0.91
+ * Version: 2.0.93
  * Requires at least: 5.5
  * Requires PHP: 8.0
  * Author: Hostinger
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'HOSTINGER_EASY_ONBOARDING_VERSION' ) ) {
-    define( 'HOSTINGER_EASY_ONBOARDING_VERSION', '2.0.91' );
+    define( 'HOSTINGER_EASY_ONBOARDING_VERSION', '2.0.93' );
 }
 
 if ( ! defined( 'HOSTINGER_EASY_ONBOARDING_ABSPATH' ) ) {

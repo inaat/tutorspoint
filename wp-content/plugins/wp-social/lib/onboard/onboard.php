@@ -74,12 +74,11 @@ class Onboard {
 
         if ( isset( $_POST['settings']['newsletter_email'] ) && !empty($_POST['settings']['newsletter_email'])) {
             $data = [
-                'email'           => sanitize_email($_POST['settings']['newsletter_email']),
-                'environment_id'  => Onboard::ENVIRONMENT_ID,
-                'contact_list_id' => Onboard::CONTACT_LIST_ID,
+                'email'           => sanitize_email( wp_unslash( $_POST['settings']['newsletter_email'] ) ),
+                'slug'            => 'wp-social',
             ];
 
-            $response = Plugin_Data_Sender::instance()->sendAutomizyData( 'email-subscribe', $data);
+            $response = Plugin_Data_Sender::instance()->sendEmailSubscribeData( 'plugin-subscribe', $data);            
             exit;
         }
     }

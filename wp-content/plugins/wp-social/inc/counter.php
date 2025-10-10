@@ -388,9 +388,9 @@ class Counter {
 
 				'get_token' => [
 					'type'  => 'link',
-					'label' => esc_html__('Get access token ', 'wp-social'),
+					'label' => esc_html__('Documentation to get access token & account ID.', 'wp-social'),
 					'input' => 'link',
-					'url' => 'https://token.wpmet.com/social_token.php?provider=instagram',
+					'url' => 'https://wpmet.com/doc/social-counter-instagram/',
 					'class' => 'wslu-btn wslu-target-link',
 				],
 
@@ -401,7 +401,7 @@ class Counter {
 				],
 				'user_id' => [
 					'type'  => 'normal',
-					'label' => 'User ID',
+					'label' => 'Account ID',
 					'input' => 'text',
 				],
 			],
