@@ -79,7 +79,7 @@ function generate_class_token() {
     $token = base64_encode($hash . $json_str);
 
     // ✅ Generate link
-    $meeting_link = "https://onlineclass.public_html.test/classroom/{$room_id}";
+    $meeting_link = "https://onlineclass.test.tutorspoint.co.uk/classroom/{$room_id}";
 
     // ✅ Store in DB (you must have `meeting_link` and `access_token` columns)
     $updated = $wpdb->update(
@@ -142,7 +142,7 @@ function generate_class_token() {
     $hash = hash_hmac('sha256', $json, $server_secret, true);
     $token = base64_encode($hash . $json);
 
-    $link = "https://onlineclass.public_html.test/classroom/{$room_id}";
+    $link = "https://onlineclass.test.tutorspoint.co.uk/classroom/{$room_id}";
 
     $wpdb->update('wpC_teacher_sessions', [
         'meeting_link' => $link,

@@ -23,7 +23,7 @@
       }
 
       try {
-        const res = await fetch(`http://public_html.test/api/resolve-session.php?subject=${subjectSlug}`);
+        const res = await fetch(`http://test.tutorspoint.co.uk/api/resolve-session.php?subject=${subjectSlug}`);
         const data = await res.json();
 
         if (!data.success) {

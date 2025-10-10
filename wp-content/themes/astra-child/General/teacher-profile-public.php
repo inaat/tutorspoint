@@ -20,7 +20,7 @@ add_shortcode('teacher_profile_public', function () {
 
     $normalize_media_url = function(?string $raw) use ($http_ok): string {
         $raw = trim((string)$raw);
-        $fallback = 'http://public_html.test/wp-content/uploads/2025/08/teacher_intro.mp4';
+        $fallback = 'http://test.tutorspoint.co.uk/wp-content/uploads/2025/08/teacher_intro.mp4';
         if ($raw === '') return $fallback;
 
         if (preg_match('~^https?://~i', $raw)) {

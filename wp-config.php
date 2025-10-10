@@ -103,8 +103,8 @@ if (!defined('ZEGO_SERVER_SECRET')) {
 /* Add any custom values between this line and the "stop editing" line. */
 
 // Force correct site URL (prevents redirects)
-define('WP_HOME', 'http://public_html.test');
-define('WP_SITEURL', 'http://public_html.test');
+define('WP_HOME', 'http://test.tutorspoint.co.uk');
+define('WP_SITEURL', 'http://test.tutorspoint.co.uk');
 
 
 

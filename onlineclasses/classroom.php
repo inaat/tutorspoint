@@ -63,7 +63,7 @@ if ( isset($_POST['generate_link']) && wp_verify_nonce($_POST['generate_link_non
         $json = wp_json_encode( $payload );
         $hash = hash_hmac('sha256', $json, $server_secret, true);
         $token= base64_encode( $hash . $json );
-        $link = "https://onlineclass.public_html.test/classroom.php?token=" . rawurlencode($token) . "&role=teacher";
+        $link = "https://onlineclass.test.tutorspoint.co.uk/classroom.php?token=" . rawurlencode($token) . "&role=teacher";
 
         $wpdb->update( 'wpC_teacher_sessions', [
             'meeting_link'  => $link,
