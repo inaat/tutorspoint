@@ -1,3 +1,6 @@
 # WordPress Configuration
 wp-config.php
 testcon/wp-config.php
+
+# WooCommerce Logs
+wp-content/uploads/wc-logs/

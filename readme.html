@@ -1,98 +1,2481 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta name="viewport" content="width=device-width" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="robots" content="noindex,nofollow" />
-	<title>WordPress &#8250; ReadMe</title>
-	<link rel="stylesheet" href="wp-admin/css/install.css?ver=20100228" type="text/css" />
-</head>
-<body>
-<h1 id="logo">
-	<a href="https://wordpress.org/"><img alt="WordPress" src="wp-admin/images/wordpress-logo.png" /></a>
-</h1>
-<p style="text-align: center">Semantic Personal Publishing Platform</p>
+<?php
+/**
+ * Admin Dashboard Shell (+ AJAX + Helpers)
+ * Path: /wp-content/themes/astra-child/admin-dashboard/admin-dashboard.php
+ * Renders a 10-tab interface via [tp_admin_dashboard]
+ */
 
-<h2>First Things First</h2>
-<p>Welcome. WordPress is a very special project to me. Every developer and contributor adds something unique to the mix, and together we create something beautiful that I am proud to be a part of. Thousands of hours have gone into WordPress, and we are dedicated to making it better every day. Thank you for making it part of your world.</p>
-<p style="text-align: right">&#8212; Matt Mullenweg</p>
+if (!defined('ABSPATH')) exit;
 
-<h2>Installation: Famous 5-minute install</h2>
-<ol>
-	<li>Unzip the package in an empty directory and upload everything.</li>
-	<li>Open <span class="file"><a href="wp-admin/install.php">wp-admin/install.php</a></span> in your browser. It will take you through the process to set up a <code>wp-config.php</code> file with your database connection details.
-		<ol>
-			<li>If for some reason this does not work, do not worry. It may not work on all web hosts. Open up <code>wp-config-sample.php</code> with a text editor like WordPad or similar and fill in your database connection details.</li>
-			<li>Save the file as <code>wp-config.php</code> and upload it.</li>
-			<li>Open <span class="file"><a href="wp-admin/install.php">wp-admin/install.php</a></span> in your browser.</li>
-		</ol>
-	</li>
-	<li>Once the configuration file is set up, the installer will set up the tables needed for your site. If there is an error, double check your <code>wp-config.php</code> file, and try again. If it fails again, please go to the <a href="https://wordpress.org/support/forums/">WordPress support forums</a> with as much data as you can gather.</li>
-	<li><strong>If you did not enter a password, note the password given to you.</strong> If you did not provide a username, it will be <code>admin</code>.</li>
-	<li>The installer should then send you to the <a href="wp-login.php">login page</a>. Sign in with the username and password you chose during the installation. If a password was generated for you, you can then click on &#8220;Profile&#8221; to change the password.</li>
-</ol>
+/* ---------- Helpers ---------- */
 
-<h2>Updating</h2>
-<h3>Using the Automatic Updater</h3>
-<ol>
-	<li>Open <span class="file"><a href="wp-admin/update-core.php">wp-admin/update-core.php</a></span> in your browser and follow the instructions.</li>
-	<li>You wanted more, perhaps? That&#8217;s it!</li>
-</ol>
+/** Return table name with auto-detected prefix (wpC_ wins if exists) */
+function tp_adm_tbl($base){
+  global $wpdb;
+  $custom = $wpdb->get_var( $wpdb->prepare("SHOW TABLES LIKE %s", 'wpC_'.$base) );
+  if ($custom === 'wpC_'.$base) return 'wpC_'.$base;
+  return $wpdb->prefix . $base;
+}
 
-<h3>Updating Manually</h3>
-<ol>
-	<li>Before you update anything, make sure you have backup copies of any files you may have modified such as <code>index.php</code>.</li>
-	<li>Delete your old WordPress files, saving ones you&#8217;ve modified.</li>
-	<li>Upload the new files.</li>
-	<li>Point your browser to <span class="file"><a href="wp-admin/upgrade.php">/wp-admin/upgrade.php</a>.</span></li>
-</ol>
+/** Ensure level_hourly_rates table exists (idempotent) */
+function tp_adm_ensure_rate_table(){
+  global $wpdb;
+  $table   = tp_adm_tbl('level_hourly_rates');
+  $charset = $wpdb->get_charset_collate();
+  require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+  $sql = "CREATE TABLE {$table} (
+    rate_id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    level_id       BIGINT UNSIGNED NOT NULL,
+    currency       CHAR(3) NOT NULL DEFAULT 'PKR',
+    hourly_rate    DECIMAL(10,2) NOT NULL,
+    effective_from DATE NOT NULL,
+    effective_to   DATE NULL,
+    status         TINYINT(1) NOT NULL DEFAULT 1,
+    notes          VARCHAR(255) NULL,
+    created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (rate_id),
+    KEY idx_level (level_id),
+    KEY idx_status (status),
+    KEY idx_dates (effective_from, effective_to),
+    UNIQUE KEY uniq_level_curr_from (level_id, currency, effective_from)
+  ) {$charset};";
+  dbDelta($sql);
+}
 
-<h2>Migrating from other systems</h2>
-<p>WordPress can <a href="https://developer.wordpress.org/advanced-administration/wordpress/import/">import from a number of systems</a>. First you need to get WordPress installed and working as described above, before using <a href="wp-admin/import.php">our import tools</a>.</p>
+/** Attempt to resolve columns for class_levels table */
+function tp_adm_levels_cols(){
+  global $wpdb;
+  $table = tp_adm_tbl('class_levels');
+  $cols  = $wpdb->get_col("SHOW COLUMNS FROM {$table}");
+  // prefer common names
+  $id = in_array('id',$cols,true) ? 'id' : (in_array('level_id',$cols,true) ? 'level_id' : null);
+  $nm = in_array('level_name',$cols,true) ? 'level_name' : (in_array('name',$cols,true) ? 'name' : null);
+  return [$table, $id, $nm];
+}
 
-<h2>System Requirements</h2>
-<ul>
-	<li><a href="https://www.php.net/">PHP</a> version <strong>7.2.24</strong> or greater.</li>
-	<li><a href="https://www.mysql.com/">MySQL</a> version <strong>5.5.5</strong> or greater.</li>
-</ul>
+/* ---------- Shortcode Shell ---------- */
+add_shortcode('tp_admin_dashboard', function(){
+  if (!current_user_can('edit_posts')) {
+    return '<div class="tp-admin-dash">You do not have permission to view this dashboard.</div>';
+  }
 
-<h3>Recommendations</h3>
-<ul>
-	<li><a href="https://www.php.net/">PHP</a> version <strong>7.4</strong> or greater.</li>
-	<li><a href="https://www.mysql.com/">MySQL</a> version <strong>8.0</strong> or greater OR <a href="https://mariadb.org/">MariaDB</a> version <strong>10.5</strong> or greater.</li>
-	<li>The <a href="https://httpd.apache.org/docs/2.2/mod/mod_rewrite.html">mod_rewrite</a> Apache module.</li>
-	<li><a href="https://wordpress.org/news/2016/12/moving-toward-ssl/">HTTPS</a> support.</li>
-	<li>A link to <a href="https://wordpress.org/">wordpress.org</a> on your site.</li>
-</ul>
+  tp_adm_ensure_rate_table();
 
-<h2>Online Resources</h2>
-<p>If you have any questions that are not addressed in this document, please take advantage of WordPress&#8217; numerous online resources:</p>
-<dl>
-	<dt><a href="https://wordpress.org/documentation/">HelpHub</a></dt>
-		<dd>HelpHub is the encyclopedia of all things WordPress. It is the most comprehensive source of information for WordPress available.</dd>
-	<dt><a href="https://wordpress.org/news/">The WordPress Blog</a></dt>
-		<dd>This is where you&#8217;ll find the latest updates and news related to WordPress. Recent WordPress news appears in your administrative dashboard by default.</dd>
-	<dt><a href="https://planet.wordpress.org/">WordPress Planet</a></dt>
-		<dd>The WordPress Planet is a news aggregator that brings together posts from WordPress blogs around the web.</dd>
-	<dt><a href="https://wordpress.org/support/forums/">WordPress Support Forums</a></dt>
-		<dd>If you&#8217;ve looked everywhere and still cannot find an answer, the support forums are very active and have a large community ready to help. To help them help you be sure to use a descriptive thread title and describe your question in as much detail as possible.</dd>
-	<dt><a href="https://make.wordpress.org/support/handbook/appendix/other-support-locations/introduction-to-irc/">WordPress <abbr>IRC</abbr> (Internet Relay Chat) Channel</a></dt>
-		<dd>There is an online chat channel that is used for discussion among people who use WordPress and occasionally support topics. The above wiki page should point you in the right direction. (<a href="https://web.libera.chat/#wordpress">irc.libera.chat #wordpress</a>)</dd>
-</dl>
+  $tabs = [
+    'levels-rates' => 'Levels & Hourly Rates',
+    'subjects'     => 'Subjects',
+    'teachers'     => 'Teachers',
+    'students'     => 'Students',
+    'schedules'    => 'Schedules',
+    'bookings'     => 'Bookings',
+    'retakes'      => 'Retakes',
+    'finance'      => 'Finance',
+    'suggestions'  => 'Blog Suggestions',
+    'settings'     => 'Settings & Logs',
+  ];
 
-<h2>Final Notes</h2>
-<ul>
-	<li>If you have any suggestions, ideas, or comments, or if you (gasp!) found a bug, join us in the <a href="https://wordpress.org/support/forums/">Support Forums</a>.</li>
-	<li>WordPress has a robust plugin <abbr>API</abbr> (Application Programming Interface) that makes extending the code easy. If you are a developer interested in utilizing this, see the <a href="https://developer.wordpress.org/plugins/">Plugin Developer Handbook</a>. You shouldn&#8217;t modify any of the core code.</li>
-</ul>
+  $active = isset($_GET['tab']) && isset($tabs[$_GET['tab']]) ? sanitize_key($_GET['tab']) : 'levels-rates';
+  $base_url = esc_url(remove_query_arg(['tab']));
 
-<h2>Share the Love</h2>
-<p>WordPress has no multi-million dollar marketing campaign or celebrity sponsors, but we do have something even better&#8212;you. If you enjoy WordPress please consider telling a friend, setting it up for someone less knowledgeable than yourself, or writing the author of a media article that overlooks us.</p>
+  ob_start(); ?>
+  <div class="tp-admin-dash">
+    <div class="tp-ad-nav" role="tablist">
+      <?php foreach($tabs as $slug=>$label): ?>
+        <a class="tp-ad-tab <?php echo $slug===$active?'active':''; ?>"
+           href="<?php echo esc_url(add_query_arg('tab',$slug,$base_url)); ?>">
+          <?php echo esc_html($label); ?>
+        </a>
+      <?php endforeach; ?>
+    </div>
 
-<p>WordPress is the official continuation of b2/caf&#233;log, which came from Michel V. The work has been continued by the <a href="https://wordpress.org/about/">WordPress developers</a>. If you would like to support WordPress, please consider <a href="https://wordpress.org/donate/">donating</a>.</p>
+    <div class="tp-ad-body">
+      <?php
+       // Simpler + safer: map active tab to partial filename
+$tab_file_map = [
+  'levels-rates' => '1-levels-rates',
+  'subjects'     => '2',
+  'teachers'     => '3',
+  'students'     => '4',
+  'schedules'    => '5',
+  'bookings'     => '6',
+  'retakes'      => '7',
+  'finance'      => '8',
+  'suggestions'  => '9',
+  'settings'     => '10',
+];
+$slug    = isset($tab_file_map[$active]) ? $tab_file_map[$active] : '1-levels-rates';
+$partial = get_stylesheet_directory() . '/admin-dashboard/partials/tab-' . $slug . '.php';
 
-<h2>License</h2>
-<p>WordPress is free software, and is released under the terms of the <abbr>GPL</abbr> (GNU General Public License) version 2 or (at your option) any later version. See <a href="license.txt">license.txt</a>.</p>
+                   '.php';
+        if (file_exists($partial)) {
+          include $partial;
+        } else {
+          echo '<div class="tp-ad-empty">Partial not found: '.esc_html(basename($partial)).'</div>';
+        }
+      ?>
+    </div>
+  </div>
 
-</body>
-</html>
+  <style>
+    .tp-admin-dash{font-family:Roboto,Arial,sans-serif}
+    .tp-ad-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tp-ad-tab{
+      text-decoration:none;padding:8px 10px;border:1px solid #ccc;border-radius:6px;
+      font-size:13px;color:#222;background:#fff;transition:background .15s ease,opacity .15s ease
+    }
+    .tp-ad-tab:hover{background:#f6f6f6}
+    .tp-ad-tab.active{background:#111;color:#fff;border-color:#111}
+    .tp-ad-body{border:1px solid #ddd;border-radius:8px;padding:12px;background:#fff}
+    .tp-ad-empty{padding:10px;color:#777}
+  </style>
+  <?php
+  return ob_get_clean();
+});
+
+/* ---------- AJAX: Levels & Rates (Tab 1) ---------- */
+
+/** List/search levels */
+add_action('wp_ajax_tp_adm_lv_list', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_lv');
+
+  global $wpdb;
+  list($t,$id,$nm) = tp_adm_levels_cols();
+  if (!$id || !$nm) wp_send_json_error('Levels table/columns not found');
+
+  $q = isset($_POST['q']) ? trim(wp_unslash($_POST['q'])) : '';
+  if ($q!=='') {
+    $like = '%'.$wpdb->esc_like($q).'%';
+    $rows = $wpdb->get_results( $wpdb->prepare("SELECT {$id} AS id, {$nm} AS name FROM {$t} WHERE {$nm} LIKE %s ORDER BY {$nm} ASC LIMIT 200",$like) );
+  } else {
+    $rows = $wpdb->get_results("SELECT {$id} AS id, {$nm} AS name FROM {$t} ORDER BY {$nm} ASC LIMIT 200");
+  }
+  wp_send_json_success(['items'=> array_map(fn($r)=>['id'=>(int)$r->id,'name'=>$r->name], $rows ?: []) ]);
+});
+
+/** Add level */
+add_action('wp_ajax_tp_adm_lv_add', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_lv');
+
+  global $wpdb;
+  list($t,$id,$nm) = tp_adm_levels_cols();
+  if (!$id || !$nm) wp_send_json_error('Levels table/columns not found');
+
+  $name = sanitize_text_field($_POST['name'] ?? '');
+  if ($name==='') wp_send_json_error('Level name required');
+
+  // unique-ish check
+  $exists = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(*) FROM {$t} WHERE {$nm}=%s", $name) );
+  if ($exists) wp_send_json_error('Level already exists');
+
+  $ok = $wpdb->insert($t, [$nm=>$name], ['%s']);
+  if (!$ok) wp_send_json_error('DB insert failed');
+  wp_send_json_success(['id'=>(int)$wpdb->insert_id, 'name'=>$name]);
+});
+
+/** Update level (rename) */
+add_action('wp_ajax_tp_adm_lv_update', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_lv');
+
+  global $wpdb;
+  list($t,$id,$nm) = tp_adm_levels_cols();
+  if (!$id || !$nm) wp_send_json_error('Levels table/columns not found');
+
+  $level_id = intval($_POST['id'] ?? 0);
+  $name     = sanitize_text_field($_POST['name'] ?? '');
+  if (!$level_id || $name==='') wp_send_json_error('Invalid params');
+
+  $ok = $wpdb->update($t, [$nm=>$name], [$id=>$level_id], ['%s'], ['%d']);
+  if ($ok===false) wp_send_json_error('DB update failed');
+  wp_send_json_success();
+});
+
+/** Get current & history rates for a level */
+add_action('wp_ajax_tp_adm_rt_get', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_rt');
+
+  global $wpdb;
+  $table = tp_adm_tbl('level_hourly_rates');
+  $level = intval($_POST['level_id'] ?? 0);
+  if (!$level) wp_send_json_error('Invalid level');
+
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT rate_id, currency, hourly_rate, effective_from, effective_to, status, notes
+     FROM {$table} WHERE level_id=%d
+     ORDER BY effective_from DESC, rate_id DESC LIMIT 200", $level
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Add/version a new rate for a level */
+add_action('wp_ajax_tp_adm_rt_add', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_rt');
+
+  global $wpdb;
+  $table = tp_adm_tbl('level_hourly_rates');
+
+  $level_id = intval($_POST['level_id'] ?? 0);
+  $currency = strtoupper(substr(sanitize_text_field($_POST['currency'] ?? 'GBP'),0,3));
+  $rate     = floatval($_POST['hourly_rate'] ?? 0);
+  $from     = sanitize_text_field($_POST['effective_from'] ?? '');
+  $notes    = sanitize_text_field($_POST['notes'] ?? '');
+
+  if (!$level_id || !$from || $rate<=0) wp_send_json_error('Required fields missing');
+
+  // Close any open-ended active rate that starts before new from
+  $open = $wpdb->get_row( $wpdb->prepare(
+    "SELECT rate_id, effective_from FROM {$table}
+     WHERE level_id=%d AND currency=%s AND status=1 AND effective_to IS NULL
+     ORDER BY effective_from DESC LIMIT 1", $level_id, $currency
+  ) );
+
+  if ($open && strtotime($open->effective_from) <= strtotime($from)) {
+    // set effective_to to day before new from
+    $prev_to = date('Y-m-d', strtotime($from.' -1 day'));
+    $wpdb->update($table, ['effective_to'=>$prev_to], ['rate_id'=>$open->rate_id], ['%s'], ['%d']);
+  }
+
+  $ok = $wpdb->insert($table, [
+    'level_id'       => $level_id,
+    'currency'       => $currency,
+    'hourly_rate'    => $rate,
+    'effective_from' => $from,
+    'effective_to'   => null,
+    'status'         => 1,
+    'notes'          => $notes,
+    'created_at'     => current_time('mysql'),
+  ], ['%d','%s','%f','%s','%s','%d','%s','%s']);
+
+  if (!$ok) wp_send_json_error('Insert failed (duplicate start date?)');
+  wp_send_json_success(['rate_id'=>(int)$wpdb->insert_id]);
+});
+
+/** Toggle rate status */
+add_action('wp_ajax_tp_adm_rt_toggle', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_rt');
+
+  global $wpdb;
+  $table = tp_adm_tbl('level_hourly_rates');
+  $rid   = intval($_POST['rate_id'] ?? 0);
+  $to    = intval($_POST['to'] ?? 0);
+  if (!$rid) wp_send_json_error('Invalid rate_id');
+
+  $ok = $wpdb->update($table, ['status'=>$to], ['rate_id'=>$rid], ['%d'], ['%d']);
+  if ($ok===false) wp_send_json_error('Update failed');
+  wp_send_json_success();
+});
+
+
+
+/* ---------- SUBJECTS (Tab 2) ---------- */
+
+/** Resolve table names/columns for subjects and mapping */
+function tp_adm_subject_tables(){
+  $subjects = tp_adm_tbl('subjects');           // wpC_subjects or <prefix>subjects
+  $map      = tp_adm_tbl('subjects_level');     // wpC_subjects_level or <prefix>subjects_level
+  // Fixed column names per your schema:
+  return [
+    'subjects' => $subjects,        // columns: subject_id, SubjectName
+    'map'      => $map,             // columns: subject_level_id, level_id, subject_id
+  ];
+}
+
+/** (Optional) ensure uniqueness — call once if you like */
+// add_action('init', function(){
+//   global $wpdb; $t = tp_adm_subject_tables();
+//   // Unique subject names (case-insensitive) – safe if not already there
+//   @$wpdb->query("ALTER TABLE {$t['subjects']} ADD UNIQUE KEY subj_name_unique (SubjectName(180))");
+//   // Unique mapping per (level, subject)
+//   @$wpdb->query("ALTER TABLE {$t['map']} ADD UNIQUE KEY uniq_level_subject (level_id, subject_id)");
+// });
+
+/** List subjects attached to a level */
+add_action('wp_ajax_tp_adm_sub_list_for_level', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sub');
+
+  $level_id = isset($_POST['level_id']) ? intval($_POST['level_id']) : 0;
+  if (!$level_id) wp_send_json_error('Invalid level');
+
+  global $wpdb; $t = tp_adm_subject_tables();
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT sl.subject_level_id, s.subject_id, s.SubjectName
+     FROM {$t['map']} sl
+     JOIN {$t['subjects']} s ON s.subject_id = sl.subject_id
+     WHERE sl.level_id = %d
+     ORDER BY s.SubjectName ASC", $level_id
+  ) );
+  wp_send_json_success(['items' => $rows ?: []]);
+});
+
+/** Search all subjects (library) */
+add_action('wp_ajax_tp_adm_sub_list_all', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sub');
+
+  $q = isset($_POST['q']) ? trim(wp_unslash($_POST['q'])) : '';
+  global $wpdb; $t = tp_adm_subject_tables();
+  if ($q !== '') {
+    $like = '%'.$wpdb->esc_like($q).'%';
+    $rows = $wpdb->get_results( $wpdb->prepare("SELECT subject_id, SubjectName FROM {$t['subjects']} WHERE SubjectName LIKE %s ORDER BY SubjectName ASC LIMIT 300", $like) );
+  } else {
+    $rows = $wpdb->get_results("SELECT subject_id, SubjectName FROM {$t['subjects']} ORDER BY SubjectName ASC LIMIT 300");
+  }
+  wp_send_json_success(['items' => $rows ?: []]);
+});
+
+/**
+ * Attach subject to level.
+ * Accepts either subject_id OR subject_name (creates subject if missing).
+ */
+add_action('wp_ajax_tp_adm_sub_attach', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sub');
+
+  global $wpdb; $t = tp_adm_subject_tables();
+
+  $level_id    = isset($_POST['level_id']) ? intval($_POST['level_id']) : 0;
+  $subject_id  = isset($_POST['subject_id']) ? intval($_POST['subject_id']) : 0;
+  $subject_name= isset($_POST['subject_name']) ? sanitize_text_field($_POST['subject_name']) : '';
+
+  if (!$level_id) wp_send_json_error('Invalid level');
+
+  // If name provided, create-or-get subject_id
+  if (!$subject_id) {
+    if ($subject_name === '') wp_send_json_error('Subject name required');
+    // Try find by name (case-sensitive by default; you can COLLATE to ci if needed)
+    $found = $wpdb->get_row( $wpdb->prepare("SELECT subject_id FROM {$t['subjects']} WHERE SubjectName = %s", $subject_name) );
+    if ($found) {
+      $subject_id = (int)$found->subject_id;
+    } else {
+      $ok = $wpdb->insert($t['subjects'], ['SubjectName'=>$subject_name], ['%s']);
+      if (!$ok) wp_send_json_error('Failed to create subject (maybe duplicate?)');
+      $subject_id = (int)$wpdb->insert_id;
+    }
+  }
+
+  // Create mapping if not exists
+  // Protect with unique (level_id, subject_id) if you added the index; otherwise check manually
+  $exists = $wpdb->get_var( $wpdb->prepare(
+    "SELECT COUNT(*) FROM {$t['map']} WHERE level_id=%d AND subject_id=%d", $level_id, $subject_id
+  ) );
+  if ($exists) wp_send_json_success(['attached'=>false,'message'=>'Already attached']);
+
+  $ok = $wpdb->insert($t['map'], ['level_id'=>$level_id, 'subject_id'=>$subject_id], ['%d','%d']);
+  if (!$ok) wp_send_json_error('Attach failed');
+  wp_send_json_success(['attached'=>true,'subject_id'=>$subject_id]);
+});
+
+/** Detach subject from level (by mapping id) */
+add_action('wp_ajax_tp_adm_sub_detach', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sub');
+
+  global $wpdb; $t = tp_adm_subject_tables();
+
+  $map_id = isset($_POST['subject_level_id']) ? intval($_POST['subject_level_id']) : 0;
+  if (!$map_id) wp_send_json_error('Invalid mapping id');
+
+  $ok = $wpdb->delete($t['map'], ['subject_level_id'=>$map_id], ['%d']);
+  if ($ok===false) wp_send_json_error('Delete failed');
+  wp_send_json_success();
+});
+
+
+
+/* ---------- TEACHERS (Tab 3) ---------- */
+
+function tp_adm_teacher_tables(){
+  return [
+    'teachers'     => tp_adm_tbl('teachers_main'),              // teacher_id, FullName, Email, Status
+    'alloc'        => tp_adm_tbl('teacher_allocated_subjects'), // teacher_allocated_subject_id, teacher_id, subject_level_id
+    'slots'        => tp_adm_tbl('teacher_generated_slots'),
+    't_rate'       => tp_adm_tbl('teacher_Hour_Rate'),
+    'p_due'        => tp_adm_tbl('teacher_payments_record'),
+    'p_withdrawn'  => tp_adm_tbl('teacher_payment_received'),
+
+    // Lookups
+    'subjects'     => tp_adm_tbl('subjects'),
+    'sub_level'    => tp_adm_tbl('subjects_level'),
+    'levels'       => tp_adm_tbl('class_levels'),
+    'lvl_rates'    => tp_adm_tbl('level_hourly_rates'),
+  ];
+}
+
+/** List/search teachers */
+add_action('wp_ajax_tp_adm_t_list', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $q = isset($_POST['q']) ? trim(wp_unslash($_POST['q'])) : '';
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  if ($q!=='') {
+    $like = '%'.$wpdb->esc_like($q).'%';
+    $rows = $wpdb->get_results( $wpdb->prepare("SELECT teacher_id, FullName, Email, COALESCE(Status,'inactive') AS Status FROM {$t['teachers']} WHERE FullName LIKE %s OR Email LIKE %s ORDER BY FullName ASC LIMIT 300", $like, $like) );
+  } else {
+    $rows = $wpdb->get_results("SELECT teacher_id, FullName, Email, COALESCE(Status,'inactive') AS Status FROM {$t['teachers']} ORDER BY FullName ASC LIMIT 300");
+  }
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Add teacher (name + email) */
+add_action('wp_ajax_tp_adm_t_add', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $name = sanitize_text_field($_POST['name'] ?? '');
+  $email= sanitize_email($_POST['email'] ?? '');
+  if (!$name || !$email) wp_send_json_error('Name & Email required');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  // ensure unique email
+  $ex = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(*) FROM {$t['teachers']} WHERE Email=%s", $email) );
+  if ($ex) wp_send_json_error('Email already exists');
+
+  $ok = $wpdb->insert($t['teachers'], [
+    'FullName' => $name,
+    'Email'    => $email,
+    'Status'   => 'active',
+    'created_at' => current_time('mysql'),
+  ], ['%s','%s','%s','%s']);
+  if (!$ok) wp_send_json_error('Insert failed');
+  wp_send_json_success(['teacher_id'=>(int)$wpdb->insert_id]);
+});
+
+/** Toggle teacher status active/inactive */
+add_action('wp_ajax_tp_adm_t_toggle', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $id = intval($_POST['teacher_id'] ?? 0);
+  $to = sanitize_text_field($_POST['to'] ?? 'inactive');
+  if (!$id || !in_array($to,['active','inactive'],true)) wp_send_json_error('Invalid');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  $ok = $wpdb->update($t['teachers'], ['Status'=>$to], ['teacher_id'=>$id], ['%s'], ['%d']);
+  if ($ok===false) wp_send_json_error('Update failed');
+  wp_send_json_success();
+});
+
+/** Allocation list for teacher+level (subjects) */
+add_action('wp_ajax_tp_adm_t_alloc_list', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  $level_id   = intval($_POST['level_id'] ?? 0);
+  if (!$teacher_id || !$level_id) wp_send_json_error('Invalid');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT tas.teacher_allocated_subject_id, sl.subject_level_id, s.subject_id, s.SubjectName
+     FROM {$t['alloc']} tas
+     JOIN {$t['sub_level']} sl ON sl.subject_level_id = tas.subject_level_id
+     JOIN {$t['subjects']}  s  ON s.subject_id = sl.subject_id
+     WHERE tas.teacher_id=%d AND sl.level_id=%d
+     ORDER BY s.SubjectName ASC", $teacher_id, $level_id
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Attach subject (by id or name) to teacher at a level */
+add_action('wp_ajax_tp_adm_t_alloc_attach', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  $level_id   = intval($_POST['level_id'] ?? 0);
+  $subject_id = intval($_POST['subject_id'] ?? 0);
+  $subject_name = sanitize_text_field($_POST['subject_name'] ?? '');
+  if (!$teacher_id || !$level_id) wp_send_json_error('Invalid');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+
+  // create subject if name provided
+  if (!$subject_id) {
+    if ($subject_name==='') wp_send_json_error('Subject required');
+    $ex = $wpdb->get_var( $wpdb->prepare("SELECT subject_id FROM {$t['subjects']} WHERE SubjectName=%s", $subject_name) );
+    if ($ex) $subject_id = (int)$ex;
+    else {
+      $ok = $wpdb->insert($t['subjects'], ['SubjectName'=>$subject_name], ['%s']);
+      if (!$ok) wp_send_json_error('Failed to create subject'); $subject_id = (int)$wpdb->insert_id;
+    }
+  }
+
+  // get or create subject_level_id
+  $sl = $wpdb->get_var( $wpdb->prepare("SELECT subject_level_id FROM {$t['sub_level']} WHERE level_id=%d AND subject_id=%d", $level_id, $subject_id) );
+  if (!$sl) {
+    $wpdb->insert($t['sub_level'], ['level_id'=>$level_id, 'subject_id'=>$subject_id], ['%d','%d']);
+    $sl = (int)$wpdb->insert_id;
+  }
+
+  // attach if not exists
+  $ex2 = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(*) FROM {$t['alloc']} WHERE teacher_id=%d AND subject_level_id=%d", $teacher_id, $sl) );
+  if ($ex2) wp_send_json_success(['attached'=>false,'message'=>'Already attached']);
+  $ok = $wpdb->insert($t['alloc'], ['teacher_id'=>$teacher_id, 'subject_level_id'=>$sl], ['%d','%d']);
+  if (!$ok) wp_send_json_error('Attach failed');
+  wp_send_json_success(['attached'=>true]);
+});
+
+/** Detach allocated subject */
+add_action('wp_ajax_tp_adm_t_alloc_detach', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $id = intval($_POST['teacher_allocated_subject_id'] ?? 0);
+  if (!$id) wp_send_json_error('Invalid id');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  $ok = $wpdb->delete($t['alloc'], ['teacher_allocated_subject_id'=>$id], ['%d']);
+  if ($ok===false) wp_send_json_error('Delete failed');
+  wp_send_json_success();
+});
+
+/** Save teacher hourly rate (validate <= level standard) */
+add_action('wp_ajax_tp_adm_t_rate_set', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  $sl_id      = intval($_POST['subject_level_id'] ?? 0);
+  $amount     = floatval($_POST['hourly_rate'] ?? 0);
+  if (!$teacher_id || !$sl_id || $amount<=0) wp_send_json_error('Invalid input');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+
+  // find level_id for sl_id
+  $level_id = $wpdb->get_var( $wpdb->prepare("SELECT level_id FROM {$t['sub_level']} WHERE subject_level_id=%d", $sl_id) );
+  if (!$level_id) wp_send_json_error('Mapping not found');
+
+  // get current level standard rate (GBP) as max
+  $today = current_time('Y-m-d');
+  $max = $wpdb->get_var( $wpdb->prepare(
+    "SELECT hourly_rate FROM {$t['lvl_rates']}
+     WHERE level_id=%d AND currency='GBP' AND status=1
+       AND effective_from<=%s AND (effective_to IS NULL OR effective_to>=%s)
+     ORDER BY effective_from DESC LIMIT 1", $level_id, $today, $today
+  ) );
+  if ($max===null) wp_send_json_error('Level standard rate not set');
+  if ($amount > floatval($max)) wp_send_json_error('Hourly rate exceeds level maximum (£'.number_format((float)$max,2).')');
+
+  // insert/update teacher rate (versionless simple upsert)
+  // Table wpC_teacher_Hour_Rate: hour_rate_id, teacher_id, subject_level_id, hourly_rate, _date, to_date
+  // We'll close any open period and add a new open one.
+  $open = $wpdb->get_row( $wpdb->prepare(
+    "SELECT hour_rate_id FROM {$t['t_rate']} WHERE teacher_id=%d AND subject_level_id=%d AND to_date IS NULL
+     ORDER BY _date DESC LIMIT 1", $teacher_id, $sl_id
+  ) );
+  if ($open) {
+    $wpdb->update($t['t_rate'], ['to_date'=> $today], ['hour_rate_id'=>$open->hour_rate_id], ['%s'], ['%d']);
+  }
+  $ok = $wpdb->insert($t['t_rate'], [
+    'teacher_id'      => $teacher_id,
+    'subject_level_id'=> $sl_id,
+    'hourly_rate'     => $amount,
+    '_date'           => $today,
+    'to_date'         => null,
+  ], ['%d','%d','%f','%s','%s']);
+  if (!$ok) wp_send_json_error('Save failed');
+  wp_send_json_success();
+});
+
+/** Slots list (range) */
+add_action('wp_ajax_tp_adm_t_slots', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  $from = sanitize_text_field($_POST['from'] ?? '');
+  $to   = sanitize_text_field($_POST['to'] ?? '');
+  if (!$teacher_id) wp_send_json_error('Invalid teacher');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  $from = $from ?: current_time('Y-m-d');
+  $to   = $to   ?: current_time('Y-m-d', true);
+
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT s.session_date, s.start_time, s.end_time, s.status,
+            l.level_name, sub.SubjectName
+     FROM {$t['slots']} s
+     LEFT JOIN {$t['levels']} l ON l.id = s.class_level_id
+     LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+     WHERE s.teacher_id=%d AND s.session_date BETWEEN %s AND %s
+     ORDER BY s.session_date DESC, s.start_time DESC LIMIT 500",
+     $teacher_id, $from, $to
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Due payments (records) */
+add_action('wp_ajax_tp_adm_t_due', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  if (!$teacher_id) wp_send_json_error('Invalid');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  // Column typo "techer_id" handled via COALESCE aliasing if needed
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT payment_record_id, hour_rate_id, lecture_book_id, eligible_payout_amount
+     FROM {$t['p_due']}
+     WHERE (teacher_id=%d OR techer_id=%d) AND COALESCE(eligible_payout_amount,0) > 0
+     ORDER BY payment_record_id DESC LIMIT 300",
+     $teacher_id, $teacher_id
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Withdrawn payments */
+add_action('wp_ajax_tp_adm_t_withdrawn', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_teacher');
+
+  $teacher_id = intval($_POST['teacher_id'] ?? 0);
+  if (!$teacher_id) wp_send_json_error('Invalid');
+
+  $t = tp_adm_teacher_tables(); global $wpdb;
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT payment_withdrawal_date, amount_withdrawal, status, remarks
+     FROM {$t['p_withdrawn']}
+     WHERE teacher_id=%d
+     ORDER BY payment_received_id DESC LIMIT 300",
+     $teacher_id
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+
+/* ---------- STUDENTS (Tab 4) ---------- */
+
+function tp_adm_student_tables(){
+  return [
+    'students' => tp_adm_tbl('student_register'),   // wpC_student_register
+    'lectures' => tp_adm_tbl('student_lectures'),   // wpC_student_lectures
+    'levels'   => tp_adm_tbl('class_levels'),       // id, level_name
+    'subjects' => tp_adm_tbl('subjects'),           // subject_id, SubjectName
+  ];
+}
+
+/** List/search with filters */
+add_action('wp_ajax_tp_adm_s_list', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $q = trim(wp_unslash($_POST['q'] ?? ''));
+  $level_id  = intval($_POST['level_id'] ?? 0);
+  $subject_id= intval($_POST['subject_id'] ?? 0);
+
+  global $wpdb; $t = tp_adm_student_tables();
+  $where = ['1=1']; $args = [];
+  if ($q !== '') {
+    $like = '%'.$wpdb->esc_like($q).'%';
+    $where[] = "(full_name LIKE %s OR email LIKE %s OR phone LIKE %s)";
+    array_push($args, $like, $like, $like);
+  }
+  if ($level_id) {
+    $where[] = "level_id = %d"; $args[] = $level_id;
+  }
+  // filter by subject: student_lectures join subjects
+  $join = '';
+  if ($subject_id) {
+    $join = "JOIN {$t['lectures']} l ON l.student_id = s.student_id AND l.subject_id = %d";
+    array_unshift($args, $subject_id);
+  }
+  $sql = "SELECT s.student_id, s.full_name, s.email, s.phone, COALESCE(s.status,'inactive') AS status
+          FROM {$t['students']} s
+          $join
+          WHERE ".implode(' AND ', $where)."
+          GROUP BY s.student_id
+          ORDER BY s.full_name ASC LIMIT 400";
+  $rows = $wpdb->get_results( $wpdb->prepare($sql, $args) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Get single student */
+add_action('wp_ajax_tp_adm_s_get', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0); if(!$id) wp_send_json_error('Invalid');
+  global $wpdb; $t = tp_adm_student_tables();
+  $row = $wpdb->get_row( $wpdb->prepare(
+    "SELECT s.*, l.level_name
+     FROM {$t['students']} s
+     LEFT JOIN {$t['levels']} l ON l.id = s.level_id
+     WHERE s.student_id=%d", $id
+  ) );
+  if (!$row) wp_send_json_error('Not found');
+  wp_send_json_success($row);
+});
+
+/** Toggle status active/inactive */
+add_action('wp_ajax_tp_adm_s_toggle', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0);
+  $to = sanitize_text_field($_POST['to'] ?? 'inactive');
+  if (!$id || !in_array($to, ['active','inactive'], true)) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_student_tables();
+  $ok = $wpdb->update($t['students'], ['status'=>$to], ['student_id'=>$id], ['%s'], ['%d']);
+  if ($ok===false) wp_send_json_error('Update failed');
+  wp_send_json_success();
+});
+
+/** Send deactivation email */
+add_action('wp_ajax_tp_adm_s_email_deact', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0);
+  if (!$id) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_student_tables();
+  $row = $wpdb->get_row( $wpdb->prepare("SELECT full_name, email, status FROM {$t['students']} WHERE student_id=%d", $id) );
+  if (!$row || !$row->email) wp_send_json_error('Student/email not found');
+
+  $subject = 'Your TutorsPoint account has been deactivated';
+  $body = "Dear {$row->full_name},\n\nYour student account has been deactivated by the administrator. If you believe this is a mistake, please reply to this email.\n\nRegards,\nTutorsPoint";
+  $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+  $sent = wp_mail($row->email, $subject, $body, $headers);
+  if (!$sent) wp_send_json_error('Failed to send email');
+  wp_send_json_success();
+});
+
+/** Set new password (wp_users + custom table hash) */
+add_action('wp_ajax_tp_adm_s_set_pass', function(){
+  if (!current_user_can('edit_users')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0);
+  $new = $_POST['new_password'] ?? '';
+  if (!$id || strlen($new) < 8) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_student_tables();
+  $row = $wpdb->get_row( $wpdb->prepare("SELECT email FROM {$t['students']} WHERE student_id=%d", $id) );
+  if (!$row) wp_send_json_error('Student not found');
+
+  // Update WP user if exists
+  $user = get_user_by('email', $row->email);
+  if ($user) {
+    wp_set_password($new, $user->ID); // logs them out everywhere
+  }
+
+  // Update custom table with a hash (NEVER store plaintext)
+  if (!function_exists('wp_hash_password')) require_once ABSPATH.'wp-includes/pluggable.php';
+  $hash = wp_hash_password($new);
+  $wpdb->update($t['students'], ['password'=>$hash], ['student_id'=>$id], ['%s'], ['%d']);
+
+  wp_send_json_success();
+});
+
+/** Lectures list (range + subject) */
+add_action('wp_ajax_tp_adm_s_lectures', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0);
+  $from = sanitize_text_field($_POST['from'] ?? '');
+  $to   = sanitize_text_field($_POST['to'] ?? '');
+  $subject_id = intval($_POST['subject_id'] ?? 0);
+  if(!$id) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_student_tables();
+
+  $where = ["l.student_id=%d"]; $args = [$id];
+  if ($from) { $where[]="l.lecture_book_date >= %s"; $args[]=$from; }
+  if ($to)   { $where[]="l.lecture_book_date <= %s"; $args[]=$to; }
+  if ($subject_id) { $where[]="l.subject_id=%d"; $args[]=$subject_id; }
+
+  $sql = "SELECT l.*, s.SubjectName
+          FROM {$t['lectures']} l
+          LEFT JOIN {$t['subjects']} s ON s.subject_id = l.subject_id
+          WHERE ".implode(' AND ', $where)."
+          ORDER BY l.lecture_book_date DESC, l.lecture_time DESC
+          LIMIT 1000";
+  $rows = $wpdb->get_results( $wpdb->prepare($sql, $args) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Payments (from student_lectures) */
+add_action('wp_ajax_tp_adm_s_payments', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_POST['student_id'] ?? 0); if(!$id) wp_send_json_error('Invalid');
+  global $wpdb; $t = tp_adm_student_tables();
+  $rows = $wpdb->get_results( $wpdb->prepare(
+    "SELECT l.lecture_book_id, l.lecture_book_date, l.original_price, l.discount_rate, l.final_price, l.is_paid, s.SubjectName
+     FROM {$t['lectures']} l
+     LEFT JOIN {$t['subjects']} s ON s.subject_id = l.subject_id
+     WHERE l.student_id=%d
+     ORDER BY l.lecture_book_id DESC
+     LIMIT 1000", $id
+  ) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** Export CSV (lectures | payments) */
+add_action('wp_ajax_tp_adm_s_export', function(){
+  if (!current_user_can('edit_posts')) wp_die('No permission');
+  check_ajax_referer('tp_adm_student');
+
+  $id = intval($_GET['student_id'] ?? 0);
+  $type = sanitize_text_field($_GET['type'] ?? 'lectures');
+  $from = sanitize_text_field($_GET['from'] ?? '');
+  $to   = sanitize_text_field($_GET['to'] ?? '');
+  if(!$id) wp_die('Invalid');
+
+  global $wpdb; $t = tp_adm_student_tables();
+  $filename = "student-{$id}-{$type}-".date('Ymd-His').".csv";
+
+  header('Content-Type: text/csv; charset=utf-8');
+  header('Content-Disposition: attachment; filename="'.$filename.'"');
+  $out = fopen('php://output', 'w');
+
+  if ($type === 'payments') {
+    fputcsv($out, ['lecture_book_id','date','subject','original','discount_rate','final','is_paid']);
+    $rows = $wpdb->get_results( $wpdb->prepare(
+      "SELECT l.lecture_book_id, l.lecture_book_date, s.SubjectName,
+              l.original_price, l.discount_rate, l.final_price, l.is_paid
+       FROM {$t['lectures']} l
+       LEFT JOIN {$t['subjects']} s ON s.subject_id = l.subject_id
+       WHERE l.student_id=%d
+       ORDER BY l.lecture_book_id DESC", $id
+    ), ARRAY_A );
+  } else {
+    fputcsv($out, ['lecture_book_id','date','time','topic','subject','duration','status']);
+    $where = ["l.student_id=%d"]; $args = [$id];
+    if ($from) { $where[]="l.lecture_book_date >= %s"; $args[]=$from; }
+    if ($to)   { $where[]="l.lecture_book_date <= %s"; $args[]=$to; }
+    $sql = "SELECT l.lecture_book_id, l.lecture_book_date, l.lecture_time, l.topic,
+                   s.SubjectName, l.duration, l.status
+            FROM {$t['lectures']} l
+            LEFT JOIN {$t['subjects']} s ON s.subject_id = l.subject_id
+            WHERE ".implode(' AND ', $where)."
+            ORDER BY l.lecture_book_date DESC, l.lecture_time DESC";
+    $rows = $wpdb->get_results( $wpdb->prepare($sql, $args), ARRAY_A );
+  }
+
+  foreach (($rows ?: []) as $r) fputcsv($out, $r);
+  fclose($out);
+  exit;
+});
+
+
+
+/* ------------- SCHEDULE (Tab 5) ------------- */
+function tp_adm_sched_tbls(){
+  return [
+    'slots'    => tp_adm_tbl('teacher_generated_slots'),
+    'teachers' => tp_adm_tbl('teachers_main'),
+    'levels'   => tp_adm_tbl('class_levels'),
+    'subjects' => tp_adm_tbl('subjects'),
+    'students' => tp_adm_tbl('student_register'),
+    'lectures' => tp_adm_tbl('student_lectures'), // for payment flag
+  ];
+}
+
+/** 1) Teachers with at least one slot for a given day (current week day) */
+add_action('wp_ajax_tp_adm_sched_teachers', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sched');
+
+  $day = sanitize_text_field($_POST['day'] ?? '');
+  if (!$day) wp_send_json_error('Invalid day');
+
+  global $wpdb; $t = tp_adm_sched_tbls();
+  $rows = $wpdb->get_results( $wpdb->prepare("
+    SELECT s.teacher_id, COUNT(*) AS slots, tm.FullName
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    WHERE s.session_date = %s AND COALESCE(s.is_active,1) = 1
+    GROUP BY s.teacher_id
+    ORDER BY tm.FullName ASC
+  ", $day) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** 2) Slots list for a teacher & day (includes payment/free flags) */
+add_action('wp_ajax_tp_adm_sched_slots', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sched');
+
+  $day = sanitize_text_field($_POST['day'] ?? '');
+  $tid = intval($_POST['teacher_id'] ?? 0);
+  if (!$day || !$tid) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_sched_tbls();
+
+  // Join to levels/subjects/students + attempt to join to student_lectures for paid/free info
+  $rows = $wpdb->get_results( $wpdb->prepare("
+    SELECT s.slot_id, s.teacher_id, s.session_date, s.start_time, s.end_time, s.status, s.is_active,
+           s.meeting_link, s.class_level_id, s.subject_id, s.student_id,
+           l.level_name, sub.SubjectName,
+           st.full_name AS student_name,
+           le.final_price, le.is_paid,
+           CASE WHEN le.final_price IS NULL OR le.final_price=0 THEN 1 ELSE 0 END AS is_free
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['levels']}   l   ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['students']} st  ON st.student_id = s.student_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE s.session_date=%s AND s.teacher_id=%d
+    ORDER BY s.start_time ASC
+  ", $day, $tid) );
+
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** 3) Halt a slot and notify teacher + student */
+add_action('wp_ajax_tp_adm_sched_halt', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_sched');
+
+  $sid    = intval($_POST['slot_id'] ?? 0);
+  $reason = sanitize_text_field($_POST['reason'] ?? '');
+  if (!$sid || !$reason) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_sched_tbls();
+  $row = $wpdb->get_row( $wpdb->prepare("
+    SELECT s.*, tm.FullName AS tname, tm.Email AS temail,
+           st.full_name AS sname, st.email AS semail,
+           l.level_name, sub.SubjectName
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    WHERE s.slot_id=%d
+  ", $sid) );
+  if (!$row) wp_send_json_error('Slot not found');
+
+  // mark halted
+  $ok = $wpdb->update($t['slots'], ['status'=>'halted','is_active'=>0,'updated_at'=>current_time('mysql')], ['slot_id'=>$sid], ['%s','%d','%s'], ['%d']);
+  if ($ok===false) wp_send_json_error('DB update failed');
+
+  // email both parties
+  $subject = 'Session halted';
+  $body = "This session has been halted by the administrator.\n\n".
+          "Teacher: {$row->tname}\n".
+          "Student: {$row->sname}\n".
+          "Date: {$row->session_date}\nTime: {$row->start_time}–{$row->end_time}\n".
+          "Level: {$row->level_name}\nSubject: {$row->SubjectName}\n\n".
+          "Reason: {$reason}\n\nRegards,\nTutorsPoint";
+  $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+  if ($row->temail) wp_mail($row->temail, $subject, $body, $headers);
+  if ($row->semail) wp_mail($row->semail, $subject, $body, $headers);
+
+  wp_send_json_success();
+});
+
+/** 4) Export CSV (day or teacher/day) */
+add_action('wp_ajax_tp_adm_sched_export', function(){
+  if (!current_user_can('edit_posts')) wp_die('No permission');
+  check_ajax_referer('tp_adm_sched');
+
+  $day = sanitize_text_field($_GET['day'] ?? '');
+  $tid = intval($_GET['teacher_id'] ?? 0);
+  if(!$day) wp_die('Missing day');
+
+  global $wpdb; $t = tp_adm_sched_tbls();
+
+  $where = $tid ? $wpdb->prepare("s.session_date=%s AND s.teacher_id=%d", $day, $tid)
+                : $wpdb->prepare("s.session_date=%s", $day);
+  $rows = $wpdb->get_results("
+    SELECT s.slot_id, s.session_date, s.start_time, s.end_time, tm.FullName AS teacher,
+           st.full_name AS student, l.level_name, sub.SubjectName, COALESCE(s.status,'') AS status,
+           COALESCE(le.final_price,0) AS final_price, COALESCE(le.is_paid,0) AS is_paid
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE {$where}
+    ORDER BY tm.FullName ASC, s.start_time ASC
+  ", ARRAY_A );
+
+  $fn = 'schedules-'.$day.($tid?('-teacher-'.$tid):'').'-'.date('Ymd-His').'.csv';
+  header('Content-Type: text/csv; charset=utf-8');
+  header('Content-Disposition: attachment; filename="'.$fn.'"');
+  $out = fopen('php://output', 'w');
+  fputcsv($out, ['slot_id','date','start','end','teacher','student','level','subject','status','final_price','is_paid']);
+  foreach(($rows?:[]) as $r) fputcsv($out, $r);
+  fclose($out);
+  exit;
+});
+
+/** 5) Print view (use browser Save as PDF) */
+add_action('wp_ajax_tp_adm_sched_print', function(){
+  if (!current_user_can('edit_posts')) wp_die('No permission');
+  check_ajax_referer('tp_adm_sched');
+
+  $day = sanitize_text_field($_GET['day'] ?? '');
+  $tid = intval($_GET['teacher_id'] ?? 0);
+  if(!$day) wp_die('Missing day');
+
+  global $wpdb; $t = tp_adm_sched_tbls();
+  $where = $tid ? $wpdb->prepare("s.session_date=%s AND s.teacher_id=%d", $day, $tid)
+                : $wpdb->prepare("s.session_date=%s", $day);
+  $rows = $wpdb->get_results("
+    SELECT s.session_date, s.start_time, s.end_time, tm.FullName AS teacher,
+           st.full_name AS student, l.level_name, sub.SubjectName, COALESCE(s.status,'') AS status,
+           COALESCE(le.final_price,0) AS final_price, COALESCE(le.is_paid,0) AS is_paid
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE {$where}
+    ORDER BY tm.FullName ASC, s.start_time ASC
+  ");
+
+  ?><!doctype html><html><head><meta charset="utf-8">
+  <title>Schedules <?php echo esc_html($day); ?></title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:20px}
+    h2{margin:0 0 6px}
+    .meta{color:#666;margin-bottom:12px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid #eee;padding:8px;text-align:left;white-space:nowrap}
+    .paid{color:#0a7a4b;font-weight:600}
+    .unpaid{color:#555}
+    @media print { .noprint{display:none} }
+  </style>
+  </head><body>
+  <div class="noprint"><button onclick="window.print()">Print</button></div>
+  <h2>Schedules – <?php echo esc_html($day); ?><?php if($tid) echo ' (Teacher #'.intval($tid).')'; ?></h2>
+  <div class="meta">Generated at <?php echo esc_html(date_i18n('Y-m-d H:i')); ?></div>
+  <table><thead>
+    <tr><th>Time</th><th>Teacher</th><th>Student</th><th>Level</th><th>Subject</th><th>Status</th><th>Payment</th></tr>
+  </thead><tbody>
+  <?php if($rows){ foreach($rows as $r){ ?>
+    <tr>
+      <td><?php echo esc_html("{$r->start_time}-{$r->end_time}"); ?></td>
+      <td><?php echo esc_html($r->teacher); ?></td>
+      <td><?php echo esc_html($r->student); ?></td>
+      <td><?php echo esc_html($r->level_name); ?></td>
+      <td><?php echo esc_html($r->SubjectName); ?></td>
+      <td><?php echo esc_html($r->status); ?></td>
+      <td class="<?php echo $r->is_paid?'paid':'unpaid'; ?>">
+        <?php echo $r->is_paid ? ('Paid £'.number_format((float)$r->final_price,2)) : ($r->final_price>0?'Unpaid':'Free'); ?>
+      </td>
+    </tr>
+  <?php }} else { ?>
+    <tr><td colspan="7">No data.</td></tr>
+  <?php } ?>
+  </tbody></table>
+  </body></html><?php
+  exit;
+});
+
+
+
+/* ------------ BOOKINGS (Tab 6) ------------- */
+function tp_adm_book_tbls(){
+  return [
+    'slots'    => tp_adm_tbl('teacher_generated_slots'),
+    'teachers' => tp_adm_tbl('teachers_main'),
+    'levels'   => tp_adm_tbl('class_levels'),
+    'subjects' => tp_adm_tbl('subjects'),
+    'students' => tp_adm_tbl('student_register'),
+    'lectures' => tp_adm_tbl('student_lectures'),
+  ];
+}
+
+/** 1) Distinct time buckets for a day (sorted asc) */
+add_action('wp_ajax_tp_adm_book_times', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_bookings');
+
+  $day = sanitize_text_field($_POST['day'] ?? '');
+  if (!$day) wp_send_json_error('Invalid day');
+
+  global $wpdb; $t = tp_adm_book_tbls();
+  $rows = $wpdb->get_results( $wpdb->prepare("
+    SELECT s.start_time, MIN(s.end_time) AS end_time, COUNT(*) AS ct
+    FROM {$t['slots']} s
+    WHERE s.session_date = %s AND COALESCE(s.is_active,1)=1
+    GROUP BY s.start_time
+    ORDER BY s.start_time ASC
+  ", $day) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** 2) Bookings list for a day + start_time (across teachers) */
+add_action('wp_ajax_tp_adm_book_rows', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_bookings');
+
+  $day  = sanitize_text_field($_POST['day'] ?? '');
+  $time = sanitize_text_field($_POST['start_time'] ?? '');
+  if (!$day || !$time) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_book_tbls();
+  $rows = $wpdb->get_results( $wpdb->prepare("
+    SELECT s.slot_id, s.start_time, s.end_time, s.status, s.meeting_link,
+           s.teacher_id, tm.FullName AS teacher,
+           s.student_id, st.full_name AS student,
+           l.level_name, sub.SubjectName,
+           COALESCE(le.final_price,0) AS final_price,
+           COALESCE(le.is_paid,0)     AS is_paid
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE s.session_date=%s AND s.start_time=%s
+    ORDER BY tm.FullName ASC
+  ", $day, $time) );
+  wp_send_json_success(['items'=>$rows ?: []]);
+});
+
+/** 3) Halt a booking (slot) and email parties */
+add_action('wp_ajax_tp_adm_book_halt', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_adm_bookings');
+
+  $sid    = intval($_POST['slot_id'] ?? 0);
+  $reason = sanitize_text_field($_POST['reason'] ?? '');
+  if (!$sid || !$reason) wp_send_json_error('Invalid');
+
+  global $wpdb; $t = tp_adm_book_tbls();
+  $row = $wpdb->get_row( $wpdb->prepare("
+    SELECT s.*, tm.FullName AS tname, tm.Email AS temail,
+           st.full_name AS sname, st.email AS semail,
+           l.level_name, sub.SubjectName
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    WHERE s.slot_id=%d
+  ", $sid) );
+  if (!$row) wp_send_json_error('Slot not found');
+
+  $ok = $wpdb->update($t['slots'], ['status'=>'halted','is_active'=>0,'updated_at'=>current_time('mysql')], ['slot_id'=>$sid], ['%s','%d','%s'], ['%d']);
+  if ($ok===false) wp_send_json_error('DB update failed');
+
+  $subject = 'Session halted';
+  $body = "This session has been halted by the administrator.\n\n".
+          "Teacher: {$row->tname}\n".
+          "Student: {$row->sname}\n".
+          "Date: {$row->session_date}\nTime: {$row->start_time}–{$row->end_time}\n".
+          "Level: {$row->level_name}\nSubject: {$row->SubjectName}\n\n".
+          "Reason: {$reason}\n\nRegards,\nTutorsPoint";
+  $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+  if ($row->temail) wp_mail($row->temail, $subject, $body, $headers);
+  if ($row->semail) wp_mail($row->semail, $subject, $body, $headers);
+
+  wp_send_json_success();
+});
+
+/** 4) Export CSV (whole day OR specific start_time) */
+add_action('wp_ajax_tp_adm_book_export', function(){
+  if (!current_user_can('edit_posts')) wp_die('No permission');
+  check_ajax_referer('tp_adm_bookings');
+
+  $day  = sanitize_text_field($_GET['day'] ?? '');
+  $time = sanitize_text_field($_GET['start_time'] ?? '');
+  if(!$day) wp_die('Missing day');
+
+  global $wpdb; $t = tp_adm_book_tbls();
+  $where = $time
+    ? $wpdb->prepare("s.session_date=%s AND s.start_time=%s", $day, $time)
+    : $wpdb->prepare("s.session_date=%s", $day);
+
+  $rows = $wpdb->get_results("
+    SELECT s.slot_id, s.session_date, s.start_time, s.end_time,
+           tm.FullName AS teacher, st.full_name AS student,
+           l.level_name, sub.SubjectName, COALESCE(s.status,'') AS status,
+           COALESCE(le.final_price,0) AS final_price, COALESCE(le.is_paid,0) AS is_paid
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE {$where}
+    ORDER BY s.start_time ASC, tm.FullName ASC
+  ", ARRAY_A );
+
+  $fn = 'bookings-'.$day.($time?('-'.$time):'').'-'.date('Ymd-His').'.csv';
+  header('Content-Type: text/csv; charset=utf-8');
+  header('Content-Disposition: attachment; filename="'.$fn.'"');
+  $out = fopen('php://output', 'w');
+  fputcsv($out, ['slot_id','date','start','end','teacher','student','level','subject','status','final_price','is_paid']);
+  foreach(($rows?:[]) as $r) fputcsv($out, $r);
+  fclose($out);
+  exit;
+});
+
+/** 5) Print view (use browser Save as PDF) */
+add_action('wp_ajax_tp_adm_book_print', function(){
+  if (!current_user_can('edit_posts')) wp_die('No permission');
+  check_ajax_referer('tp_adm_bookings');
+
+  $day  = sanitize_text_field($_GET['day'] ?? '');
+  $time = sanitize_text_field($_GET['start_time'] ?? '');
+  if(!$day) wp_die('Missing day');
+
+  global $wpdb; $t = tp_adm_book_tbls();
+  $where = $time
+    ? $wpdb->prepare("s.session_date=%s AND s.start_time=%s", $day, $time)
+    : $wpdb->prepare("s.session_date=%s", $day);
+
+  $rows = $wpdb->get_results("
+    SELECT s.start_time, s.end_time, tm.FullName AS teacher, st.full_name AS student,
+           l.level_name, sub.SubjectName, COALESCE(s.status,'') AS status,
+           COALESCE(le.final_price,0) AS final_price, COALESCE(le.is_paid,0) AS is_paid
+    FROM {$t['slots']} s
+    LEFT JOIN {$t['teachers']} tm ON tm.teacher_id = s.teacher_id
+    LEFT JOIN {$t['students']} st ON st.student_id = s.student_id
+    LEFT JOIN {$t['levels']}   l  ON l.id = s.class_level_id
+    LEFT JOIN {$t['subjects']} sub ON sub.subject_id = s.subject_id
+    LEFT JOIN {$t['lectures']} le  ON le.student_id = s.student_id
+                                   AND le.lecture_book_date = s.session_date
+                                   AND le.lecture_time = s.start_time
+    WHERE {$where}
+    ORDER BY s.start_time ASC, tm.FullName ASC
+  ");
+
+  ?><!doctype html><html><head><meta charset="utf-8">
+  <title>Bookings <?php echo esc_html($day); echo $time?(' '.$time):''; ?></title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:20px}
+    h2{margin:0 0 6px}
+    .meta{color:#666;margin-bottom:12px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{border-bottom:1px solid #eee;padding:8px;text-align:left;white-space:nowrap}
+    .paid{color:#0a7a4b;font-weight:600}
+    .unpaid{color:#555}
+    @media print { .noprint{display:none} }
+  </style>
+  </head><body>
+  <div class="noprint"><button onclick="window.print()">Print</button></div>
+  <h2>Bookings – <?php echo esc_html($day); echo $time?(' '.$time):''; ?></h2>
+  <div class="meta">Generated at <?php echo esc_html(date_i18n('Y-m-d H:i')); ?></div>
+  <table><thead>
+    <tr><th>Time</th><th>Teacher</th><th>Student</th><th>Level</th><th>Subject</th><th>Status</th><th>Payment</th></tr>
+  </thead><tbody>
+  <?php if($rows){ foreach($rows as $r){ ?>
+    <tr>
+      <td><?php echo esc_html("{$r->start_time}-{$r->end_time}"); ?></td>
+      <td><?php echo esc_html($r->teacher); ?></td>
+      <td><?php echo esc_html($r->student); ?></td>
+      <td><?php echo esc_html($r->level_name); ?></td>
+      <td><?php echo esc_html($r->SubjectName); ?></td>
+      <td><?php echo esc_html($r->status); ?></td>
+      <td class="<?php echo $r->is_paid?'paid':'unpaid'; ?>">
+        <?php echo $r->is_paid ? ('Paid £'.number_format((float)$r->final_price,2)) : ($r->final_price>0?'Unpaid':'Free'); ?>
+      </td>
+    </tr>
+  <?php }} else { ?>
+    <tr><td colspan="7">No data.</td></tr>
+  <?php } ?>
+  </tbody></table>
+  </body></html><?php
+  exit;
+});
+
+
+// === Categories AJAX for Admin/Teacher Dashboard ===
+// Register endpoints (logged-in users only, via admin-ajax.php)
+add_action('wp_ajax_tp_list_categories',       'tdcats_list_categories');
+add_action('wp_ajax_tp_add_category',          'tdcats_add_category');
+add_action('wp_ajax_tp_rename_category',       'tdcats_rename_category');
+add_action('wp_ajax_tp_delete_category',       'tdcats_delete_category');
+add_action('wp_ajax_tp_set_default_category',  'tdcats_set_default_category');
+
+// Optional quick ping for debugging
+// add_action('wp_ajax_tp_cat_ping', function(){ wp_send_json_success(['ok'=>true]); });
+
+if (!function_exists('tdcats_guard')) {
+  function tdcats_guard(){
+    if (!is_user_logged_in() || !current_user_can('manage_categories')) {
+      wp_send_json_error('Unauthorized', 403);
+    }
+    $nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
+    if (!$nonce || !wp_verify_nonce($nonce, 'tp_cat_manage')) {
+      wp_send_json_error('Bad nonce', 400);
+    }
+  }
+}
+
+if (!function_exists('tdcats_list_categories')) {
+  function tdcats_list_categories(){
+    tdcats_guard();
+    $search = isset($_POST['s']) ? sanitize_text_field($_POST['s']) : '';
+    $parent = isset($_POST['parent']) && $_POST['parent'] !== '' ? intval($_POST['parent']) : null;
+
+    $args = [
+      'taxonomy'   => 'category',
+      'hide_empty' => false,
+      'number'     => 200,
+      'orderby'    => 'name',
+      'order'      => 'ASC',
+    ];
+    if ($search) $args['search'] = $search;
+    if ($parent !== null) $args['parent'] = $parent;
+
+    $terms = get_terms($args);
+    if (is_wp_error($terms)) wp_send_json_error($terms->get_error_message(), 500);
+
+    $default_id = (int) get_option('default_category');
+    $uncat      = get_term_by('slug', 'uncategorized', 'category');
+    $uncat_id   = $uncat ? (int)$uncat->term_id : 0;
+
+    $items = [];
+    foreach ($terms as $t) {
+      $parent_name = '';
+      if ($t->parent) {
+        $p = get_term($t->parent, 'category');
+        if ($p && !is_wp_error($p)) $parent_name = $p->name;
+      }
+      $items[] = [
+        'id'              => (int)$t->term_id,
+        'name'            => $t->name,
+        'slug'            => $t->slug,
+        'parent'          => (int)$t->parent,
+        'parent_name'     => $parent_name,
+        'count'           => (int)$t->count,
+        'is_default'      => ((int)$t->term_id === $default_id),
+        'is_uncategorized'=> ((int)$t->term_id === $uncat_id),
+      ];
+    }
+    wp_send_json_success(['items' => $items]);
+  }
+}
+
+if (!function_exists('tdcats_add_category')) {
+  function tdcats_add_category(){
+    tdcats_guard();
+
+    $name   = isset($_POST['name'])  ? sanitize_text_field($_POST['name']) : '';
+    $slug   = isset($_POST['slug'])  ? sanitize_title($_POST['slug'])      : '';
+    $parent = isset($_POST['parent'])? intval($_POST['parent'])            : 0;
+    $desc   = isset($_POST['desc'])  ? sanitize_textarea_field($_POST['desc']) : '';
+
+    if ($name === '') wp_send_json_error('Name is required', 400);
+    if ($parent < 0)  $parent = 0;
+
+    // Unique slug to avoid "term_exists" errors
+    $base = $slug ?: sanitize_title($name);
+    $use  = $base ?: 'category';
+    $i = 2;
+    while (get_term_by('slug', $use, 'category')) {
+      $use = $base . '-' . $i++;
+    }
+
+    $args = ['description' => $desc, 'slug' => $use];
+    if ($parent) $args['parent'] = $parent;
+
+    $res = wp_insert_term($name, 'category', $args);
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => (int)$res['term_id'], 'slug' => $use]);
+  }
+}
+
+if (!function_exists('tdcats_rename_category')) {
+  function tdcats_rename_category(){
+    tdcats_guard();
+    $id   = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    if ($id <= 0 || $name === '') wp_send_json_error('Invalid data', 400);
+
+    $res = wp_update_term($id, 'category', ['name' => $name]);
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => $id]);
+  }
+}
+
+if (!function_exists('tdcats_delete_category')) {
+  function tdcats_delete_category(){
+    tdcats_guard();
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    if ($id <= 0) wp_send_json_error('Invalid ID', 400);
+
+    $default = (int)get_option('default_category');
+    $uncat   = get_term_by('slug', 'uncategorized', 'category');
+    $uncat_id= $uncat ? (int)$uncat->term_id : 0;
+
+    if ($id === $default || $id === $uncat_id) {
+      wp_send_json_error('Protected category cannot be deleted', 400);
+    }
+
+    $res = wp_delete_term($id, 'category');
+    if (is_wp_error($res)) wp_send_json_error($res->get_error_message(), 500);
+
+    wp_send_json_success(['id' => $id]);
+  }
+}
+
+if (!function_exists('tdcats_set_default_category')) {
+  function tdcats_set_default_category(){
+    tdcats_guard();
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Insufficient permission', 403);
+    }
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    $term = get_term($id, 'category');
+    if (!$term || is_wp_error($term)) wp_send_json_error('Category not found', 404);
+
+    update_option('default_category', (int)$id);
+    wp_send_json_success(['id' => (int)$id]);
+  }
+}
+
+
+/* ---------- BLOG SUGGESTIONS (Tab 9) ---------- */
+
+/** Submit a blog suggestion */
+add_action('wp_ajax_tp_submit_blog_suggestion', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $edit_id = intval($_POST['edit_id'] ?? 0);
+  $title   = sanitize_text_field($_POST['title'] ?? '');
+  $content = wp_kses_post($_POST['content'] ?? '');
+  $cat_id  = intval($_POST['category'] ?? 0);
+  $tags    = sanitize_text_field($_POST['tags'] ?? '');
+  $excerpt = sanitize_textarea_field($_POST['excerpt'] ?? '');
+
+  if (!$title || !$content || !$cat_id) wp_send_json_error('Required fields missing');
+
+  $post_data = [
+    'post_title'   => $title,
+    'post_content' => $content,
+    'post_excerpt' => $excerpt,
+    'post_category'=> [$cat_id],
+  ];
+
+  // Edit mode
+  if ($edit_id) {
+    $post = get_post($edit_id);
+    if (!$post || get_post_meta($edit_id, '_tp_is_suggestion', true) !== '1') {
+      wp_send_json_error('Not a valid suggestion');
+    }
+
+    $post_data['ID'] = $edit_id;
+    $post_id = wp_update_post($post_data);
+    if (is_wp_error($post_id)) wp_send_json_error($post_id->get_error_message());
+  }
+  // Create mode
+  else {
+    $post_data['post_status'] = 'draft';
+    $post_data['post_type'] = 'post';
+    $post_data['post_author'] = get_current_user_id();
+
+    $post_id = wp_insert_post($post_data);
+    if (is_wp_error($post_id)) wp_send_json_error($post_id->get_error_message());
+
+    // Mark as suggestion
+    update_post_meta($post_id, '_tp_is_suggestion', '1');
+  }
+
+  // Handle tags
+  if ($tags) {
+    wp_set_post_tags($post_id, $tags, false);
+  } else {
+    wp_set_post_tags($post_id, '', false);
+  }
+
+  // Handle featured image
+  if (isset($_FILES['featured']) && !empty($_FILES['featured']['name'])) {
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+    $attach_id = media_handle_upload('featured', $post_id);
+    if (!is_wp_error($attach_id)) {
+      set_post_thumbnail($post_id, $attach_id);
+    }
+  }
+
+  wp_send_json_success(['post_id' => $post_id]);
+});
+
+/** Get a single blog suggestion for editing */
+add_action('wp_ajax_tp_get_blog_suggestion', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  $cats = wp_get_post_categories($post_id);
+  $tags = wp_get_post_tags($post_id, ['fields' => 'names']);
+  $featured_id = get_post_thumbnail_id($post_id);
+  $featured_image = $featured_id ? wp_get_attachment_image_url($featured_id, 'medium') : '';
+
+  wp_send_json_success([
+    'title'          => $post->post_title,
+    'content'        => $post->post_content,
+    'excerpt'        => $post->post_excerpt,
+    'category'       => !empty($cats) ? $cats[0] : 0,
+    'tags'           => implode(', ', $tags),
+    'featured_image' => $featured_image,
+  ]);
+});
+
+/** Fetch blog suggestions list */
+add_action('wp_ajax_tp_fetch_blog_suggestions', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $search = isset($_POST['s']) ? sanitize_text_field($_POST['s']) : '';
+  $cat_id = isset($_POST['cat']) ? intval($_POST['cat']) : 0;
+
+  $args = [
+    'post_type'      => 'post',
+    'post_status'    => ['draft', 'publish'],
+    'posts_per_page' => 100,
+    'meta_key'       => '_tp_is_suggestion',
+    'meta_value'     => '1',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+  ];
+
+  if ($search) $args['s'] = $search;
+  if ($cat_id) $args['cat'] = $cat_id;
+
+  $query = new WP_Query($args);
+
+  $html = '';
+  if ($query->have_posts()) {
+    while ($query->have_posts()) {
+      $query->the_post();
+      $pid = get_the_ID();
+      $cats = get_the_category();
+      $cat_name = !empty($cats) ? esc_html($cats[0]->name) : 'N/A';
+      $author = get_the_author();
+      $date = get_the_date('Y-m-d');
+      $status = get_post_status() === 'publish' ? 'Published' : 'Draft';
+
+      $html .= '<tr class="tpbs-rowcard"><td>';
+      $html .= '<a href="'.get_edit_post_link($pid).'" target="_blank" class="tpbs-link">'.esc_html(get_the_title()).'</a>';
+      $html .= '</td><td><span class="tpbs-chip">'.$cat_name.'</span></td>';
+      $html .= '<td>'.esc_html($author).'</td>';
+      $html .= '<td>'.$status.'</td>';
+      $html .= '<td>'.$date.'</td>';
+      $html .= '<td class="tpbs-actions-col">';
+
+      if (get_post_status() === 'draft') {
+        $html .= '<button class="tpbs-btn" onclick="TPBS.publish('.$pid.')">Publish</button>';
+      }
+      $html .= '<button class="tpbs-btn sec" onclick="TPBS.edit('.$pid.')">Edit</button>';
+      $html .= '<button class="tpbs-btn sec" onclick="TPBS.remove('.$pid.')">Delete</button>';
+      $html .= '</td></tr>';
+    }
+  }
+  wp_reset_postdata();
+
+  wp_send_json_success(['html' => $html]);
+});
+
+/** Publish a blog suggestion */
+add_action('wp_ajax_tp_publish_blog_suggestion', function(){
+  if (!current_user_can('publish_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  wp_update_post(['ID' => $post_id, 'post_status' => 'publish']);
+  wp_send_json_success();
+});
+
+/** Delete a blog suggestion */
+add_action('wp_ajax_tp_delete_blog_suggestion', function(){
+  if (!current_user_can('delete_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  wp_delete_post($post_id, true);
+  wp_send_json_success();
+});
+
+
+
+
+/* =========================================================
+   GLOBAL RESET & THEME
+   ========================================================= */
+:root{
+  --font: 'League Spartan', sans-serif;
+  --green: #3dba9f;
+  --green-2: #5cd4b6;
+  --text: #333;
+  --muted: #666;
+  --bg-1: #e5f4ef;
+  --bg-2: #d8f0e8;
+  --bg-3: #cceee2;
+  --shadow-1: 0 8px 28px rgba(0,0,0,.08);
+  --shadow-2: 0 12px 35px rgba(0,0,0,.12);
+}
+
+/* Hide WordPress default header/footer */
+.site-header, .site-footer, #masthead, #colophon { display: none !important; }
+
+/* Basic reset */
+html, body { margin: 0; padding: 0; }
+body{ font-family: var(--font); }
+
+/* Optional per-page local reset */
+.front-page-wrapper *{ margin:0; padding:0; box-sizing:border-box; }
+
+/* =========================================================
+   WRAPPER BACKGROUNDS (ALL PAGES)
+   ========================================================= */
+.front-page-wrapper,
+.terms-page-wrapper,
+.privacy-page-wrapper,
+.tutors-page-wrapper{
+  font-family: var(--font);
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Decorative blurred blobs */
+.bg-blur{
+  position: fixed; border-radius: 50%; filter: blur(120px);
+  opacity: .4; pointer-events:none; z-index:0;
+}
+.blur-1{ width:450px; height:450px; background: var(--green); top:-200px; left:-200px; }
+.blur-2{ width:400px; height:400px; background: var(--green-2); bottom:-150px; right:-150px; }
+/* Some pages use a third blob */
+.blur-3{ width:350px; height:350px; background: var(--green); bottom:150px; right:-100px; }
+
+.content-wrapper{ position:relative; z-index:1; }
+
+/* =========================================================
+   HEADER (SHARED)
+   ========================================================= */
+.custom-header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 70px; background:rgba(255,255,255,.7); backdrop-filter: blur(10px);
+  box-shadow:0 2px 4px rgba(0,0,0,.05); border-radius:20px; margin:10px 20px; position:relative; z-index:10;
+}
+
+.logo{ display:flex; align-items:center; gap:10px; }
+.logo svg{ height:30px; width:auto; }
+.logo-icon{ width:38px; height:38px; border-radius:50%; background: linear-gradient(135deg, var(--green), var(--green-2)); }
+.logo-text{ font-size:14px; font-weight:700; letter-spacing:.5px; color:#000; text-decoration:none; }
+
+.custom-header nav{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+}
+.custom-header nav ul{ display:flex; gap:38px; list-style:none; margin:0; padding:0; justify-content:center; align-items:center; }
+.custom-header nav a{
+  text-decoration:none; color:#000; font-size:13px; font-weight:500; transition: color .3s ease;
+}
+.custom-header nav a:hover{ color: var(--green); }
+
+.user-icon{
+  width:33px; height:33px; border:2px solid var(--green); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition: all .3s ease; text-decoration:none;
+}
+.user-icon:hover{ background: var(--green); transform: scale(1.1); }
+
+/* Hamburger Menu */
+.hamburger{
+  display:none; flex-direction:column; gap:5px; cursor:pointer; padding:5px;
+  background:none; border:none; z-index:1000;
+}
+.hamburger span{
+  display:block; width:25px; height:3px; background: var(--green); border-radius:3px;
+  transition: all .3s ease;
+}
+.hamburger.active span:nth-child(1){ transform: rotate(45deg) translate(8px, 8px); }
+.hamburger.active span:nth-child(2){ opacity:0; }
+.hamburger.active span:nth-child(3){ transform: rotate(-45deg) translate(7px, -7px); }
+
+.nav-wrapper{ display:flex; align-items:center; gap:20px; }
+
+/* User Dropdown */
+.user-dropdown-wrapper{ position:relative; }
+
+.user-header-btn{
+  display:flex; align-items:center; gap:8px; padding:5px 12px 5px 5px;
+  background:rgba(255,255,255,0.9); backdrop-filter:blur(10px);
+  border:2px solid var(--green); border-radius:50px; cursor:pointer;
+  transition:all 0.3s ease;
+}
+.user-header-btn:hover{ background:var(--green); border-color:var(--green); }
+.user-header-btn:hover .user-name{ color:#fff; }
+
+.user-avatar-circle{
+  width:33px; height:33px; border-radius:50%; overflow:hidden;
+  background:var(--green); border:2px solid var(--green);
+}
+.user-avatar-circle img{ width:100%; height:100%; object-fit:cover; }
+
+.user-name{
+  color:#000; font-weight:500; font-size:13px;
+  font-family: var(--font); transition:color 0.3s ease;
+}
+
+.user-dropdown-panel{
+  position:absolute; top:calc(100% + 10px); right:0; width:260px;
+  background:rgba(255,255,255,0.95); backdrop-filter:blur(10px);
+  border-radius:20px; box-shadow:0 4px 20px rgba(0,0,0,0.1);
+  opacity:0; visibility:hidden; transform:translateY(-10px);
+  transition:all 0.3s ease; z-index:1000; overflow:hidden;
+  border:1px solid rgba(61,186,159,0.2);
+}
+.user-dropdown-panel.show{
+  opacity:1; visibility:visible; transform:translateY(0);
+}
+
+.dropdown-header{
+  background:linear-gradient(135deg, var(--green), var(--green-2));
+  padding:20px; text-align:center; color:#fff;
+}
+.dropdown-avatar{
+  width:60px; height:60px; border-radius:50%; margin:0 auto 10px;
+  overflow:hidden; background:#fff; border:3px solid #fff;
+}
+.dropdown-avatar img{ width:100%; height:100%; object-fit:cover; }
+.dropdown-name{ font-size:16px; font-weight:600; font-family: var(--font); }
+
+.dropdown-item{
+  display:flex; align-items:center; gap:10px; padding:12px 16px;
+  color:#000; text-decoration:none; font-size:13px; font-weight:500;
+  font-family: var(--font); transition:all 0.3s ease;
+}
+.dropdown-item:hover{ background:rgba(61,186,159,0.1); color:var(--green); }
+.dropdown-item svg{ color:var(--green); }
+
+/* =========================================================
+   HERO (FRONT PAGE)
+   ========================================================= */
+.hero{ text-align:center; padding:70px 30px 50px; }
+.hero-subtitle{ font-size:13px; color:var(--text); font-weight:500; margin-bottom:15px; }
+.hero h1{ font-size:62px; font-weight:700; line-height:1; margin-bottom:18px; }
+.hero h1 .affordable{ font-weight:300; font-style:italic; color: var(--green-2); }
+.hero-ksl{ font-size:30px; font-weight:700; color: var(--green-2); margin:22px 0 32px; }
+
+.btn-book-free{
+  background: var(--green); color:#fff; border:none; padding:14px 42px; font-size:14px; font-weight:700;
+  border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-book-free:hover{ background:#2da889; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(61,186,159,.3); }
+
+/* =========================================================
+   GET STARTED / PRICING (FRONT PAGE)
+   ========================================================= */
+.get-started{ padding:70px 30px; }
+.section-title{ text-align:center; font-size:40px; font-weight:700; margin-bottom:55px; }
+
+.pricing-cards{
+  display:flex; justify-content:center; gap:25px; flex-wrap:wrap; max-width:1150px; margin:0 auto;
+}
+.pricing-card{
+  background:#fff; border-radius:22px; padding:38px 28px; width:250px; text-align:center;
+  box-shadow: var(--shadow-1); transition: transform .3s ease, box-shadow .3s ease;
+}
+.pricing-card:hover{ transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,.12); }
+.pricing-card h3{ font-size:17px; font-weight:600; margin-bottom:20px; }
+.pricing-card .price-wrap{ margin:22px 0; }
+.pricing-card .price{ font-size:54px; font-weight:700; color: var(--green); line-height:.9; }
+.pricing-card .currency{ font-size:32px; }
+.pricing-card .period{ font-size:12px; color:#999; margin-top:8px; font-weight:500; }
+.pricing-card .divider{ width:45px; height:2px; background:#e5e5e5; margin:22px auto; }
+.pricing-card ul{ list-style:none; text-align:left; margin:0 0 28px 0; font-size:13px; color:#555; }
+.pricing-card ul li{ margin:9px 0; font-weight:500; }
+.pricing-card ul li:first-child{ font-weight:600; color:#333; }
+.pricing-card .subjects-label{ font-size:11px; color:#888; margin-bottom:8px; font-weight:500; }
+
+.btn-book-now{
+  background: var(--green); color:#fff; border:none; padding:11px 0; width:100%;
+  font-size:13px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-book-now:hover{ background:#2da889; }
+
+/* =========================================================
+   SEARCH (FRONT PAGE)
+   ========================================================= */
+.search-section{ padding:70px 30px; }
+.search-container{
+  max-width:780px; margin:0 auto; background: rgba(255,255,255,.65); backdrop-filter: blur(30px);
+  border-radius:18px; padding:42px 48px; box-shadow: 0 8px 32px rgba(0,0,0,.06);
+}
+.search-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:18px; margin-bottom:22px; }
+.search-field label{ display:block; font-size:12px; font-weight:600; margin-bottom:8px; color:var(--text); }
+.search-field select{
+  width:100%; padding:11px 13px; border:1px solid #d0d0d0; border-radius:6px; font-size:12px; background:#fff; font-weight:500;
+}
+.btn-search{
+  width:100%; background: var(--green); color:#fff; border:none; padding:13px; font-size:14px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-search:hover{ background:#2da889; }
+
+/* =========================================================
+   FEATURES (FRONT PAGE)
+   ========================================================= */
+.features{ padding:70px 30px; max-width:1250px; margin:0 auto; }
+.features-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:32px; }
+.feature-card{
+  background:#fff; border-radius:22px; overflow:hidden; box-shadow: var(--shadow-1); transition: transform .3s ease;
+}
+.feature-card:hover{ transform: translateY(-10px); }
+.feature-img{
+  height:215px; background: linear-gradient(135deg, #54c7e8, var(--green));
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.feature-img .circle{ width:115px; height:115px; background: rgba(255,255,255,.25); border-radius:50%; }
+.feature-content{ padding:32px 28px; text-align:center; }
+.feature-content h3{ font-size:19px; font-weight:700; margin-bottom:14px; line-height:1.3; }
+.feature-content p{ font-size:13px; color:#666; line-height:1.7; font-weight:500; margin-bottom:24px; }
+.btn-learn{
+  background: var(--green); color:#fff; border:none; padding:11px 32px; font-size:13px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-learn:hover{ background:#2da889; }
+
+/* =========================================================
+   TUTORS GRID (FRONT PAGE & TUTORS PAGE)
+   ========================================================= */
+.tutors-section{ padding:70px 30px; max-width:1250px; margin:0 auto; }
+.tutors-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:28px; }
+.tutor-card{
+  background:#fff; border-radius:18px; overflow:hidden; box-shadow: var(--shadow-1); transition: transform .3s ease, box-shadow .3s ease;
+}
+.tutor-card:hover{ transform: translateY(-8px); box-shadow: var(--shadow-2); }
+.tutor-image{ height:280px; background-size:cover; background-position:center; position:relative; background-color: var(--bg-1); }
+.play-button{
+  position:absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+  width:60px; height:60px; background: rgba(61,186,159,.9); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; color:#fff; font-size:24px; cursor:pointer; transition: all .3s ease; padding-left:4px;
+}
+.play-button:hover{ background: rgba(61,186,159,1); transform: translate(-50%,-50%) scale(1.1); }
+.tutor-info{ padding:24px 20px; text-align:center; }
+.tutor-info h3{ font-size:18px; font-weight:700; margin-bottom:8px; color:#333; }
+.tutor-subjects, .tutor-meta{ font-size:13px; color:#666; margin-bottom:18px; font-weight:500; }
+.tutor-subjects{ min-height:36px; }
+.tutor-stats{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; justify-content:center; }
+.stat-badge{ font-size:11px; background:#f1f5f9; color:#333; padding:6px 12px; border-radius:999px; font-weight:600; }
+.tutor-actions{ display:flex; gap:10px; justify-content:center; }
+.btn-view-profile, .btn-book, .btn-view-all{
+  display:inline-block; text-align:center; text-decoration:none; color:#fff; border:none; padding:10px 20px;
+  font-size:13px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease; font-family: var(--font);
+  flex:1;
+}
+.btn-view-profile{ background: var(--green); }
+.btn-view-profile:hover{ background:#2da889; }
+.btn-book{ background: var(--green-2); }
+.btn-book:hover{ background:#4bc4a6; }
+.btn-view-all{
+  background:#fff; color: var(--green); border:2px solid var(--green); padding:14px 38px; font-size:14px;
+}
+.btn-view-all:hover{ background: var(--green); color:#fff; }
+
+/* =========================================================
+   VIDEO MODAL (SHARED)
+   ========================================================= */
+.video-modal{
+  display:none; position:fixed; z-index:9999; inset:0; width:100%; height:100%;
+  background-color: rgba(0,0,0,.85); backdrop-filter: blur(5px);
+}
+.video-modal.open{ display:flex; align-items:center; justify-content:center; }
+.video-modal-content{
+  background:#fff; padding:30px; border-radius:18px; max-width:800px; width:90%; position:relative;
+}
+.video-modal-content h3{ margin-bottom:20px; font-size:22px; color:#333; font-weight:700; }
+.video-close{ position:absolute; top:15px; right:20px; font-size:32px; font-weight:700; color:#999; cursor:pointer; transition: color .3s ease; }
+.video-close:hover{ color:#333; }
+
+/* =========================================================
+   CTA BANNER (SHARED)
+   ========================================================= */
+.cta-banner{
+  background: linear-gradient(135deg, var(--green), var(--green-2));
+  margin:70px 70px; padding:38px 55px; border-radius:18px;
+  display:flex; justify-content:space-between; align-items:center; color:#fff;
+  box-shadow: 0 10px 35px rgba(61,186,159,.3);
+}
+.cta-left{ display:flex; align-items:center; gap:22px; }
+.cta-icon-circle{ width:58px; height:58px; background:#fff; border-radius:50%; flex-shrink:0; }
+.cta-text h3{ font-size:19px; font-weight:700; margin-bottom:2px; }
+.cta-text p{ font-size:15px; font-weight:500; }
+.cta-right{ display:flex; align-items:center; gap:28px; }
+.cta-phone{ font-size:17px; font-weight:700; }
+.btn-contact{
+  background:#fff; color: var(--green); border:none; padding:13px 32px; font-size:14px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-contact:hover{ background:#f5f5f5; }
+
+/* =========================================================
+   FOOTER (SHARED)
+   ========================================================= */
+.custom-footer{ background: var(--bg-2); padding:70px 70px 35px; position:relative; z-index:1; }
+.footer-grid{
+  display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr; gap:80px; max-width:1400px; margin:0 auto 50px;
+}
+.footer-col h4{ font-size:18px; font-weight:700; margin-bottom:18px; color:#000; }
+.footer-col p{ font-size:13px; color:#666; line-height:1.8; font-weight:500; margin-bottom:18px; }
+.footer-col ul{ list-style:none; padding:0; margin:0; }
+.footer-col ul li{ margin:11px 0; }
+.footer-col a{ color:#666; text-decoration:none; font-size:13px; font-weight:500; transition: color .3s ease; }
+.footer-col a:hover{ color: var(--green); }
+.social-icons{ display:flex; gap:18px; margin-top:22px; }
+.social-icon{
+  width:48px; height:48px; background:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff;
+  font-size:18px; cursor:pointer; transition: all .3s ease;
+}
+.social-icon:hover{ background: var(--green); transform: translateY(-3px); }
+.footer-bottom{
+  text-align:center; padding-top:28px; border-top:1px solid rgba(0,0,0,.1); font-size:13px; color:#888; font-weight:500;
+}
+.about-section{ margin-top:32px; }
+
+/* =========================================================
+   TERMS & PRIVACY CONTENT (GROUPED)
+   ========================================================= */
+.terms-content,
+.privacy-content{
+  max-width:1000px; margin:40px auto; padding:50px 70px;
+  background: rgba(255,255,255,.85); backdrop-filter: blur(20px);
+  border-radius:22px; box-shadow: 0 10px 40px rgba(0,0,0,.1); position:relative; z-index:1;
+}
+.terms-content h1, .privacy-content h1{
+  font-size:42px; font-weight:700; color:#333; margin-bottom:10px; text-align:center;
+}
+.terms-content .effective-date, .privacy-content .effective-date{
+  text-align:center; font-size:14px; color:#666; margin-bottom:15px; font-weight:500;
+}
+.terms-content .company-name, .privacy-content .company-name{
+  text-align:center; font-size:16px; color: var(--green); font-weight:600; margin-bottom:40px;
+}
+.terms-content h2, .privacy-content h2{ font-size:26px; font-weight:700; color: var(--green); margin:40px 0 18px; }
+.terms-content h3, .privacy-content h3{ font-size:20px; font-weight:600; color:#333; margin:28px 0 14px; }
+.terms-content h4, .privacy-content h4{ font-size:17px; font-weight:600; color:#555; margin:22px 0 12px; }
+.terms-content p,  .privacy-content p{ font-size:15px; line-height:1.8; color:#555; margin-bottom:18px; font-weight:500; }
+.terms-content ul, .privacy-content ul{ margin:18px 0; padding-left:28px; }
+.terms-content ul li, .privacy-content ul li{ font-size:15px; line-height:1.8; color:#555; margin-bottom:12px; font-weight:500; }
+.terms-content ul ul, .privacy-content ul ul{ margin:10px 0; }
+.terms-content a,  .privacy-content a{ color: var(--green); text-decoration:none; font-weight:600; transition: color .3s ease; }
+.terms-content a:hover, .privacy-content a:hover{ color:#2da889; text-decoration:underline; }
+.terms-content strong, .privacy-content strong{ color:#333; font-weight:700; }
+.section-divider{ border-top:2px solid #e0e0e0; margin:50px 0; }
+
+/* =========================================================
+   TUTORS PAGE-SPECIFIC
+   ========================================================= */
+.tutors-main{ max-width:1280px; margin:40px auto; padding:20px 30px; position:relative; z-index:1; }
+.page-title{ text-align:center; font-size:42px; font-weight:700; color:#333; margin-bottom:15px; }
+.page-subtitle{ text-align:center; font-size:16px; color:#666; margin-bottom:40px; font-weight:500; }
+
+.filter-section{
+  background: rgba(255,255,255,.85); backdrop-filter: blur(20px);
+  border-radius:18px; padding:32px 40px; margin-bottom:40px; box-shadow: var(--shadow-1);
+}
+.filter-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:18px; margin-bottom:22px; }
+.filter-field label{ display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--text); }
+.filter-field select{
+  width:100%; padding:11px 13px; border:1px solid #d0d0d0; border-radius:6px; font-size:13px; background:#fff; font-weight:500;
+}
+.btn-filter{
+  width:100%; background: var(--green); color:#fff; border:none; padding:13px; font-size:14px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+}
+.btn-filter:hover{ background:#2da889; }
+
+.results-info{ text-align:center; font-size:15px; color:#666; margin-bottom:30px; font-weight:500; }
+.results-info strong{ color: var(--green); font-weight:700; }
+
+.no-results{
+  text-align:center; padding:60px 20px; background: rgba(255,255,255,.85); backdrop-filter: blur(20px);
+  border-radius:18px; margin-bottom:40px;
+}
+.no-results h3{ font-size:24px; color:#333; margin-bottom:12px; }
+.no-results p{ font-size:15px; color:#666; }
+
+/* =========================================================
+   BLOG PAGE
+   ========================================================= */
+/* Blog page wrapper - ensure proper styling */
+.blog-page .front-page-wrapper,
+.front-page-wrapper{
+  font-family: var(--font) !important;
+}
+
+.blog-page .front-page-wrapper *,
+.front-page-wrapper *{
+  box-sizing: border-box;
+}
+
+.blog-header{
+  text-align:center; padding:60px 30px 30px;
+}
+.blog-header .page-title{
+  font-size:42px; font-weight:700; color:#333; margin-bottom:10px;
+}
+.blog-header .page-subtitle{
+  font-size:16px; color:#666; font-weight:500;
+}
+
+.blog-filters{
+  padding:0 30px 40px;
+}
+
+.blog-section{
+  padding: 0 30px 70px !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.blog-section .blog-grid,
+.blog-grid{
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 32px !important;
+  margin-bottom: 40px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.blog-section .blog-card,
+.blog-card{
+  background: #fff !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,.08) !important;
+  transition: transform .3s ease, box-shadow .3s ease;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.blog-card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 12px 35px rgba(0,0,0,.12) !important;
+}
+
+.blog-card-link{
+  text-decoration:none !important;
+  color:inherit;
+  display:block;
+  height:100%;
+}
+
+.blog-image{
+  height:240px; background-size:cover; background-position:center; position:relative;
+  background-color: #e5f4ef;
+  width:100%;
+}
+
+.blog-category-badge{
+  position:absolute; top:16px; left:16px; background: rgba(61,186,159,.95); color:#fff;
+  padding:6px 14px; border-radius:999px; font-size:12px; font-weight:600;
+  backdrop-filter: blur(10px);
+}
+
+.blog-content{
+  padding:28px 24px !important;
+  background: #fff;
+}
+
+.blog-meta{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  font-size:12px;
+  color:#999;
+  font-weight:500;
+}
+.blog-author{ color:#666 !important; font-weight:600; }
+.blog-separator{ color:#ddd !important; }
+.blog-date{ color:#999 !important; }
+
+.blog-title{
+  font-size:20px !important;
+  font-weight:700 !important;
+  color:#333 !important;
+  margin-bottom:12px;
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.blog-excerpt{
+  font-size:14px; color:#666; line-height:1.7; margin-bottom:18px; font-weight:500;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.blog-read-more{
+  color: var(--green); font-size:13px; font-weight:700;
+  transition: color .3s ease;
+}
+.blog-card:hover .blog-read-more{ color:#2da889; }
+
+/* Blog Pagination */
+.blog-pagination{
+  margin-top:60px; display:flex; justify-content:center;
+}
+.blog-pagination ul{
+  display:flex; gap:10px; list-style:none; padding:0; margin:0;
+}
+.blog-pagination li{
+  margin:0;
+}
+.blog-pagination a,
+.blog-pagination span{
+  display:block; padding:10px 16px; background:#fff; border-radius:8px;
+  color:#333; text-decoration:none; font-size:14px; font-weight:600;
+  border:1px solid #e0e0e0; transition: all .3s ease;
+}
+.blog-pagination a:hover{
+  background: var(--green); color:#fff; border-color: var(--green);
+}
+.blog-pagination .current{
+  background: var(--green); color:#fff; border-color: var(--green);
+}
+
+/* Filter field input */
+.filter-field input{
+  width:100%; padding:11px 13px; border:1px solid #d0d0d0; border-radius:6px;
+  font-size:13px; background:#fff; font-weight:500; font-family: var(--font);
+}
+
+/* =========================================================
+   SINGLE POST PAGE
+   ========================================================= */
+.single-post-content{
+  max-width: 900px;
+  margin: 40px auto;
+  background: rgba(255,255,255,.9);
+  backdrop-filter: blur(20px);
+  border-radius: 22px;
+  padding: 60px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.1);
+}
+
+.post-header{
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.post-category{
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.post-title{
+  font-size: 42px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.post-meta{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.post-author{
+  color: #333;
+  font-weight: 600;
+}
+
+.post-separator{
+  color: #ddd;
+}
+
+.post-featured-image{
+  margin-bottom: 40px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.post-featured-image img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.post-content{
+  font-size: 17px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.post-content p{
+  margin-bottom: 20px;
+}
+
+.post-content h2{
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green);
+  margin: 40px 0 20px;
+}
+
+.post-content h3{
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 30px 0 15px;
+}
+
+.post-content ul,
+.post-content ol{
+  margin: 20px 0;
+  padding-left: 30px;
+}
+
+.post-content li{
+  margin-bottom: 10px;
+}
+
+.post-content img{
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 30px 0;
+}
+
+.post-navigation{
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 2px solid #e5e5e5;
+  text-align: left;
+}
+
+.btn-back-to-blog{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--green);
+  color: #fff !important;
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none !important;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all .3s ease;
+  font-family: var(--font);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-back-to-blog:hover{
+  background: #2da889;
+  transform: translateX(-5px);
+  box-shadow: 0 5px 15px rgba(61,186,159,.3);
+  color: #fff !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px){
+  .features-grid{ grid-template-columns: repeat(2,1fr); }
+  .tutors-grid{ grid-template-columns: repeat(3,1fr); }
+  .pricing-cards{ grid-template-columns: repeat(2,1fr); }
+  .blog-grid{ grid-template-columns: repeat(2,1fr); }
+
+  .footer-grid{ grid-template-columns: repeat(2,1fr); gap:40px; }
+  .search-grid, .filter-grid{ grid-template-columns: 1fr; }
+
+  .cta-banner{
+    flex-direction:column; gap:22px; text-align:center; margin:50px 20px;
+  }
+  .cta-left{ flex-direction:column; }
+  .cta-right{ flex-direction:column; gap:15px; }
+
+  .hero h1{ font-size:42px; }
+  .hero{ padding:50px 20px 40px; }
+  .section-title{ font-size:32px; margin-bottom:40px; }
+
+  .custom-header{ padding:15px 30px; margin:10px; }
+}
+
+@media (max-width: 768px){
+  /* Hamburger Menu Mobile */
+  .hamburger{ display:flex; }
+
+  .custom-header{
+    flex-wrap:wrap; padding:15px 20px;
+  }
+
+  /* Ensure user dropdown shows on mobile with proper z-index */
+  .user-dropdown-wrapper{
+    display:flex;
+    z-index:2000;
+    position:relative;
+  }
+
+  .user-header-btn{
+    z-index:2000;
+    position:relative;
+  }
+
+  .custom-header .nav-wrapper .user-dropdown-panel{
+    z-index:9999 !important;
+    position:fixed !important;
+    top:auto !important;
+    bottom:80px !important;
+    right:20px !important;
+    left:auto !important;
+    max-height:none !important;
+  }
+
+  .custom-header .nav-wrapper .user-dropdown-panel.show{
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:translateY(0) !important;
+    display:block !important;
+    max-height:500px !important;
+  }
+
+  .custom-header .nav-wrapper.active .user-dropdown-wrapper{
+    display:flex !important;
+  }
+
+  .custom-header .nav-wrapper{
+    position:absolute; top:100%; left:0; right:0;
+    background:rgba(255,255,255,.95); backdrop-filter: blur(20px);
+    flex-direction:column; width:100%; padding:20px;
+    border-radius:0 0 20px 20px; box-shadow: 0 10px 25px rgba(0,0,0,.1);
+    max-height:0; overflow:hidden; opacity:0;
+    transition: all .3s ease;
+  }
+
+  .custom-header .nav-wrapper.active{
+    max-height:500px; opacity:1; margin-top:10px;
+  }
+
+  .custom-header nav{
+    width:100%;
+    position:relative;
+    left:auto;
+    transform:none;
+  }
+  .custom-header nav ul{
+    flex-direction:column; gap:15px; text-align:center; width:100%;
+    align-items:center;
+    justify-content:center;
+  }
+  .custom-header nav li{
+    width:100%;
+    text-align:center;
+  }
+  .custom-header nav a{ font-size:15px; padding:10px; display:block; text-align:center; }
+
+  .user-icon{ margin-top:10px; }
+
+  /* Content adjustments */
+  .features-grid,
+  .tutors-grid,
+  .pricing-cards,
+  .blog-grid{ grid-template-columns: 1fr; }
+
+  .hero h1{ font-size:36px; }
+  .hero-ksl{ font-size:24px; }
+
+  .get-started,
+  .search-section,
+  .features,
+  .tutors-section{ padding:40px 20px; }
+
+  .search-container,
+  .filter-section{ padding:25px 20px; }
+
+  .terms-content,
+  .privacy-content{ margin:20px 10px; padding:30px 20px; }
+  .terms-content h1,
+  .privacy-content h1{ font-size:28px; }
+  .terms-content h2,
+  .privacy-content h2{ font-size:22px; }
+
+  .custom-footer{ padding:40px 20px 25px; }
+  .footer-grid{ grid-template-columns:1fr; gap:30px; }
+
+  .page-title{ font-size:32px; }
+  .page-subtitle{ font-size:14px; }
+}
+
+@media (max-width: 600px){
+  .hero h1{ font-size:28px; }
+  .hero-ksl{ font-size:20px; }
+  .section-title{ font-size:26px; }
+
+  .pricing-card{ width:100%; max-width:280px; }
+
+  .cta-banner{ margin:40px 15px; padding:25px 20px; }
+  .cta-text h3{ font-size:16px; }
+  .cta-phone{ font-size:15px; }
+
+  .page-title{ font-size:26px; }
+  .tutors-main{ padding:15px; margin:20px auto; }
+
+  .custom-header{ margin:5px; border-radius:15px; }
+}

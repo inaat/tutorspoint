@@ -68,6 +68,7 @@ $tpbs_cats = get_categories(['hide_empty' => false]);
     <form id="tpbs_form" onsubmit="return TPBS.submit(this)">
       <input type="hidden" name="action" value="tp_submit_blog_suggestion">
       <input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>">
+      <input type="hidden" id="tpbs_edit_id" name="edit_id" value="">
 
       <div class="tpbs-row">
         <div class="f">
@@ -126,6 +127,7 @@ $tpbs_cats = get_categories(['hide_empty' => false]);
       <div class="tpbs-actions">
         <button class="tpbs-btn" type="submit" id="tpbs_submit">Save Suggestion</button>
         <button class="tpbs-btn sec" type="button" onclick="TPBS.clearForm()">Clear</button>
+        <button class="tpbs-btn sec" type="button" id="tpbs_cancel_edit" onclick="TPBS.cancelEdit()" style="display:none">Cancel Edit</button>
         <span class="tpbs-note" id="tpbs_status"></span>
       </div>
     </form>
@@ -178,8 +180,15 @@ $tpbs_cats = get_categories(['hide_empty' => false]);
     },
     clearForm(){
       $('#tpbs_form').reset();
+      $('#tpbs_edit_id').value = '';
+      $('#tpbs_submit').textContent = 'Save Suggestion';
+      $('#tpbs_cancel_edit').style.display = 'none';
       const img = $('#tpbs_preview'); if(img){img.style.display='none'; img.src='';}
       if (window.tinymce && tinymce.get('tpbs_content')) tinymce.get('tpbs_content').setContent('');
+    },
+    cancelEdit(){
+      TPBS.clearForm();
+      TPBS.alert('success', 'Edit cancelled.');
     },
     alert(kind,html){
       const el = $('#tpbs_alert');
@@ -204,7 +213,8 @@ $tpbs_cats = get_categories(['hide_empty' => false]);
         .then(r=>r.json())
         .then(res=>{
           if(!res || !res.success){ throw new Error(res && res.data ? res.data : 'Failed'); }
-          TPBS.alert('success', 'Suggestion saved.');
+          const isEdit = fd.get('edit_id');
+          TPBS.alert('success', isEdit ? 'Suggestion updated.' : 'Suggestion saved.');
           TPBS.clearForm();
           TPBS.fetchList();
         })
@@ -212,6 +222,37 @@ $tpbs_cats = get_categories(['hide_empty' => false]);
         .finally(()=>{ if(btn) btn.disabled=false; if(stat) stat.textContent=''; });
 
       return false;
+    },
+    edit(id){
+      TPBS._post('tp_get_blog_suggestion', {id})
+        .then(data=>{
+          $('#tpbs_edit_id').value = id;
+          $('#tpbs_title').value = data.title || '';
+          $('#tpbs_category').value = data.category || '';
+          $('#tpbs_tags').value = data.tags || '';
+          $('#tpbs_excerpt').value = data.excerpt || '';
+
+          if (window.tinymce && tinymce.get('tpbs_content')) {
+            tinymce.get('tpbs_content').setContent(data.content || '');
+          } else {
+            const ta = $('#tpbs_content');
+            if (ta) ta.value = data.content || '';
+          }
+
+          if (data.featured_image) {
+            const img = $('#tpbs_preview');
+            if (img) {
+              img.src = data.featured_image;
+              img.style.display = 'block';
+            }
+          }
+
+          $('#tpbs_submit').textContent = 'Update Suggestion';
+          $('#tpbs_cancel_edit').style.display = 'inline-block';
+          TPBS.alert('success', 'Editing suggestion. Update the form and click "Update Suggestion".');
+          window.scrollTo({top: 0, behavior: 'smooth'});
+        })
+        .catch(e=> TPBS.alert('error', e));
     },
     publish(id){
       if(!confirm('Publish this suggestion?')) return;

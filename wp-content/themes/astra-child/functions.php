@@ -1,5 +1,6 @@
 <?php
 
+
 // Load the Teachers shortcode (once)
 add_action('init', function () {
     $file = trailingslashit( get_stylesheet_directory() ) . 'General/tp_teachers_home.php';
@@ -1124,6 +1125,9 @@ define( 'CHILD_THEME_ASTRA_CHILD_VERSION', '1.0.0' );
 function child_enqueue_styles() {
 
 	wp_enqueue_style( 'astra-child-theme-css', get_stylesheet_directory_uri() . '/style.css', array('astra-theme-css'), CHILD_THEME_ASTRA_CHILD_VERSION, 'all' );
+
+	// Enqueue main.css with cache busting
+	wp_enqueue_style( 'main-css', get_stylesheet_directory_uri() . '/main.css', array('astra-child-theme-css'), filemtime( get_stylesheet_directory() . '/main.css' ), 'all' );
 
 }
 

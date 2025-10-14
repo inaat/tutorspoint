@@ -578,7 +578,7 @@ add_action('wp_ajax_tp_adm_t_rate_set', function(){
     'teacher_id'      => $teacher_id,
     'subject_level_id'=> $sl_id,
     'hourly_rate'     => $amount,
-    '_date'           => $today,
+    'from_date'           => $today,
     'to_date'         => null,
   ], ['%d','%d','%f','%s','%s']);
   if (!$ok) wp_send_json_error('Save failed');
