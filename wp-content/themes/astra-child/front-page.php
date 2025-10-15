@@ -83,42 +83,97 @@ A flat rate for each Level of Study
                 <?php
                 global $wpdb;
 
-                // Get pricing data from database - fetch all active rates with level details
-                $pricing_data = $wpdb->get_results("
+                // ---- core query: one card per level (not grouped by price) ----
+                $sqlCore = "
                     SELECT
-                        l.id as level_id,
-                        l.level_name,
-                        r.currency,
+                        cl.id as level_id,
+                        cl.level_name,
                         r.hourly_rate,
-                        r.effective_from
+                        COALESCE(r.currency,'GBP') AS currency
                     FROM wpC_level_hourly_rates r
-                    INNER JOIN wpC_class_levels l ON r.level_id = l.id
+                    JOIN wpC_class_levels cl ON cl.id = r.level_id
                     WHERE r.status = 1
-                    AND (r.effective_to IS NULL OR r.effective_to >= CURDATE())
-                    AND r.effective_from <= CURDATE()
-                    ORDER BY r.hourly_rate ASC
-                ", ARRAY_A);
+                        AND (r.effective_from IS NULL OR r.effective_from <= CURDATE())
+                        AND (r.effective_to   IS NULL OR r.effective_to   >= CURDATE())
+                    ORDER BY r.hourly_rate ASC, cl.level_name ASC
+                ";
+                $groups = $wpdb->get_results($sqlCore);
 
-                // Remove duplicate levels (keep the lowest rate for each level)
-                $unique_pricing = [];
-                foreach ($pricing_data as $price) {
-                    if (!isset($unique_pricing[$price['level_id']])) {
-                        $unique_pricing[$price['level_id']] = $price;
-                    }
+                // if nothing (e.g., dates not set yet), retry without date filters
+                if (!$groups || $wpdb->last_error) {
+                    $sqlCore = "
+                        SELECT
+                            cl.id as level_id,
+                            cl.level_name,
+                            r.hourly_rate,
+                            COALESCE(r.currency,'GBP') AS currency
+                        FROM wpC_level_hourly_rates r
+                        JOIN wpC_class_levels cl ON cl.id = r.level_id
+                        WHERE r.status = 1
+                        ORDER BY r.hourly_rate ASC, cl.level_name ASC
+                    ";
+                    $groups = $wpdb->get_results($sqlCore);
                 }
-                $pricing_data = array_values($unique_pricing);
+
+                // ---- optional: subjects for each group (best-effort; skip on mismatch) ----
+                $subjects_url = home_url('/subjects/');
+
+                // Detect subjects table columns (label + id)
+                $T_SUBJECT = 'wpC_subjects';
+                $T_MAP     = 'wpC_subjects_level';
+
+                $subCols = $wpdb->get_col("SHOW COLUMNS FROM {$T_SUBJECT}");
+                $mapCols = $wpdb->get_col("SHOW COLUMNS FROM {$T_MAP}");
+
+                $subject_label = 'SubjectName';
+                if ($subCols && !in_array($subject_label, $subCols, true)) {
+                    foreach (['subject_name','name','subject','title','label'] as $c) {
+                        if (in_array($c, $subCols, true)) { $subject_label = $c; break; }
+                    }
+                    if (!in_array($subject_label, (array)$subCols, true)) { $subject_label = null; }
+                }
+                $subject_id = ($subCols && in_array('subject_id', $subCols, true)) ? 'subject_id' : (($subCols && in_array('id',$subCols,true)) ? 'id' : null);
+                $map_level_fk   = ($mapCols && in_array('level_id',   $mapCols, true)) ? 'level_id'   : (($mapCols && in_array('class_level_id',$mapCols,true)) ? 'class_level_id' : null);
+                $map_subject_fk = ($mapCols && in_array('subject_id', $mapCols, true)) ? 'subject_id' : (($mapCols && in_array('sid',$mapCols,true))            ? 'sid'          : null);
+
+                $canFetchSubjects = ($subject_label && $subject_id && $map_level_fk && $map_subject_fk);
 
                 // Check if we have pricing data, otherwise show a message
-                if (!empty($pricing_data)):
-                    foreach ($pricing_data as $price):
-                    $level_name = $price['level_name'];
-                    $rate = number_format((float)$price['hourly_rate'], 0);
-                    $currency_symbol = $price['currency'] === 'GBP' ? '£' : '$';
+                if (!empty($groups)):
+                    foreach ($groups as $g):
+                        $rate = (float)$g->hourly_rate;
+                        $currency = $g->currency;
+                        $currency_symbol = $currency === 'GBP' ? '£' : '$';
+                        $level_id = (int)$g->level_id;
+                        $level_name = $g->level_name;
+
+                        // Fetch subjects for this level (ALL subjects)
+                        $all_subjects = [];
+                        if ($canFetchSubjects && $level_id) {
+                            $sqlSub = "
+                                SELECT DISTINCT s.`{$subject_label}` AS label
+                                FROM {$T_SUBJECT} s
+                                JOIN {$T_MAP} sl ON sl.`{$map_subject_fk}` = s.`{$subject_id}`
+                                WHERE sl.`{$map_level_fk}` = {$level_id}
+                                ORDER BY s.`{$subject_label}`
+                            ";
+                            $subRows = $wpdb->get_col($sqlSub);
+                            if ($subRows && !$wpdb->last_error) {
+                                $all_subjects = $subRows;
+                            }
+                        }
                 ?>
                     <div class="pricing-card">
                         <h3><?php echo esc_html($level_name); ?></h3>
+                        <?php if (!empty($all_subjects)): ?>
+                            <div class="subjects-list">
+                                <?php foreach ($all_subjects as $subject): ?>
+                                    <div class="subject-item">• <?php echo esc_html($subject); ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                         <div class="price-wrap">
-                            <div class="price"><span class="currency"><?php echo $currency_symbol; ?></span><?php echo $rate; ?></div>
+                            <div class="price"><span class="currency"><?php echo $currency_symbol; ?></span><?php echo number_format($rate, 0); ?></div>
                             <p class="period">/ Per session</p>
                         </div>
                         <button class="btn-book-now" onclick="document.getElementById('tp-open-auth')?.click()">Book Now</button>
@@ -138,13 +193,12 @@ A flat rate for each Level of Study
 
         <!-- Search Section -->
         <section class="search-section">
-            <h2 class="section-title">Search</h2>
+            <h2 class="section-title">Find Your Perfect Tutor</h2>
             <div class="search-container">
                 <div class="search-grid">
-                    
                     <div class="search-field">
                         <label>Select Grade</label>
-                        <select id="search-grade">
+                        <select id="ls-level">
                             <option value="">Select Grade</option>
                             <?php
                             $levels = $wpdb->get_results("SELECT id, level_name FROM wpC_class_levels ORDER BY level_name", ARRAY_A);
@@ -156,7 +210,7 @@ A flat rate for each Level of Study
                     </div>
                     <div class="search-field">
                         <label>Select Subject</label>
-                        <select id="search-subject">
+                        <select id="ls-subject">
                             <option value="">Select Subject</option>
                             <?php
                             $all_subjects = $wpdb->get_results("SELECT subject_id, SubjectName FROM wpC_subjects ORDER BY SubjectName", ARRAY_A);
@@ -167,50 +221,52 @@ A flat rate for each Level of Study
                         </select>
                     </div>
                 </div>
-                <button class="btn-search" onclick="performSearch()">Search</button>
+                <button class="btn-search" id="tp_searchTeachersBtn">Search Tutors</button>
             </div>
         </section>
 
         <script>
-        function performSearch() {
-            const curriculum = document.getElementById('search-curriculum').value;
-            const gradeId = document.getElementById('search-grade').value;
-            const subjectId = document.getElementById('search-subject').value;
-
-            // Get the text labels for level and subject
-            const gradeSelect = document.getElementById('search-grade');
-            const subjectSelect = document.getElementById('search-subject');
-
-            const gradeName = gradeSelect.options[gradeSelect.selectedIndex].text;
-            const subjectName = subjectSelect.options[subjectSelect.selectedIndex].text;
-
-            // Build search URL with parameters matching listofteachers format
-            const params = new URLSearchParams();
-
-            if (gradeId) {
-                params.append('level', gradeName);
-                params.append('level_id', gradeId);
+        jQuery(function ($) {
+            function scrollIntoView(el) {
+                if (!el) return;
+                const header = document.querySelector('.ast-primary-header-bar, .site-header, header');
+                const offset = header ? header.offsetHeight : 0;
+                const y = el.getBoundingClientRect().top + window.pageYOffset - offset - 10;
+                window.scrollTo({ top: y, behavior: 'smooth' });
             }
 
-            if (subjectId) {
-                params.append('subject', subjectName);
-                params.append('subject_id', subjectId);
-            }
+            $('#tp_searchTeachersBtn').on('click', function (e) {
+                e.preventDefault();
 
-            // Redirect to listofteachers page with filters
-            const searchUrl = '<?php echo home_url('/listofteachers'); ?>?' + params.toString();
-            window.location.href = searchUrl;
-        }
+                const $level = $('#ls-level');
+                const $subject = $('#ls-subject');
 
-        // Allow Enter key to trigger search
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchSelects = document.querySelectorAll('#search-curriculum, #search-grade, #search-subject');
-            searchSelects.forEach(select => {
-                select.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        performSearch();
-                    }
-                });
+                const levelVal  = ($level.val() || '').trim();
+                const levelText = ($level.find(':selected').text() || '').trim();
+                const subjVal   = ($subject.val() || '').trim();
+                const subjText  = ($subject.find(':selected').text() || '').trim();
+
+                if (!levelVal || !subjVal) {
+                    scrollIntoView($level[0]);
+                    alert('Please select both Grade and Subject before continuing.');
+                    return;
+                }
+
+                const params = new URLSearchParams();
+                params.set('level', levelText);
+                if (!isNaN(Number(levelVal))) params.set('level_id', levelVal);
+
+                params.set('subject', subjText);
+                if (!isNaN(Number(subjVal))) params.set('subject_id', subjVal);
+
+                window.location.href = '<?php echo esc_url(site_url("/listofteachers")); ?>' + '?' + params.toString();
+            });
+
+            // Allow Enter key to trigger search
+            $('#ls-level, #ls-subject').on('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    $('#tp_searchTeachersBtn').click();
+                }
             });
         });
 

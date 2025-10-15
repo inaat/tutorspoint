@@ -135,14 +135,15 @@ function tp_book_lecture_shortcode(){
     $paid_count = (int)$wpdb->get_var($wpdb->prepare(
       "SELECT COUNT(*) FROM {$studLect} WHERE teacher_id=%d AND is_paid <> 'free'", $teacher_id
     ));
-    $show_30off = ($paid_count < 5);
+    $show_30off = ($paid_count < 3);
   }
 
   // View
   ob_start();
   $nonce = wp_create_nonce('book_lecture_nonce');
   $ajax  = admin_url('admin-ajax.php');
-  $photo = $teacher->Photo ? esc_url($teacher->Photo) : 'https://placehold.co/160x160?text=Tutor';
+  // Use avatar if no photo
+  $photo = $teacher->Photo ? esc_url($teacher->Photo) : 'https://ui-avatars.com/api/?name=' . urlencode($teacher->FullName) . '&size=160&background=3dba9f&color=ffffff&bold=true';
   $name  = esc_html($teacher->FullName ?: 'Tutor');
   $country = esc_html($teacher->Country ?: '—');
   $rate_fmt = $hourly_rate > 0 ? '£'.number_format($hourly_rate, 2) : '—';
@@ -164,9 +165,9 @@ function tp_book_lecture_shortcode(){
           <?php if ($show_free): ?>
             <div class="bl-free">Free trial available</div>
             <?php if ($hourly_rate > 0): ?><div class="bl-cross"><?php echo $rate_fmt; ?>/hr</div><?php endif; ?>
-            <?php if ($show_30off && $hourly_rate > 0): ?><div class="bl-discount">First 5 paid sessions: <strong>30% off</strong></div><?php endif; ?>
+            <?php if ($show_30off && $hourly_rate > 0): ?><div class="bl-discount">First 3 paid sessions: <strong>30% off</strong></div><?php endif; ?>
           <?php elseif ($show_30off && $hourly_rate > 0): ?>
-            <div class="bl-discount">First 5 paid sessions: <strong>30% off</strong></div>
+            <div class="bl-discount">First 3 paid sessions: <strong>30% off</strong></div>
             <div class="bl-cross"><?php echo $rate_fmt; ?>/hr</div>
             <div class="bl-now">Now: £<?php echo number_format($hourly_rate*0.7,2); ?>/hr</div>
           <?php else: ?>
@@ -474,11 +475,26 @@ function tp_book_lecture_ajax(){
   ));
   $topic = (trim($topic_in) !== '') ? $topic_in : ('Intro Lecture + ' . ($subj_name ?: 'Subject'));
 
-  // Pricing rules
+  // Pricing rules - use level-based rate
+  $level_rate_table = $p.'level_hourly_rates';
   $hourly_rate = (float)$wpdb->get_var($wpdb->prepare(
-    "SELECT hourly_rate FROM {$thrTable}
-     WHERE teacher_id=%d ORDER BY from_date DESC, hour_rate_id DESC LIMIT 1", $teacher_id
+    "SELECT r.hourly_rate FROM {$level_rate_table} r
+     WHERE r.level_id = %d
+       AND r.status = 1
+       AND (r.effective_from IS NULL OR r.effective_from <= CURDATE())
+       AND (r.effective_to IS NULL OR r.effective_to >= CURDATE())
+     ORDER BY r.effective_from DESC LIMIT 1", $level_id
   ));
+
+  // Fallback without date filters
+  if (!$hourly_rate) {
+    $hourly_rate = (float)$wpdb->get_var($wpdb->prepare(
+      "SELECT r.hourly_rate FROM {$level_rate_table} r
+       WHERE r.level_id = %d AND r.status = 1
+       ORDER BY r.rate_id DESC LIMIT 1", $level_id
+    ));
+  }
+
   $original_price = max(0.0, $hourly_rate);
 
   $has_free = (int)$wpdb->get_var($wpdb->prepare(
@@ -497,7 +513,7 @@ function tp_book_lecture_ajax(){
        WHERE student_id=%d AND teacher_id=%d AND is_paid <> 'free'",
       $student_id, $teacher_id
     ));
-    if ($paid_count < 5 && $original_price > 0){
+    if ($paid_count < 3 && $original_price > 0){
       $discount_rate = 30;
       $final_price   = round($original_price * 0.7, 2);
     }

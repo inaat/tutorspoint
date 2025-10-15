@@ -149,6 +149,184 @@ add_filter('the_content', function ($content) {
 
 //require_once get_stylesheet_directory() . '/General/book-lecture.php';
 
+// Book Lecture AJAX Handler
+add_action('wp_ajax_tp_book_lecture', 'tp_book_lecture_ajax_handler');
+add_action('wp_ajax_nopriv_tp_book_lecture', 'tp_book_lecture_ajax_handler');
+
+function tp_book_lecture_ajax_handler() {
+    global $wpdb;
+
+    // Nonce check
+    if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'book_lecture_nonce')) {
+        wp_send_json_error(['message' => 'Security check failed.'], 403);
+    }
+
+    $teacher_id = isset($_POST['teacher_id']) ? (int)$_POST['teacher_id'] : 0;
+    $subject_id = isset($_POST['subject_id']) ? (int)$_POST['subject_id'] : 0;
+    $level_id   = isset($_POST['level_id'])   ? (int)$_POST['level_id']   : 0;
+    $slot_id    = isset($_POST['session_id']) ? (int)$_POST['session_id'] : 0;
+    $topic      = isset($_POST['topic']) ? sanitize_text_field($_POST['topic']) : '';
+
+    if (!$teacher_id || !$subject_id || !$level_id || !$slot_id) {
+        wp_send_json_error(['message' => 'Missing required parameters.']);
+    }
+
+    // Get level-based rate
+    $level_rate = (float)$wpdb->get_var($wpdb->prepare(
+        "SELECT r.hourly_rate FROM wpC_level_hourly_rates r
+         WHERE r.level_id = %d AND r.status = 1
+         AND (r.effective_from IS NULL OR r.effective_from <= CURDATE())
+         AND (r.effective_to IS NULL OR r.effective_to >= CURDATE())
+         ORDER BY r.effective_from DESC LIMIT 1", $level_id
+    ));
+
+    if (!$level_rate) {
+        $level_rate = (float)$wpdb->get_var($wpdb->prepare(
+            "SELECT r.hourly_rate FROM wpC_level_hourly_rates r
+             WHERE r.level_id = %d AND r.status = 1
+             ORDER BY r.rate_id DESC LIMIT 1", $level_id
+        ));
+    }
+
+    // Validate slot
+    $slot = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM wpC_teacher_generated_slots
+         WHERE slot_id=%d AND teacher_id=%d AND is_active=1
+         AND (student_id IS NULL OR student_id=0)
+         AND (status IS NULL OR status IN ('available','open'))
+         LIMIT 1", $slot_id, $teacher_id
+    ));
+
+    if (!$slot) {
+        wp_send_json_error(['message' => 'This slot is no longer available.']);
+    }
+
+    // Handle user authentication
+    $wp_user_id = get_current_user_id();
+
+    if (!$wp_user_id) {
+        $name  = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        $pass  = isset($_POST['password']) ? $_POST['password'] : '';
+
+        if (!$name || !$email || !is_email($email) || strlen($pass) < 8) {
+            wp_send_json_error(['message' => 'Please provide valid name, email and password (min 8 chars).']);
+        }
+
+        $existing = get_user_by('email', $email);
+        if ($existing) {
+            $creds = ['user_login' => $existing->user_login, 'user_password' => $pass, 'remember' => true];
+            $user  = wp_signon($creds, false);
+            if (is_wp_error($user)) {
+                wp_send_json_error(['message' => 'Email exists. Please enter correct password.']);
+            }
+            $wp_user_id = (int)$user->ID;
+        } else {
+            $wp_user_id = wp_create_user($email, $pass, $email);
+            if (is_wp_error($wp_user_id)) {
+                wp_send_json_error(['message' => 'Could not create user.']);
+            }
+            wp_update_user(['ID' => $wp_user_id, 'display_name' => $name]);
+            $u = new WP_User($wp_user_id);
+            $u->set_role('student');
+        }
+        wp_set_current_user($wp_user_id);
+        wp_set_auth_cookie($wp_user_id, true);
+        $current_email = $email;
+        $current_name = $name;
+    } else {
+        $u = get_userdata($wp_user_id);
+        $current_email = $u->user_email;
+        $current_name = $u->display_name ?: $u->user_email;
+    }
+
+    // Get or create student_id
+    $student = $wpdb->get_row($wpdb->prepare(
+        "SELECT student_id FROM wpC_student_register WHERE email=%s LIMIT 1", $current_email
+    ));
+
+    if (!$student) {
+        $wpdb->insert('wpC_student_register', [
+            'full_name' => $current_name,
+            'email' => $current_email,
+            'status' => 'active',
+            'created_at' => current_time('mysql'),
+        ]);
+        $student_id = (int)$wpdb->insert_id;
+    } else {
+        $student_id = (int)$student->student_id;
+    }
+
+    // Check for free session
+    $has_free = (int)$wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM wpC_student_lectures
+         WHERE student_id=%d AND teacher_id=%d AND subject_id=%d AND is_paid='free'",
+        $student_id, $teacher_id, $subject_id
+    )) > 0;
+
+    $is_paid_flag = $has_free ? 'paid' : 'free';
+    $discount_rate = $has_free ? 0 : 100;
+    $final_price = $has_free ? $level_rate : 0.0;
+
+    if ($has_free) {
+        $paid_count = (int)$wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM wpC_student_lectures
+             WHERE student_id=%d AND teacher_id=%d AND is_paid <> 'free'",
+            $student_id, $teacher_id
+        ));
+        if ($paid_count < 3 && $level_rate > 0) {
+            $discount_rate = 30;
+            $final_price = round($level_rate * 0.7, 2);
+        }
+    }
+
+    // Calculate duration
+    $start_ts = strtotime($slot->start_time);
+    $end_ts = strtotime($slot->end_time);
+    if ($end_ts <= $start_ts) $end_ts += 3600;
+    $duration = (int)round(($end_ts - $start_ts) / 60);
+
+    // Resolve booking date
+    $book_date = ($slot->session_date && $slot->session_date !== '0000-00-00')
+        ? $slot->session_date
+        : date('Y-m-d', strtotime('next ' . $slot->day_of_week));
+
+    // Get subject name
+    $subject_name = $wpdb->get_var($wpdb->prepare(
+        "SELECT SubjectName FROM wpC_subjects WHERE subject_id=%d", $subject_id
+    ));
+    $topic = $topic ?: ('Intro Lecture + ' . $subject_name);
+
+    // Insert booking
+    $wpdb->insert('wpC_student_lectures', [
+        'student_id' => $student_id,
+        'teacher_id' => $teacher_id,
+        'subject_id' => $subject_id,
+        'topic' => $topic,
+        'lecture_book_date' => $book_date,
+        'lecture_time' => $slot->start_time,
+        'duration' => $duration,
+        'status' => 'booked',
+        'is_taught' => 0,
+        'is_paid' => $is_paid_flag,
+        'original_price' => $level_rate,
+        'discount_rate' => $discount_rate,
+        'final_price' => $final_price,
+        'created_at' => current_time('mysql'),
+    ]);
+
+    if (!$wpdb->insert_id) {
+        wp_send_json_error(['message' => 'Could not create booking: ' . $wpdb->last_error]);
+    }
+
+    // Mark slot as booked
+    $wpdb->update('wpC_teacher_generated_slots',
+        ['status' => 'booked', 'student_id' => $student_id],
+        ['slot_id' => $slot_id]
+    );
+
+    wp_send_json_success(['redirect' => site_url('/student-dashboard/?tab=freelecturebook')]);
+}
 
 // Load Zego Classroom shortcode
 require_once get_stylesheet_directory() . '/includes/zego-classroom.php';

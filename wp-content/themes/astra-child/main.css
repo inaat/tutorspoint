@@ -396,10 +396,39 @@ body{ font-family: var(--font); }
 .pricing-card{
   background:#fff; border-radius:22px; padding:38px 28px; width:250px; text-align:center;
   box-shadow: var(--shadow-1); transition: transform .3s ease, box-shadow .3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 450px;
 }
 .pricing-card:hover{ transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,.12); }
-.pricing-card h3{ font-size:17px; font-weight:600; margin-bottom:20px; }
-.pricing-card .price-wrap{ margin:22px 0; }
+.pricing-card h3{ font-size:17px; font-weight:600; margin-bottom:15px; }
+.pricing-card .subjects-list{
+  font-size:12px;
+  color:#555;
+  line-height:1.8;
+  margin-bottom:20px;
+  font-weight:500;
+  flex-grow: 1;
+  padding:15px;
+  background: linear-gradient(135deg, rgba(61,186,159,0.05), rgba(61,186,159,0.1));
+  border-radius:12px;
+  border-left:3px solid var(--green);
+  text-align:left;
+}
+.pricing-card .subject-item{
+  padding:4px 0;
+  color:#555;
+  font-size:12px;
+  line-height:1.6;
+}
+.pricing-card .subject-item:first-child{
+  padding-top:0;
+}
+.pricing-card .subject-item:last-child{
+  padding-bottom:0;
+}
+.pricing-card .price-wrap{ margin:20px 0; }
 .pricing-card .price{ font-size:54px; font-weight:700; color: var(--green); line-height:.9; }
 .pricing-card .currency{ font-size:32px; }
 .pricing-card .period{ font-size:12px; color:#999; margin-top:8px; font-weight:500; }
@@ -415,6 +444,7 @@ body{ font-family: var(--font); }
 .btn-book-now{
   background: var(--green); color:#fff; border:none; padding:11px 0; width:100%;
   font-size:13px; font-weight:700; border-radius:6px; cursor:pointer; transition: all .3s ease;
+  margin-top: auto;
 }
 .btn-book-now:hover{ background:#2da889; }
 

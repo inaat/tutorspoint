@@ -47,14 +47,7 @@ if ($level_id && $subject_id) {
             tm.Country,
             tm.Photo,
             tm.intro_video_url,
-            COALESCE(SUM(CASE WHEN sls.is_taught = 1 THEN sls.duration END), 0) AS hours_taught,
-            COALESCE((
-                SELECT thr.hourly_rate
-                FROM wpC_teacher_Hour_Rate thr
-                WHERE thr.teacher_id = tm.teacher_id
-                ORDER BY thr.from_date DESC, thr.hour_rate_id DESC
-                LIMIT 1
-            ), 0) AS hourly_rate
+            COALESCE(SUM(CASE WHEN sls.is_taught = 1 THEN sls.duration END), 0) AS hours_taught
         FROM wpC_teachers_main tm
         INNER JOIN wpC_teacher_allocated_subjects tas ON tas.teacher_id = tm.teacher_id
         INNER JOIN wpC_subjects_level sl ON sl.subject_level_id = tas.subject_level_id
@@ -67,6 +60,35 @@ if ($level_id && $subject_id) {
         LIMIT 100
     ";
     $teachers = $wpdb->get_results($wpdb->prepare($sql, $level_id, $subject_id));
+
+    // Get level-based rate for display
+    $level_rate_query = "
+        SELECT r.hourly_rate, COALESCE(r.currency,'GBP') AS currency
+        FROM wpC_level_hourly_rates r
+        WHERE r.level_id = %d
+            AND r.status = 1
+            AND (r.effective_from IS NULL OR r.effective_from <= CURDATE())
+            AND (r.effective_to IS NULL OR r.effective_to >= CURDATE())
+        ORDER BY r.effective_from DESC
+        LIMIT 1
+    ";
+    $level_rate_data = $wpdb->get_row($wpdb->prepare($level_rate_query, $level_id));
+
+    // Fallback without date filters if needed
+    if (!$level_rate_data) {
+        $level_rate_query = "
+            SELECT r.hourly_rate, COALESCE(r.currency,'GBP') AS currency
+            FROM wpC_level_hourly_rates r
+            WHERE r.level_id = %d AND r.status = 1
+            ORDER BY r.rate_id DESC
+            LIMIT 1
+        ";
+        $level_rate_data = $wpdb->get_row($wpdb->prepare($level_rate_query, $level_id));
+    }
+
+    $level_hourly_rate = $level_rate_data ? (float)$level_rate_data->hourly_rate : 0;
+    $level_currency = $level_rate_data ? $level_rate_data->currency : 'GBP';
+    $currency_symbol = $level_currency === 'GBP' ? '£' : '$';
 } else {
     // No filters - show all active teachers
     $teachers = $wpdb->get_results("
@@ -192,7 +214,9 @@ if ($level_id && $subject_id) {
                             <?php if ($show_results && isset($tutor->hours_taught)): ?>
                                 <div class="tutor-stats">
                                     <span class="stat-badge">Hours: <?php echo (int)$tutor->hours_taught; ?></span>
-                                    <span class="stat-badge">£<?php echo (int)$tutor->hourly_rate; ?>/hr</span>
+                                    <?php if (isset($level_hourly_rate) && $level_hourly_rate > 0): ?>
+                                        <span class="stat-badge"><?php echo $currency_symbol; ?><?php echo number_format($level_hourly_rate, 0); ?>/hr</span>
+                                    <?php endif; ?>
                                 </div>
                             <?php else: ?>
                                 <p class="tutor-meta" style="font-size: 12px; margin-bottom: 16px;"><?php echo esc_html($tutor_subjects_list); ?></p>
