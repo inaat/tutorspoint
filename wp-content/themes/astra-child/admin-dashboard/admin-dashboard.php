@@ -1452,3 +1452,190 @@ if (!function_exists('tdcats_set_default_category')) {
 }
 
 
+/* ---------- BLOG SUGGESTIONS (Tab 9) ---------- */
+
+/** Submit a blog suggestion */
+add_action('wp_ajax_tp_submit_blog_suggestion', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $edit_id = intval($_POST['edit_id'] ?? 0);
+  $title   = sanitize_text_field($_POST['title'] ?? '');
+  $content = wp_kses_post($_POST['content'] ?? '');
+  $cat_id  = intval($_POST['category'] ?? 0);
+  $tags    = sanitize_text_field($_POST['tags'] ?? '');
+  $excerpt = sanitize_textarea_field($_POST['excerpt'] ?? '');
+
+  if (!$title || !$content || !$cat_id) wp_send_json_error('Required fields missing');
+
+  $post_data = [
+    'post_title'   => $title,
+    'post_content' => $content,
+    'post_excerpt' => $excerpt,
+    'post_category'=> [$cat_id],
+  ];
+
+  // Edit mode
+  if ($edit_id) {
+    $post = get_post($edit_id);
+    if (!$post || get_post_meta($edit_id, '_tp_is_suggestion', true) !== '1') {
+      wp_send_json_error('Not a valid suggestion');
+    }
+
+    $post_data['ID'] = $edit_id;
+    $post_id = wp_update_post($post_data);
+    if (is_wp_error($post_id)) wp_send_json_error($post_id->get_error_message());
+  }
+  // Create mode
+  else {
+    $post_data['post_status'] = 'draft';
+    $post_data['post_type'] = 'post';
+    $post_data['post_author'] = get_current_user_id();
+
+    $post_id = wp_insert_post($post_data);
+    if (is_wp_error($post_id)) wp_send_json_error($post_id->get_error_message());
+
+    // Mark as suggestion
+    update_post_meta($post_id, '_tp_is_suggestion', '1');
+  }
+
+  // Handle tags
+  if ($tags) {
+    wp_set_post_tags($post_id, $tags, false);
+  } else {
+    wp_set_post_tags($post_id, '', false);
+  }
+
+  // Handle featured image
+  if (isset($_FILES['featured']) && !empty($_FILES['featured']['name'])) {
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+    $attach_id = media_handle_upload('featured', $post_id);
+    if (!is_wp_error($attach_id)) {
+      set_post_thumbnail($post_id, $attach_id);
+    }
+  }
+
+  wp_send_json_success(['post_id' => $post_id]);
+});
+
+/** Get a single blog suggestion for editing */
+add_action('wp_ajax_tp_get_blog_suggestion', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  $cats = wp_get_post_categories($post_id);
+  $tags = wp_get_post_tags($post_id, ['fields' => 'names']);
+  $featured_id = get_post_thumbnail_id($post_id);
+  $featured_image = $featured_id ? wp_get_attachment_image_url($featured_id, 'medium') : '';
+
+  wp_send_json_success([
+    'title'          => $post->post_title,
+    'content'        => $post->post_content,
+    'excerpt'        => $post->post_excerpt,
+    'category'       => !empty($cats) ? $cats[0] : 0,
+    'tags'           => implode(', ', $tags),
+    'featured_image' => $featured_image,
+  ]);
+});
+
+/** Fetch blog suggestions list */
+add_action('wp_ajax_tp_fetch_blog_suggestions', function(){
+  if (!current_user_can('edit_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $search = isset($_POST['s']) ? sanitize_text_field($_POST['s']) : '';
+  $cat_id = isset($_POST['cat']) ? intval($_POST['cat']) : 0;
+
+  $args = [
+    'post_type'      => 'post',
+    'post_status'    => ['draft', 'publish'],
+    'posts_per_page' => 100,
+    'meta_key'       => '_tp_is_suggestion',
+    'meta_value'     => '1',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+  ];
+
+  if ($search) $args['s'] = $search;
+  if ($cat_id) $args['cat'] = $cat_id;
+
+  $query = new WP_Query($args);
+
+  $html = '';
+  if ($query->have_posts()) {
+    while ($query->have_posts()) {
+      $query->the_post();
+      $pid = get_the_ID();
+      $cats = get_the_category();
+      $cat_name = !empty($cats) ? esc_html($cats[0]->name) : 'N/A';
+      $author = get_the_author();
+      $date = get_the_date('Y-m-d');
+      $status = get_post_status() === 'publish' ? 'Published' : 'Draft';
+
+      $html .= '<tr class="tpbs-rowcard"><td>';
+      $html .= '<a href="'.get_edit_post_link($pid).'" target="_blank" class="tpbs-link">'.esc_html(get_the_title()).'</a>';
+      $html .= '</td><td><span class="tpbs-chip">'.$cat_name.'</span></td>';
+      $html .= '<td>'.esc_html($author).'</td>';
+      $html .= '<td>'.$status.'</td>';
+      $html .= '<td>'.$date.'</td>';
+      $html .= '<td class="tpbs-actions-col">';
+
+      if (get_post_status() === 'draft') {
+        $html .= '<button class="tpbs-btn" onclick="TPBS.publish('.$pid.')">Publish</button>';
+      }
+      $html .= '<button class="tpbs-btn sec" onclick="TPBS.edit('.$pid.')">Edit</button>';
+      $html .= '<button class="tpbs-btn sec" onclick="TPBS.remove('.$pid.')">Delete</button>';
+      $html .= '</td></tr>';
+    }
+  }
+  wp_reset_postdata();
+
+  wp_send_json_success(['html' => $html]);
+});
+
+/** Publish a blog suggestion */
+add_action('wp_ajax_tp_publish_blog_suggestion', function(){
+  if (!current_user_can('publish_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  wp_update_post(['ID' => $post_id, 'post_status' => 'publish']);
+  wp_send_json_success();
+});
+
+/** Delete a blog suggestion */
+add_action('wp_ajax_tp_delete_blog_suggestion', function(){
+  if (!current_user_can('delete_posts')) wp_send_json_error('No permission');
+  check_ajax_referer('tp_blog_sugg', 'nonce');
+
+  $post_id = intval($_POST['id'] ?? 0);
+  if (!$post_id) wp_send_json_error('Invalid ID');
+
+  $post = get_post($post_id);
+  if (!$post || get_post_meta($post_id, '_tp_is_suggestion', true) !== '1') {
+    wp_send_json_error('Not a valid suggestion');
+  }
+
+  wp_delete_post($post_id, true);
+  wp_send_json_success();
+});
+
+
